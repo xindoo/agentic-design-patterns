@@ -4,13 +4,13 @@
 title: Agentic Design Patterns
 description: 《Agentic Design Patterns》中文翻译项目 - 系统介绍 AI Agent 系统的各种设计模式
 author: 
-  name: Translation Team
+  name: xindoo
 
 # 网站设置
 lang: zh-CN
 timezone: Asia/Shanghai
 baseurl: "/agentic-design-patterns" # 子目录路径
-url: "http://github.xindoo.xyz" # 你的域名
+url: "https://xindoo.github.io" # 你的域名
 
 # 主题设置
 theme: jekyll-theme-cayman
