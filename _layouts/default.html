@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'zh-CN' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% seo %}
+  
+  <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6;
+      color: #24292e;
+    }
+    
+    .page-header {
+      background-color: #159957;
+      background-image: linear-gradient(120deg, #155799, #159957);
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+    
+    .project-name {
+      margin-top: 0;
+      margin-bottom: 0.1rem;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    
+    .project-tagline {
+      margin-bottom: 2rem;
+      font-weight: normal;
+      opacity: 0.9;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+    
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+    }
+    
+    .sidebar nav {
+      position: sticky;
+      top: 20px;
+    }
+    
+    .sidebar h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      color: #0366d6;
+    }
+    
+    .sidebar ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    
+    .sidebar li {
+      margin: 0.3rem 0;
+    }
+    
+    .sidebar a {
+      color: #24292e;
+      text-decoration: none;
+      display: block;
+      padding: 0.25rem 0;
+    }
+    
+    .sidebar a:hover {
+      color: #0366d6;
+      text-decoration: underline;
+    }
+    
+    .content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .content img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .content pre {
+      padding: 1rem;
+      background-color: #f6f8fa;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    
+    .content code {
+      background-color: #f6f8fa;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-size: 85%;
+    }
+    
+    .content pre code {
+      background-color: transparent;
+      padding: 0;
+    }
+    
+    .btn {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 0.3rem;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      color: rgba(255, 255, 255, 1);
+      background-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    @media screen and (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+      }
+      
+      .sidebar nav {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header" role="banner">
+    <h1 class="project-name">{{ site.title | default: site.github.repository_name }}</h1>
+    <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+    {% if site.github.is_project_page %}
+      <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
+    {% endif %}
+  </header>
+
+  <div class="main-content">
+    <aside class="sidebar">
+      <nav>
+        {% include navigation.html %}
+      </nav>
+    </aside>
+    
+    <main class="content" role="main">
+      {{ content }}
+    </main>
+  </div>
+
+  {% if site.google_analytics %}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', '{{ site.google_analytics }}', 'auto');
+      ga('send', 'pageview');
+    </script>
+  {% endif %}
+</body>
+</html>

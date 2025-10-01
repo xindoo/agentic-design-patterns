@@ -80,9 +80,27 @@ agentic-design-patterns/
     └── ...                      # 其他章节图片
 ```
 
-## 🎯 翻译进度
+## 🌐 在线访问
+
+本项目已部署到 GitHub Pages，可以在线阅读：
+
+**访问地址：** `https://xindoo.github.io/agentic-design-patterns/`
+
+> 注：首次部署后需要等待几分钟才能访问
+
+## � 翻译进度
 
 查看详细翻译进度请参考 [progress.md](progress.md)
+
+## 🚀 部署说明
+
+本项目使用 Jekyll 构建 GitHub Pages。详细部署指南请参考 [DEPLOYMENT.md](DEPLOYMENT.md)
+
+快速部署步骤：
+1. 推送代码到 GitHub
+2. 在仓库 Settings → Pages 中启用 GitHub Pages
+3. 选择 `main` 分支和 `/ (root)` 目录
+4. 等待自动部署完成
 
 ## 🤝 如何贡献
 

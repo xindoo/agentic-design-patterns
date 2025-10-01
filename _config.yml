@@ -1,0 +1,82 @@
+# Jekyll 配置文件
+
+# 网站基本信息
+title: Agentic Design Patterns
+description: 《Agentic Design Patterns》中文翻译项目 - 系统介绍 AI Agent 系统的各种设计模式
+author: 
+  name: Translation Team
+
+# 网站设置
+lang: zh-CN
+timezone: Asia/Shanghai
+baseurl: "" # 如果部署在子目录，请设置相应路径
+url: "http://github.xindoo.xyz/agentic-design-patterns" # 替换为你的 GitHub Pages URL
+
+# 主题设置
+theme: jekyll-theme-cayman
+# 或者使用其他主题：
+# theme: just-the-docs
+# remote_theme: pmarsceill/just-the-docs
+
+# Markdown 设置
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-relative-links
+
+# 相对链接配置
+relative_links:
+  enabled: true
+  collections: true
+
+# 包含和排除文件
+include:
+  - README.md
+  - chapters
+  - images
+  - original
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - .jekyll-cache
+  - .github
+  - translation-guide.md
+  - PROJECT_STRUCTURE.md
+  - progress.md
+
+# 默认值
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+# 导航设置（用于某些主题）
+navigation:
+  - title: 首页
+    url: /
+  - title: 核心章节
+    url: /chapters/
+  - title: 贡献指南
+    url: /CONTRIBUTING.html
+
+# 代码高亮主题
+highlighter: rouge
+
+# 启用相对路径
+permalink: pretty
