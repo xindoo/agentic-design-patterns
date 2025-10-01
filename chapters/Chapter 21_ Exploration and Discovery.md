@@ -75,8 +75,25 @@ Agent Laboratory 的模块化架构确保了计算灵活性。目标是通过自
 
 **判断：** 为了模拟人类评估过程，系统采用三方 Agentic 判断机制来评估输出。这涉及部署三个不同的自主 Agent，每个 Agent 配置为从特定角度评估产出，从而共同模仿人类判断的细致和多方面性质。这种方法允许更稳健和全面的评估，超越单一指标以捕获更丰富的定性评估。
 
-| `class ReviewersAgent:    def __init__(self, model="gpt-4o-mini", notes=None, openai_api_key=None):        if notes is None: self.notes = []        else: self.notes = notes        self.model = model        self.openai_api_key = openai_api_key    def inference(self, plan, report):        reviewer_1 = "你是一个严格但公平的审稿人，期望能够为研究主题带来见解的良好实验。"        review_1 = get_score(outlined_plan=plan, latex=report, reward_model_llm=self.model, reviewer_type=reviewer_1, openai_api_key=self.openai_api_key)        reviewer_2 = "你是一个严格、挑剔但公平的审稿人，正在寻找一个在该领域具有影响力的想法。"        review_2 = get_score(outlined_plan=plan, latex=report, reward_model_llm=self.model, reviewer_type=reviewer_2, openai_api_key=self.openai_api_key)        reviewer_3 = "你是一个严格但公平、思想开放的审稿人，正在寻找以前未曾提出过的新颖想法。"        review_3 = get_score(outlined_plan=plan, latex=report, reward_model_llm=self.model, reviewer_type=reviewer_3, openai_api_key=self.openai_api_key)        return f"审稿人 #1:\n{review_1}, \n审稿人 #2:\n{review_2}, \n审稿人 #3:\n{review_3}"` |
-| :---- |
+```python
+class ReviewersAgent:
+    def __init__(self, model="gpt-4o-mini", notes=None, openai_api_key=None):
+        if notes is None:
+            self.notes = []
+        else:
+            self.notes = notes
+        self.model = model
+        self.openai_api_key = openai_api_key
+
+    def inference(self, plan, report):
+        reviewer_1 = "你是一个严格但公平的审稿人，期望能够为研究主题带来见解的良好实验。"
+        review_1 = get_score(outlined_plan=plan, latex=report, reward_model_llm=self.model, reviewer_type=reviewer_1, openai_api_key=self.openai_api_key)
+        reviewer_2 = "你是一个严格、挑剔但公平的审稿人，正在寻找一个在该领域具有影响力的想法。"
+        review_2 = get_score(outlined_plan=plan, latex=report, reward_model_llm=self.model, reviewer_type=reviewer_2, openai_api_key=self.openai_api_key)
+        reviewer_3 = "你是一个严格但公平、思想开放的审稿人，正在寻找以前未曾提出过的新颖想法。"
+        review_3 = get_score(outlined_plan=plan, latex=report, reward_model_llm=self.model, reviewer_type=reviewer_3, openai_api_key=self.openai_api_key)
+        return f"审稿人 #1:\n{review_1}, \n审稿人 #2:\n{review_2}, \n审稿人 #3:\n{review_3}"
+```
 
 判断 Agent 的设计采用了特定的提示词，该提示词密切模拟了人类审稿人通常采用的认知框架和评估标准。此提示词指导 Agent 通过类似于人类专家的方式分析输出，考虑相关性、连贯性、事实准确性和整体质量等因素。通过精心设计这些提示词以反映人类审查协议，该系统旨在实现接近人类判断力的评估复杂性水平。
 
@@ -87,25 +104,73 @@ Agent Laboratory 的模块化架构确保了计算灵活性。目标是通过自
 
 **教授 Agent：** 教授 Agent 充当主要研究主管，负责建立研究议程、定义研究问题并将任务委托给其他 Agent。该 Agent 设定战略方向并确保与项目目标保持一致。
 
-| ````class ProfessorAgent(BaseAgent):    def __init__(self, model="gpt4omini", notes=None, max_steps=100, openai_api_key=None):        super().__init__(model, notes, max_steps, openai_api_key)        self.phases = ["report writing"]    def generate_readme(self):        sys_prompt = f"""您是 {self.role_description()} \n 这是撰写的论文 \n{self.report}。任务说明：您的目标是整合提供给您的所有知识、代码、报告和笔记，并为 github 存储库生成 readme.md。"""        history_str = "\n".join([_[1] for _ in self.history])        prompt = (            f"""历史记录：{history_str}\n{'~' * 10}\n"""            f"请在下面以 markdown 格式生成 readme：\n")        model_resp = query_model(model_str=self.model, system_prompt=sys_prompt, prompt=prompt, openai_api_key=self.openai_api_key)        return model_resp.replace("```markdown", "")```` |
-| :---- |
+```python
+class ProfessorAgent(BaseAgent):
+    def __init__(self, model="gpt4omini", notes=None, max_steps=100, openai_api_key=None):
+        super().__init__(model, notes, max_steps, openai_api_key)
+        self.phases = ["report writing"]
+
+    def generate_readme(self):
+        sys_prompt = f"""您是 {self.role_description()} \n 这是撰写的论文 \n{self.report}。任务说明：您的目标是整合提供给您的所有知识、代码、报告和笔记，并为 github 存储库生成 readme.md。"""
+        history_str = "\n".join([_[1] for _ in self.history])
+        prompt = (
+            f"""历史记录：{history_str}\n{'~' * 10}\n"""
+            f"请在下面以 markdown 格式生成 readme：\n")
+        model_resp = query_model(model_str=self.model, system_prompt=sys_prompt, prompt=prompt, openai_api_key=self.openai_api_key)
+        return model_resp.replace("```markdown", "")
+```
 
 **博士后 Agent：** 博士后 Agent 的角色是执行研究。这包括进行文献综述、设计和实施实验以及生成研究输出（如论文）。重要的是，博士后 Agent 具有编写和执行代码的能力，使实验协议和数据分析的实际实施成为可能。该 Agent 是研究成果的主要生产者。
 
-| `class PostdocAgent(BaseAgent):    def __init__(self, model="gpt4omini", notes=None, max_steps=100, openai_api_key=None):        super().__init__(model, notes, max_steps, openai_api_key)        self.phases = ["plan formulation", "results interpretation"]    def context(self, phase):        sr_str = str()        if self.second_round:            sr_str = (                f"以下是先前实验的结果\n",                f"先前的实验代码：{self.prev_results_code}\n"                f"先前的结果：{self.prev_exp_results}\n"                f"先前对结果的解释：{self.prev_interpretation}\n"                f"先前的报告：{self.prev_report}\n"                f"{self.reviewer_response}\n\n\n"            )        if phase == "plan formulation":            return (                sr_str,                f"当前文献综述：{self.lit_review_sum}",            )        elif phase == "results interpretation":            return (                sr_str,                f"当前文献综述：{self.lit_review_sum}\n"                f"当前计划：{self.plan}\n"                f"当前数据集代码：{self.dataset_code}\n"                f"当前实验代码：{self.results_code}\n"                f"当前结果：{self.exp_results}"            )        return ""` |
-| :---- |
+```python
+class PostdocAgent(BaseAgent):
+    def __init__(self, model="gpt4omini", notes=None, max_steps=100, openai_api_key=None):
+        super().__init__(model, notes, max_steps, openai_api_key)
+        self.phases = ["plan formulation", "results interpretation"]
+
+    def context(self, phase):
+        sr_str = str()
+        if self.second_round:
+            sr_str = (
+                f"以下是先前实验的结果\n",
+                f"先前的实验代码：{self.prev_results_code}\n"
+                f"先前的结果：{self.prev_exp_results}\n"
+                f"先前对结果的解释：{self.prev_interpretation}\n"
+                f"先前的报告：{self.prev_report}\n"
+                f"{self.reviewer_response}\n\n\n"
+            )
+        if phase == "plan formulation":
+            return (
+                sr_str,
+                f"当前文献综述：{self.lit_review_sum}",
+            )
+        elif phase == "results interpretation":
+            return (
+                sr_str,
+                f"当前文献综述：{self.lit_review_sum}\n"
+                f"当前计划：{self.plan}\n"
+                f"当前数据集代码：{self.dataset_code}\n"
+                f"当前实验代码：{self.results_code}\n"
+                f"当前结果：{self.exp_results}"
+            )
+        return ""
+```
 
 **审稿人 Agent：** 审稿人 Agent 对博士后 Agent 的研究输出进行批判性评估，评估论文和实验结果的质量、有效性和科学严谨性。这个评估阶段模拟学术环境中的同行评审过程，以确保在最终确定之前研究输出的高标准。
 
 **机器学习工程 Agent：** 机器学习工程 Agent 充当机器学习工程师，与博士生进行对话式协作以开发代码。他们的核心功能是为数据预处理生成简单的代码，整合从提供的文献综述和实验协议中得出的见解。这确保数据被适当格式化并为指定的实验做好准备。
 
-| `"您是一位机器学习工程师，由一位博士生指导，他将帮助您编写代码，您可以通过对话与他们互动。\n" "您的目标是生成为提供的实验准备数据的代码。您应该追求简单的代码来准备数据，而不是复杂的代码。您应该整合提供的文献综述和计划，并为此实验准备数据的代码。\n"` |
-| :---- |
+```python
+"您是一位机器学习工程师，由一位博士生指导，他将帮助您编写代码，您可以通过对话与他们互动。\n"
+"您的目标是生成为提供的实验准备数据的代码。您应该追求简单的代码来准备数据，而不是复杂的代码。您应该整合提供的文献综述和计划，并为此实验准备数据的代码。\n"
+```
 
 **软件工程 Agent：** 软件工程 Agent 指导机器学习工程 Agent。他们的主要目的是协助机器学习工程 Agent 为特定实验创建简单的数据准备代码。软件工程 Agent 整合提供的文献综述和实验计划，确保生成的代码简单明了，并与研究目标直接相关。
 
-| `"您是一位软件工程师，正在指导一位机器学习工程师，机器学习工程师将编写代码，您可以通过对话与他们互动。\n" "您的目标是帮助机器学习工程师生成为提供的实验准备数据的代码。您应该追求非常简单的代码来准备数据，而不是复杂的代码。您应该整合提供的文献综述和计划，并为此实验准备数据的代码。\n"` |
-| :---- |
+```python
+"您是一位软件工程师，正在指导一位机器学习工程师，机器学习工程师将编写代码，您可以通过对话与他们互动。\n"
+"您的目标是帮助机器学习工程师生成为提供的实验准备数据的代码。您应该追求非常简单的代码来准备数据，而不是复杂的代码。您应该整合提供的文献综述和计划，并为此实验准备数据的代码。\n"
+```
 
 总之，"Agent Laboratory"代表了自主科学研究的复杂框架。它旨在通过自动化关键研究阶段和促进 AI 驱动的知识生成来增强人类研究能力。该系统旨在通过管理日常任务来提高研究效率，同时保持人类监督。
 

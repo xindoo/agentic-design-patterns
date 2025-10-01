@@ -70,8 +70,81 @@ This Python code defines an AI-powered crew using the CrewAI framework to genera
 
 Two tasks are defined accordingly: one for researching the trends and another for writing the blog post, with the writing task depending on the output of the research task. These agents and tasks are then assembled into a Crew, specifying a sequential process where tasks are executed in order. The Crew is initialized with the agents, tasks, and a language model (specifically the "gemini-2.0-flash" model). The main function executes this crew using the kickoff() method, orchestrating the collaboration between the agents to produce the desired output. Finally, the code prints the final result of the crew's execution, which is the generated blog post.
 
-| `import os from dotenv import load_dotenv from crewai import Agent, Task, Crew, Process from langchain_google_genai import ChatGoogleGenerativeAI def setup_environment():    """Loads environment variables and checks for the required API key."""    load_dotenv()    if not os.getenv("GOOGLE_API_KEY"):        raise ValueError("GOOGLE_API_KEY not found. Please set it in your .env file.") def main():    """    Initializes and runs the AI crew for content creation using the latest Gemini model.    """    setup_environment()    # Define the language model to use.    # Updated to a model from the Gemini 2.0 series for better performance and features.    # For cutting-edge (preview) capabilities, you could use "gemini-2.5-flash".    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")    # Define Agents with specific roles and goals    researcher = Agent(        role='Senior Research Analyst',        goal='Find and summarize the latest trends in AI.',        backstory="You are an experienced research analyst with a knack for identifying key trends and synthesizing information.",        verbose=True,        allow_delegation=False,    )    writer = Agent(        role='Technical Content Writer',        goal='Write a clear and engaging blog post based on research findings.',        backstory="You are a skilled writer who can translate complex technical topics into accessible content.",        verbose=True,        allow_delegation=False,    )    # Define Tasks for the agents    research_task = Task(        description="Research the top 3 emerging trends in Artificial Intelligence in 2024-2025. Focus on practical applications and potential impact.",        expected_output="A detailed summary of the top 3 AI trends, including key points and sources.",        agent=researcher,    )    writing_task = Task(        description="Write a 500-word blog post based on the research findings. The post should be engaging and easy for a general audience to understand.",        expected_output="A complete 500-word blog post about the latest AI trends.",        agent=writer,        context=[research_task],    )    # Create the Crew    blog_creation_crew = Crew(        agents=[researcher, writer],        tasks=[research_task, writing_task],        process=Process.sequential,        llm=llm,        verbose=2 # Set verbosity for detailed crew execution logs    )    # Execute the Crew    print("## Running the blog creation crew with Gemini 2.0 Flash... ##")    try:        result = blog_creation_crew.kickoff()        print("\n------------------\n")        print("## Crew Final Output ##")        print(result)    except Exception as e:        print(f"\nAn unexpected error occurred: {e}") if __name__ == "__main__":    main()` |
-| :---- |
+```python
+import os
+from dotenv import load_dotenv
+from crewai import Agent, Task, Crew, Process
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+def setup_environment():
+   """Loads environment variables and checks for the required API key."""
+   load_dotenv()
+   if not os.getenv("GOOGLE_API_KEY"):
+       raise ValueError("GOOGLE_API_KEY not found. Please set it in your .env file.")
+
+def main():
+   """
+   Initializes and runs the AI crew for content creation using the latest Gemini model.
+   """
+   setup_environment()
+   # Define the language model to use.
+   # Updated to a model from the Gemini 2.0 series for better performance and features.
+   # For cutting-edge (preview) capabilities, you could use "gemini-2.5-flash".
+   llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+   
+   # Define Agents with specific roles and goals
+   researcher = Agent(
+       role='Senior Research Analyst',
+       goal='Find and summarize the latest trends in AI.',
+       backstory="You are an experienced research analyst with a knack for identifying key trends and synthesizing information.",
+       verbose=True,
+       allow_delegation=False,
+   )
+   
+   writer = Agent(
+       role='Technical Content Writer',
+       goal='Write a clear and engaging blog post based on research findings.',
+       backstory="You are a skilled writer who can translate complex technical topics into accessible content.",
+       verbose=True,
+       allow_delegation=False,
+   )
+   
+   # Define Tasks for the agents
+   research_task = Task(
+       description="Research the top 3 emerging trends in Artificial Intelligence in 2024-2025. Focus on practical applications and potential impact.",
+       expected_output="A detailed summary of the top 3 AI trends, including key points and sources.",
+       agent=researcher,
+   )
+   
+   writing_task = Task(
+       description="Write a 500-word blog post based on the research findings. The post should be engaging and easy for a general audience to understand.",
+       expected_output="A complete 500-word blog post about the latest AI trends.",
+       agent=writer,
+       context=[research_task],
+   )
+   
+   # Create the Crew
+   blog_creation_crew = Crew(
+       agents=[researcher, writer],
+       tasks=[research_task, writing_task],
+       process=Process.sequential,
+       llm=llm,
+       verbose=2 # Set verbosity for detailed crew execution logs
+   )
+   
+   # Execute the Crew
+   print("## Running the blog creation crew with Gemini 2.0 Flash... ##")
+   try:
+       result = blog_creation_crew.kickoff()
+       print("\n------------------\n")
+       print("## Crew Final Output ##")
+       print(result)
+   except Exception as e:
+       print(f"\nAn unexpected error occurred: {e}")
+
+if __name__ == "__main__":
+   main()
+```
 
 We will now delve into further examples within the Google ADK framework, with particular emphasis on hierarchical, parallel, and sequential coordination paradigms, alongside the implementation of an agent as an operational instrument.
 
@@ -79,28 +152,225 @@ We will now delve into further examples within the Google ADK framework, with pa
 
 The following code example demonstrates the establishment of a hierarchical agent structure within the Google ADK through the creation of a parent-child relationship. The code defines two types of agents: LlmAgent and a custom TaskExecutor agent derived from BaseAgent. The TaskExecutor is designed for specific, non-LLM tasks and in this example, it simply yields a "Task finished successfully" event. An LlmAgent named greeter is initialized with a specified model and instruction to act as a friendly greeter. The custom TaskExecutor is instantiated as task\_doer. A parent LlmAgent called coordinator is created, also with a model and instructions. The coordinator's instructions guide it to delegate greetings to the greeter and task execution to the task\_doer. The greeter and task\_doer are added as sub-agents to the coordinator, establishing a parent-child relationship. The code then asserts that this relationship is correctly set up. Finally, it prints a message indicating that the agent hierarchy has been successfully created.
 
-| `from google.adk.agents import LlmAgent, BaseAgent from google.adk.agents.invocation_context import InvocationContext from google.adk.events import Event from typing import AsyncGenerator # Correctly implement a custom agent by extending BaseAgent class TaskExecutor(BaseAgent):    """A specialized agent with custom, non-LLM behavior."""    name: str = "TaskExecutor"    description: str = "Executes a predefined task."    async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:        """Custom implementation logic for the task."""        # This is where your custom logic would go.        # For this example, we'll just yield a simple event.        yield Event(author=self.name, content="Task finished successfully.") # Define individual agents with proper initialization # LlmAgent requires a model to be specified. greeter = LlmAgent(    name="Greeter",    model="gemini-2.0-flash-exp",    instruction="You are a friendly greeter." ) task_doer = TaskExecutor() # Instantiate our concrete custom agent # Create a parent agent and assign its sub-agents # The parent agent's description and instructions should guide its delegation logic. coordinator = LlmAgent(    name="Coordinator",    model="gemini-2.0-flash-exp",    description="A coordinator that can greet users and execute tasks.",    instruction="When asked to greet, delegate to the Greeter. When asked to perform a task, delegate to the TaskExecutor.",    sub_agents=[        greeter,        task_doer    ] ) # The ADK framework automatically establishes the parent-child relationships. # These assertions will pass if checked after initialization. assert greeter.parent_agent == coordinator assert task_doer.parent_agent == coordinator print("Agent hierarchy created successfully.")` |
-| :---- |
+```python
+from google.adk.agents import LlmAgent, BaseAgent
+from google.adk.agents.invocation_context import InvocationContext
+from google.adk.events import Event
+from typing import AsyncGenerator
+
+# Correctly implement a custom agent by extending BaseAgent
+class TaskExecutor(BaseAgent):
+   """A specialized agent with custom, non-LLM behavior."""
+   name: str = "TaskExecutor"
+   description: str = "Executes a predefined task."
+   
+   async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:
+       """Custom implementation logic for the task."""
+       # This is where your custom logic would go.
+       # For this example, we'll just yield a simple event.
+       yield Event(author=self.name, content="Task finished successfully.")
+
+# Define individual agents with proper initialization
+# LlmAgent requires a model to be specified.
+greeter = LlmAgent(
+   name="Greeter",
+   model="gemini-2.0-flash-exp",
+   instruction="You are a friendly greeter."
+)
+
+task_doer = TaskExecutor() # Instantiate our concrete custom agent
+
+# Create a parent agent and assign its sub-agents
+# The parent agent's description and instructions should guide its delegation logic.
+coordinator = LlmAgent(
+   name="Coordinator",
+   model="gemini-2.0-flash-exp",
+   description="A coordinator that can greet users and execute tasks.",
+   instruction="When asked to greet, delegate to the Greeter. When asked to perform a task, delegate to the TaskExecutor.",
+   sub_agents=[
+       greeter,
+       task_doer
+   ]
+)
+
+# The ADK framework automatically establishes the parent-child relationships.
+# These assertions will pass if checked after initialization.
+assert greeter.parent_agent == coordinator
+assert task_doer.parent_agent == coordinator
+print("Agent hierarchy created successfully.")
+```
 
 This code excerpt illustrates the employment of the LoopAgent within the Google ADK framework to establish iterative workflows. The code defines two agents: ConditionChecker and ProcessingStep. ConditionChecker is a custom agent that checks a "status" value in the session state. If the "status" is "completed", ConditionChecker escalates an event to stop the loop. Otherwise, it yields an event to continue the loop. ProcessingStep is an LlmAgent using the "gemini-2.0-flash-exp" model. Its instruction is to perform a task and set the session "status" to "completed" if it's the final step. A LoopAgent named StatusPoller is created. StatusPoller is configured with max\_iterations=10. StatusPoller includes both ProcessingStep and an instance of ConditionChecker as sub-agents. The LoopAgent will execute the sub-agents sequentially for up to 10 iterations, stopping if ConditionChecker finds the status is "completed".
 
-| i`mport asyncio from typing import AsyncGenerator from google.adk.agents import LoopAgent, LlmAgent, BaseAgent from google.adk.events import Event, EventActions from google.adk.agents.invocation_context import InvocationContext # Best Practice: Define custom agents as complete, self-describing classes. class ConditionChecker(BaseAgent):    """A custom agent that checks for a 'completed' status in the session state."""    name: str = "ConditionChecker"    description: str = "Checks if a process is complete and signals the loop to stop."    async def _run_async_impl(        self, context: InvocationContext    ) -> AsyncGenerator[Event, None]:        """Checks state and yields an event to either continue or stop the loop."""        status = context.session.state.get("status", "pending")        is_done = (status == "completed")        if is_done:            # Escalate to terminate the loop when the condition is met.            yield Event(author=self.name, actions=EventActions(escalate=True))        else:            # Yield a simple event to continue the loop.            yield Event(author=self.name, content="Condition not met, continuing loop.") # Correction: The LlmAgent must have a model and clear instructions. process_step = LlmAgent(    name="ProcessingStep",    model="gemini-2.0-flash-exp",    instruction="You are a step in a longer process. Perform your task. If you are the final step, update session state by setting 'status' to 'completed'." ) # The LoopAgent orchestrates the workflow. poller = LoopAgent(    name="StatusPoller",    max_iterations=10,    sub_agents=[        process_step,        ConditionChecker() # Instantiating the well-defined custom agent.    ] ) # This poller will now execute 'process_step'  # and then 'ConditionChecker' # repeatedly until the status is 'completed' or 10 iterations  # have passed.` |
-| :---- |
+```python
+import asyncio
+from typing import AsyncGenerator
+from google.adk.agents import LoopAgent, LlmAgent, BaseAgent
+from google.adk.events import Event, EventActions
+from google.adk.agents.invocation_context import InvocationContext
+
+# Best Practice: Define custom agents as complete, self-describing classes.
+class ConditionChecker(BaseAgent):
+   """A custom agent that checks for a 'completed' status in the session state."""
+   name: str = "ConditionChecker"
+   description: str = "Checks if a process is complete and signals the loop to stop."
+   
+   async def _run_async_impl(
+       self, context: InvocationContext
+   ) -> AsyncGenerator[Event, None]:
+       """Checks state and yields an event to either continue or stop the loop."""
+       status = context.session.state.get("status", "pending")
+       is_done = (status == "completed")
+       if is_done:
+           # Escalate to terminate the loop when the condition is met.
+           yield Event(author=self.name, actions=EventActions(escalate=True))
+       else:
+           # Yield a simple event to continue the loop.
+           yield Event(author=self.name, content="Condition not met, continuing loop.")
+
+# Correction: The LlmAgent must have a model and clear instructions.
+process_step = LlmAgent(
+   name="ProcessingStep",
+   model="gemini-2.0-flash-exp",
+   instruction="You are a step in a longer process. Perform your task. If you are the final step, update session state by setting 'status' to 'completed'."
+)
+
+# The LoopAgent orchestrates the workflow.
+poller = LoopAgent(
+   name="StatusPoller",
+   max_iterations=10,
+   sub_agents=[
+       process_step,
+       ConditionChecker() # Instantiating the well-defined custom agent.
+   ]
+)
+
+# This poller will now execute 'process_step'
+# and then 'ConditionChecker'
+# repeatedly until the status is 'completed' or 10 iterations
+# have passed.
+```
 
 This code excerpt elucidates the SequentialAgent pattern within the Google ADK, engineered for the construction of linear workflows. This code defines a sequential agent pipeline using the google.adk.agents library. The pipeline consists of two agents, step1 and step2. step1 is named "Step1\_Fetch" and its output will be stored in the session state under the key "data". step2 is named "Step2\_Process" and is instructed to analyze the information stored in session.state\["data"\] and provide a summary. The SequentialAgent named "MyPipeline" orchestrates the execution of these sub-agents. When the pipeline is run with an initial input, step1 will execute first. The response from step1 will be saved into the session state under the key "data". Subsequently, step2 will execute, utilizing the information that step1 placed into the state as per its instruction. This structure allows for building workflows where the output of one agent becomes the input for the next. This is a common pattern in creating multi-step AI or data processing pipelines. 
 
-| `from google.adk.agents import SequentialAgent, Agent # This agent's output will be saved to session.state["data"] step1 = Agent(name="Step1_Fetch", output_key="data") # This agent will use the data from the previous step. # We instruct it on how to find and use this data. step2 = Agent(    name="Step2_Process",    instruction="Analyze the information found in state['data'] and provide a summary." ) pipeline = SequentialAgent(    name="MyPipeline",    sub_agents=[step1, step2] ) # When the pipeline is run with an initial input, Step1 will execute, # its response will be stored in session.state["data"], and then # Step2 will execute, using the information from the state as instructed.` |
-| :---- |
+```python
+from google.adk.agents import SequentialAgent, Agent
+
+# This agent's output will be saved to session.state["data"]
+step1 = Agent(name="Step1_Fetch", output_key="data")
+
+# This agent will use the data from the previous step.
+# We instruct it on how to find and use this data.
+step2 = Agent(
+   name="Step2_Process",
+   instruction="Analyze the information found in state['data'] and provide a summary."
+)
+
+pipeline = SequentialAgent(
+   name="MyPipeline",
+   sub_agents=[step1, step2]
+)
+
+# When the pipeline is run with an initial input, Step1 will execute,
+# its response will be stored in session.state["data"], and then
+# Step2 will execute, using the information from the state as instructed.
+```
 
 The following code example illustrates the ParallelAgent pattern within the Google ADK, which facilitates the concurrent execution of multiple agent tasks. The data\_gatherer is designed to run two sub-agents concurrently: weather\_fetcher and news\_fetcher. The weather\_fetcher agent is instructed to get the weather for a given location and store the result in session.state\["weather\_data"\]. Similarly, the news\_fetcher agent is instructed to retrieve the top news story for a given topic and store it in session.state\["news\_data"\]. Each sub-agent is configured to use the "gemini-2.0-flash-exp" model. The ParallelAgent orchestrates the execution of these sub-agents, allowing them to work in parallel. The results from both weather\_fetcher and news\_fetcher would be gathered and stored in the session state. Finally, the example shows how to access the collected weather and news data from the final\_state after the agent's execution is complete.
 
-| `from google.adk.agents import Agent, ParallelAgent # It's better to define the fetching logic as tools for the agents # For simplicity in this example, we'll embed the logic in the agent's instruction. # In a real-world scenario, you would use tools. # Define the individual agents that will run in parallel weather_fetcher = Agent(    name="weather_fetcher",    model="gemini-2.0-flash-exp",    instruction="Fetch the weather for the given location and return only the weather report.",    output_key="weather_data"  # The result will be stored in session.state["weather_data"] ) news_fetcher = Agent(    name="news_fetcher",    model="gemini-2.0-flash-exp",    instruction="Fetch the top news story for the given topic and return only that story.",    output_key="news_data"      # The result will be stored in session.state["news_data"] ) # Create the ParallelAgent to orchestrate the sub-agents data_gatherer = ParallelAgent(    name="data_gatherer",    sub_agents=[        weather_fetcher,        news_fetcher    ] )` |
-| :---- |
+```python
+from google.adk.agents import Agent, ParallelAgent
+
+# It's better to define the fetching logic as tools for the agents
+# For simplicity in this example, we'll embed the logic in the agent's instruction.
+# In a real-world scenario, you would use tools.
+
+# Define the individual agents that will run in parallel
+weather_fetcher = Agent(
+   name="weather_fetcher",
+   model="gemini-2.0-flash-exp",
+   instruction="Fetch the weather for the given location and return only the weather report.",
+   output_key="weather_data"  # The result will be stored in session.state["weather_data"]
+)
+
+news_fetcher = Agent(
+   name="news_fetcher",
+   model="gemini-2.0-flash-exp",
+   instruction="Fetch the top news story for the given topic and return only that story.",
+   output_key="news_data"      # The result will be stored in session.state["news_data"]
+)
+
+# Create the ParallelAgent to orchestrate the sub-agents
+data_gatherer = ParallelAgent(
+   name="data_gatherer",
+   sub_agents=[
+       weather_fetcher,
+       news_fetcher
+   ]
+)
+```
 
 The provided code segment exemplifies the "Agent as a Tool" paradigm within the Google ADK, enabling an agent to utilize the capabilities of another agent in a manner analogous to function invocation. Specifically, the code defines an image generation system using Google's LlmAgent and AgentTool classes. It consists of two agents: a parent artist\_agent and a sub-agent image\_generator\_agent. The generate\_image function is a simple tool that simulates image creation, returning mock image data. The image\_generator\_agent is responsible for using this tool based on a text prompt it receives. The artist\_agent's role is to first invent a creative image prompt. It then calls the image\_generator\_agent through an AgentTool wrapper. The AgentTool acts as a bridge, allowing one agent to use another agent as a tool. When the artist\_agent calls the image\_tool, the AgentTool invokes the image\_generator\_agent with the artist's invented prompt. The image\_generator\_agent then uses the generate\_image function with that prompt. Finally, the generated image (or mock data) is returned back up through the agents. This architecture demonstrates a layered agent system where a higher-level agent orchestrates a lower-level, specialized agent to perform a task.
 
-| ``from google.adk.agents import LlmAgent from google.adk.tools import agent_tool from google.genai import types # 1. A simple function tool for the core capability. # This follows the best practice of separating actions from reasoning. def generate_image(prompt: str) -> dict:    """    Generates an image based on a textual prompt.    Args:        prompt: A detailed description of the image to generate.    Returns:        A dictionary with the status and the generated image bytes.    """    print(f"TOOL: Generating image for prompt: '{prompt}'")    # In a real implementation, this would call an image generation API.    # For this example, we return mock image data.    mock_image_bytes = b"mock_image_data_for_a_cat_wearing_a_hat"    return {        "status": "success",        # The tool returns the raw bytes, the agent will handle the Part creation.        "image_bytes": mock_image_bytes,        "mime_type": "image/png"    } # 2. Refactor the ImageGeneratorAgent into an LlmAgent. # It now correctly uses the input passed to it. image_generator_agent = LlmAgent(    name="ImageGen",    model="gemini-2.0-flash",    description="Generates an image based on a detailed text prompt.",    instruction=(        "You are an image generation specialist. Your task is to take the user's request "        "and use the `generate_image` tool to create the image. "        "The user's entire request should be used as the 'prompt' argument for the tool. "        "After the tool returns the image bytes, you MUST output the image."    ),    tools=[generate_image] ) # 3. Wrap the corrected agent in an AgentTool. # The description here is what the parent agent sees. image_tool = agent_tool.AgentTool(    agent=image_generator_agent,    description="Use this tool to generate an image. The input should be a descriptive prompt of the desired image." ) # 4. The parent agent remains unchanged. Its logic was correct. artist_agent = LlmAgent(    name="Artist",    model="gemini-2.0-flash",    instruction=(        "You are a creative artist. First, invent a creative and descriptive prompt for an image. "        "Then, use the `ImageGen` tool to generate the image using your prompt."    ),    tools=[image_tool] )`` |
-| :---- |
+```python
+from google.adk.agents import LlmAgent
+from google.adk.tools import agent_tool
+from google.genai import types
+
+# 1. A simple function tool for the core capability.
+# This follows the best practice of separating actions from reasoning.
+def generate_image(prompt: str) -> dict:
+   """
+   Generates an image based on a textual prompt.
+   Args:
+       prompt: A detailed description of the image to generate.
+   Returns:
+       A dictionary with the status and the generated image bytes.
+   """
+   print(f"TOOL: Generating image for prompt: '{prompt}'")
+   # In a real implementation, this would call an image generation API.
+   # For this example, we return mock image data.
+   mock_image_bytes = b"mock_image_data_for_a_cat_wearing_a_hat"
+   return {
+       "status": "success",
+       # The tool returns the raw bytes, the agent will handle the Part creation.
+       "image_bytes": mock_image_bytes,
+       "mime_type": "image/png"
+   }
+
+# 2. Refactor the ImageGeneratorAgent into an LlmAgent.
+# It now correctly uses the input passed to it.
+image_generator_agent = LlmAgent(
+   name="ImageGen",
+   model="gemini-2.0-flash",
+   description="Generates an image based on a detailed text prompt.",
+   instruction=(
+       "You are an image generation specialist. Your task is to take the user's request "
+       "and use the `generate_image` tool to create the image. "
+       "The user's entire request should be used as the 'prompt' argument for the tool. "
+       "After the tool returns the image bytes, you MUST output the image."
+   ),
+   tools=[generate_image]
+)
+
+# 3. Wrap the corrected agent in an AgentTool.
+# The description here is what the parent agent sees.
+image_tool = agent_tool.AgentTool(
+   agent=image_generator_agent,
+   description="Use this tool to generate an image. The input should be a descriptive prompt of the desired image."
+)
+
+# 4. The parent agent remains unchanged. Its logic was correct.
+artist_agent = LlmAgent(
+   name="Artist",
+   model="gemini-2.0-flash",
+   instruction=(
+       "You are a creative artist. First, invent a creative and descriptive prompt for an image. "
+       "Then, use the `ImageGen` tool to generate the image using your prompt."
+   ),
+   tools=[image_tool]
+)
+```
 
 # At a Glance
 

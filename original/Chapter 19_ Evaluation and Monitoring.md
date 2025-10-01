@@ -24,8 +24,18 @@ Developing a comprehensive evaluation framework for AI agents is a challenging e
 
 **Agent Response Assessment:** This core process is essential for evaluating the quality and accuracy of an agent's outputs. It involves determining if the agent delivers pertinent, correct,  logical, unbiased, and accurate information in response to given inputs. Assessment metrics may include factual correctness, fluency, grammatical precision, and adherence to the user's intended purpose.
 
-| `def evaluate_response_accuracy(agent_output: str, expected_output: str) -> float:    """Calculates a simple accuracy score for agent responses."""    # This is a very basic exact match; real-world would use more sophisticated metrics    return 1.0 if agent_output.strip().lower() == expected_output.strip().lower() else 0.0 # Example usage agent_response = "The capital of France is Paris." ground_truth = "Paris is the capital of France." score = evaluate_response_accuracy(agent_response, ground_truth) print(f"Response accuracy: {score}")` |
-| :---- |
+```python
+def evaluate_response_accuracy(agent_output: str, expected_output: str) -> float:
+    """Calculates a simple accuracy score for agent responses."""
+    # This is a very basic exact match; real-world would use more sophisticated metrics
+    return 1.0 if agent_output.strip().lower() == expected_output.strip().lower() else 0.0
+
+# Example usage
+agent_response = "The capital of France is Paris."
+ground_truth = "Paris is the capital of France."
+score = evaluate_response_accuracy(agent_response, ground_truth)
+print(f"Response accuracy: {score}")
+```
 
 The Python function \`evaluate\_response\_accuracy\` calculates a basic accuracy score for an AI agent's response by performing an exact, case-insensitive comparison between the agent's output and the expected output, after removing leading or trailing whitespace. It returns a score of 1.0 for an exact match and 0.0 otherwise, representing a binary correct or incorrect evaluation. This method, while straightforward for simple checks, does not account for variations like paraphrasing or semantic equivalence.
 
@@ -42,15 +52,176 @@ A straightforward comparison falls short in assessing semantic similarity, only 
 
 **Tracking Token Usage for LLM Interactions:** For LLM-powered agents, tracking token usage is crucial for managing costs and optimizing resource allocation. Billing for LLM interactions often depends on the number of tokens processed (input and output). Therefore, efficient token usage directly reduces operational expenses. Additionally, monitoring token counts helps identify potential areas for improvement in prompt engineering or response generation processes.
 
-| `# This is conceptual as actual token counting depends on the LLM API class LLMInteractionMonitor:    def __init__(self):        self.total_input_tokens = 0        self.total_output_tokens = 0    def record_interaction(self, prompt: str, response: str):        # In a real scenario, use LLM API's token counter or a tokenizer        input_tokens = len(prompt.split()) # Placeholder        output_tokens = len(response.split()) # Placeholder        self.total_input_tokens += input_tokens        self.total_output_tokens += output_tokens        print(f"Recorded interaction: Input tokens={input_tokens}, Output tokens={output_tokens}")    def get_total_tokens(self):        return self.total_input_tokens, self.total_output_tokens # Example usage monitor = LLMInteractionMonitor() monitor.record_interaction("What is the capital of France?", "The capital of France is Paris.") monitor.record_interaction("Tell me a joke.", "Why don't scientists trust atoms? Because they make up everything!") input_t, output_t = monitor.get_total_tokens() print(f"Total input tokens: {input_t}, Total output tokens: {output_t}")` |
-| :---- |
+```python
+# This is conceptual as actual token counting depends on the LLM API
+class LLMInteractionMonitor:
+    def __init__(self):
+        self.total_input_tokens = 0
+        self.total_output_tokens = 0
+
+    def record_interaction(self, prompt: str, response: str):
+        # In a real scenario, use LLM API's token counter or a tokenizer
+        input_tokens = len(prompt.split())  # Placeholder
+        output_tokens = len(response.split())  # Placeholder
+        self.total_input_tokens += input_tokens
+        self.total_output_tokens += output_tokens
+        print(f"Recorded interaction: Input tokens={input_tokens}, Output tokens={output_tokens}")
+
+    def get_total_tokens(self):
+        return self.total_input_tokens, self.total_output_tokens
+
+# Example usage
+monitor = LLMInteractionMonitor()
+monitor.record_interaction("What is the capital of France?", "The capital of France is Paris.")
+monitor.record_interaction("Tell me a joke.", "Why don't scientists trust atoms? Because they make up everything!")
+input_t, output_t = monitor.get_total_tokens()
+print(f"Total input tokens: {input_t}, Total output tokens: {output_t}")
+```
 
 This section introduces a conceptual Python class, \`LLMInteractionMonitor\`, developed to track token usage in large language model interactions. The class incorporates counters for both input and output tokens. Its \`record\_interaction\` method simulates token counting by splitting the prompt and response strings. In a practical implementation, specific LLM API tokenizers would be employed for precise token counts. As interactions occur, the monitor accumulates the total input and output token counts. The \`get\_total\_tokens\` method provides access to these cumulative totals, essential for cost management and optimization of LLM usage.
 
 **Custom Metric for "Helpfulness" using LLM-as-a-Judge:** Evaluating subjective qualities like an AI agent's "helpfulness" presents challenges beyond standard objective metrics. A potential framework involves using an LLM as an evaluator. This LLM-as-a-Judge approach assesses another AI agent's output based on predefined criteria for "helpfulness." Leveraging the advanced linguistic capabilities of LLMs, this method offers nuanced, human-like evaluations of subjective qualities, surpassing simple keyword matching or rule-based assessments. Though in development, this technique shows promise for automating and scaling qualitative evaluations.
 
-| ``import google.generativeai as genai import os import json import logging from typing import Optional # --- Configuration --- logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') # Set your API key as an environment variable to run this script # For example, in your terminal: export GOOGLE_API_KEY='your_key_here' try:    genai.configure(api_key=os.environ["GOOGLE_API_KEY"]) except KeyError:    logging.error("Error: GOOGLE_API_KEY environment variable not set.")    exit(1) # --- LLM-as-a-Judge Rubric for Legal Survey Quality --- LEGAL_SURVEY_RUBRIC = """ You are an expert legal survey methodologist and a critical legal reviewer. Your task is to evaluate the quality of a given legal survey question. Provide a score from 1 to 5 for overall quality, along with a detailed rationale and specific feedback. Focus on the following criteria: 1.  **Clarity & Precision (Score 1-5):**    * 1: Extremely vague, highly ambiguous, or confusing.    * 3: Moderately clear, but could be more precise.    * 5: Perfectly clear, unambiguous, and precise in its legal terminology (if applicable) and intent. 2.  **Neutrality & Bias (Score 1-5):**    * 1: Highly leading or biased, clearly influencing the respondent towards a specific answer.    * 3: Slightly suggestive or could be interpreted as leading.    * 5: Completely neutral, objective, and free from any leading language or loaded terms. 3.  **Relevance & Focus (Score 1-5):**    * 1: Irrelevant to the stated survey topic or out of scope.    * 3: Loosely related but could be more focused.    * 5: Directly relevant to the survey's objectives and well-focused on a single concept. 4.  **Completeness (Score 1-5):**    * 1: Omits critical information needed to answer accurately or provides insufficient context.    * 3: Mostly complete, but minor details are missing.    * 5: Provides all necessary context and information for the respondent to answer thoroughly. 5.  **Appropriateness for Audience (Score 1-5):**    * 1: Uses jargon inaccessible to the target audience or is overly simplistic for experts.    * 3: Generally appropriate, but some terms might be challenging or oversimplified.    * 5: Perfectly tailored to the assumed legal knowledge and background of the target survey audience. **Output Format:** Your response MUST be a JSON object with the following keys: * `overall_score`: An integer from 1 to 5 (average of criterion scores, or your holistic judgment). * `rationale`: A concise summary of why this score was given, highlighting major strengths and weaknesses. * `detailed_feedback`: A bullet-point list detailing feedback for each criterion (Clarity, Neutrality, Relevance, Completeness, Audience Appropriateness). Suggest specific improvements. * `concerns`: A list of any specific legal, ethical, or methodological concerns. * `recommended_action`: A brief recommendation (e.g., "Revise for neutrality", "Approve as is", "Clarify scope"). """ class LLMJudgeForLegalSurvey:    """A class to evaluate legal survey questions using a generative AI model."""    def __init__(self, model_name: str = 'gemini-1.5-flash-latest', temperature: float = 0.2):        """        Initializes the LLM Judge.               Args:            model_name (str): The name of the Gemini model to use.                              'gemini-1.5-flash-latest' is recommended for speed and cost.                              'gemini-1.5-pro-latest' offers the highest quality.            temperature (float): The generation temperature. Lower is better for deterministic evaluation.        """        self.model = genai.GenerativeModel(model_name)        self.temperature = temperature    def _generate_prompt(self, survey_question: str) -> str:        """Constructs the full prompt for the LLM judge."""        return f"{LEGAL_SURVEY_RUBRIC}\n\n---\n**LEGAL SURVEY QUESTION TO EVALUATE:**\n{survey_question}\n---"    def judge_survey_question(self, survey_question: str) -> Optional[dict]:        """        Judges the quality of a single legal survey question using the LLM.        Args:            survey_question (str): The legal survey question to be evaluated.        Returns:            Optional[dict]: A dictionary containing the LLM's judgment, or None if an error occurs.        """        full_prompt = self._generate_prompt(survey_question)               try:            logging.info(f"Sending request to '{self.model.model_name}' for judgment...")            response = self.model.generate_content(                full_prompt,                generation_config=genai.types.GenerationConfig(                    temperature=self.temperature,                    response_mime_type="application/json"                )            )            # Check for content moderation or other reasons for an empty response.            if not response.parts:                safety_ratings = response.prompt_feedback.safety_ratings                logging.error(f"LLM response was empty or blocked. Safety Ratings: {safety_ratings}")                return None                       return json.loads(response.text)        except json.JSONDecodeError:            logging.error(f"Failed to decode LLM response as JSON. Raw response: {response.text}")            return None        except Exception as e:            logging.error(f"An unexpected error occurred during LLM judgment: {e}")            return None # --- Example Usage --- if __name__ == "__main__":    judge = LLMJudgeForLegalSurvey()    # --- Good Example ---    good_legal_survey_question = """    To what extent do you agree or disagree that current intellectual property laws in Switzerland adequately protect emerging AI-generated content, assuming the content meets the originality criteria established by the Federal Supreme Court?    (Select one: Strongly Disagree, Disagree, Neutral, Agree, Strongly Agree)    """    print("\n--- Evaluating Good Legal Survey Question ---")    judgment_good = judge.judge_survey_question(good_legal_survey_question)    if judgment_good:        print(json.dumps(judgment_good, indent=2))    # --- Biased/Poor Example ---    biased_legal_survey_question = """    Don't you agree that overly restrictive data privacy laws like the FADP are hindering essential technological innovation and economic growth in Switzerland?    (Select one: Yes, No)    """    print("\n--- Evaluating Biased Legal Survey Question ---")    judgment_biased = judge.judge_survey_question(biased_legal_survey_question)    if judgment_biased:        print(json.dumps(judgment_biased, indent=2))    # --- Ambiguous/Vague Example ---    vague_legal_survey_question = """    What are your thoughts on legal tech?    """    print("\n--- Evaluating Vague Legal Survey Question ---")    judgment_vague = judge.judge_survey_question(vague_legal_survey_question)    if judgment_vague:        print(json.dumps(judgment_vague, indent=2))`` |
-| :---- |
+```python
+import google.generativeai as genai
+import os
+import json
+import logging
+from typing import Optional
+
+# --- Configuration ---
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Set your API key as an environment variable to run this script
+# For example, in your terminal: export GOOGLE_API_KEY='your_key_here'
+try:
+    genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+except KeyError:
+    logging.error("Error: GOOGLE_API_KEY environment variable not set.")
+    exit(1)
+
+# --- LLM-as-a-Judge Rubric for Legal Survey Quality ---
+LEGAL_SURVEY_RUBRIC = """
+You are an expert legal survey methodologist and a critical legal reviewer.
+Your task is to evaluate the quality of a given legal survey question.
+Provide a score from 1 to 5 for overall quality, along with a detailed rationale and specific feedback.
+Focus on the following criteria:
+
+1.  **Clarity & Precision (Score 1-5):**
+    * 1: Extremely vague, highly ambiguous, or confusing.
+    * 3: Moderately clear, but could be more precise.
+    * 5: Perfectly clear, unambiguous, and precise in its legal terminology (if applicable) and intent.
+2.  **Neutrality & Bias (Score 1-5):**
+    * 1: Highly leading or biased, clearly influencing the respondent towards a specific answer.
+    * 3: Slightly suggestive or could be interpreted as leading.
+    * 5: Completely neutral, objective, and free from any leading language or loaded terms.
+3.  **Relevance & Focus (Score 1-5):**
+    * 1: Irrelevant to the stated survey topic or out of scope.
+    * 3: Loosely related but could be more focused.
+    * 5: Directly relevant to the survey's objectives and well-focused on a single concept.
+4.  **Completeness (Score 1-5):**
+    * 1: Omits critical information needed to answer accurately or provides insufficient context.
+    * 3: Mostly complete, but minor details are missing.
+    * 5: Provides all necessary context and information for the respondent to answer thoroughly.
+5.  **Appropriateness for Audience (Score 1-5):**
+    * 1: Uses jargon inaccessible to the target audience or is overly simplistic for experts.
+    * 3: Generally appropriate, but some terms might be challenging or oversimplified.
+    * 5: Perfectly tailored to the assumed legal knowledge and background of the target survey audience.
+
+**Output Format:**
+Your response MUST be a JSON object with the following keys:
+* `overall_score`: An integer from 1 to 5 (average of criterion scores, or your holistic judgment).
+* `rationale`: A concise summary of why this score was given, highlighting major strengths and weaknesses.
+* `detailed_feedback`: A bullet-point list detailing feedback for each criterion (Clarity, Neutrality, Relevance, Completeness, Audience Appropriateness). Suggest specific improvements.
+* `concerns`: A list of any specific legal, ethical, or methodological concerns.
+* `recommended_action`: A brief recommendation (e.g., "Revise for neutrality", "Approve as is", "Clarify scope").
+"""
+
+class LLMJudgeForLegalSurvey:
+    """A class to evaluate legal survey questions using a generative AI model."""
+    def __init__(self, model_name: str = 'gemini-1.5-flash-latest', temperature: float = 0.2):
+        """
+        Initializes the LLM Judge.
+
+        Args:
+            model_name (str): The name of the Gemini model to use.
+                              'gemini-1.5-flash-latest' is recommended for speed and cost.
+                              'gemini-1.5-pro-latest' offers the highest quality.
+            temperature (float): The generation temperature. Lower is better for deterministic evaluation.
+        """
+        self.model = genai.GenerativeModel(model_name)
+        self.temperature = temperature
+
+    def _generate_prompt(self, survey_question: str) -> str:
+        """Constructs the full prompt for the LLM judge."""
+        return f"{LEGAL_SURVEY_RUBRIC}\n\n---\n**LEGAL SURVEY QUESTION TO EVALUATE:**\n{survey_question}\n---"
+
+    def judge_survey_question(self, survey_question: str) -> Optional[dict]:
+        """
+        Judges the quality of a single legal survey question using the LLM.
+        Args:
+            survey_question (str): The legal survey question to be evaluated.
+        Returns:
+            Optional[dict]: A dictionary containing the LLM's judgment, or None if an error occurs.
+        """
+        full_prompt = self._generate_prompt(survey_question)
+
+        try:
+            logging.info(f"Sending request to '{self.model.model_name}' for judgment...")
+            response = self.model.generate_content(
+                full_prompt,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=self.temperature,
+                    response_mime_type="application/json"
+                )
+            )
+            # Check for content moderation or other reasons for an empty response.
+            if not response.parts:
+                safety_ratings = response.prompt_feedback.safety_ratings
+                logging.error(f"LLM response was empty or blocked. Safety Ratings: {safety_ratings}")
+                return None
+
+            return json.loads(response.text)
+        except json.JSONDecodeError:
+            logging.error(f"Failed to decode LLM response as JSON. Raw response: {response.text}")
+            return None
+        except Exception as e:
+            logging.error(f"An unexpected error occurred during LLM judgment: {e}")
+            return None
+
+# --- Example Usage ---
+if __name__ == "__main__":
+    judge = LLMJudgeForLegalSurvey()
+
+    # --- Good Example ---
+    good_legal_survey_question = """
+    To what extent do you agree or disagree that current intellectual property laws in Switzerland adequately protect emerging AI-generated content, assuming the content meets the originality criteria established by the Federal Supreme Court?
+    (Select one: Strongly Disagree, Disagree, Neutral, Agree, Strongly Agree)
+    """
+    print("\n--- Evaluating Good Legal Survey Question ---")
+    judgment_good = judge.judge_survey_question(good_legal_survey_question)
+    if judgment_good:
+        print(json.dumps(judgment_good, indent=2))
+
+    # --- Biased/Poor Example ---
+    biased_legal_survey_question = """
+    Don't you agree that overly restrictive data privacy laws like the FADP are hindering essential technological innovation and economic growth in Switzerland?
+    (Select one: Yes, No)
+    """
+    print("\n--- Evaluating Biased Legal Survey Question ---")
+    judgment_biased = judge.judge_survey_question(biased_legal_survey_question)
+    if judgment_biased:
+        print(json.dumps(judgment_biased, indent=2))
+
+    # --- Ambiguous/Vague Example ---
+    vague_legal_survey_question = """
+    What are your thoughts on legal tech?
+    """
+    print("\n--- Evaluating Vague Legal Survey Question ---")
+    judgment_vague = judge.judge_survey_question(vague_legal_survey_question)
+    if judgment_vague:
+        print(json.dumps(judgment_vague, indent=2))
+```
 
 The Python code defines a class LLMJudgeForLegalSurvey designed to evaluate the quality of legal survey questions using a generative AI model. It utilizes the google.generativeai library to interact with Gemini models. 
 

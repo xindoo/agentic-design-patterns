@@ -73,20 +73,167 @@ RAG 框架提供了几个重要的优势。它允许 LLM 访问最新信息，�
 
 首先，是如何使用 Google Search 进行 RAG 并将 LLM 建立在搜索结果上。由于 RAG 涉及访问外部信息，Google Search 工具是内置检索机制的直接示例，可以增强 LLM 的知识。
 
-| `from google.adk.tools import google_search from google.adk.agents import Agent search_agent = Agent(    name="research_assistant",    model="gemini-2.0-flash-exp",    instruction="You help users research topics. When asked, use the Google Search tool",    tools=[google_search] )` |
-| :---- |
+```python
+from google.adk.tools import google_search
+from google.adk.agents import Agent
+
+search_agent = Agent(
+    name="research_assistant",
+    model="gemini-2.0-flash-exp",
+    instruction="You help users research topics. When asked, use the Google Search tool",
+    tools=[google_search]
+)
+```
 
 其次，本节解释如何在 Google ADK 中利用 Vertex AI RAG 功能。提供的代码演示了从 ADK 初始化 VertexAiRagMemoryService。这允许建立到 Google Cloud Vertex AI RAG Corpus 的连接。该服务通过指定 corpus 资源名称和可选参数（如 SIMILARITY_TOP_K 和 VECTOR_DISTANCE_THRESHOLD）进行配置。这些参数影响检索过程。SIMILARITY_TOP_K 定义要检索的最相似结果的数量。VECTOR_DISTANCE_THRESHOLD 设置检索结果的语义距离限制。这种设置使 agent 能够从指定的 RAG Corpus 执行可扩展和持久的语义知识检索。该过程有效地将 Google Cloud 的 RAG 功能集成到 ADK agent 中，从而支持开发基于事实数据的响应。
 
-| `# 从 google.adk.memory 模块导入必要的 VertexAiRagMemoryService 类。 from google.adk.memory import VertexAiRagMemoryService RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id" # 为要检索的最相似结果的数量定义一个可选参数。 # 这控制 RAG 服务将返回多少相关文档块。 SIMILARITY_TOP_K = 5 # 为向量距离阈值定义一个可选参数。 # 此阈值确定检索结果允许的最大语义距离； # 距离大于此值的结果可能会被过滤掉。 VECTOR_DISTANCE_THRESHOLD = 0.7 # 初始化 VertexAiRagMemoryService 的实例。 # 这设置了与您的 Vertex AI RAG Corpus 的连接。 # - rag_corpus: 指定您的 RAG Corpus 的唯一标识符。 # - similarity_top_k: 设置要获取的相似结果的最大数量。 # - vector_distance_threshold: 定义用于过滤结果的相似度阈值。 memory_service = VertexAiRagMemoryService(    rag_corpus=RAG_CORPUS_RESOURCE_NAME,    similarity_top_k=SIMILARITY_TOP_K,    vector_distance_threshold=VECTOR_DISTANCE_THRESHOLD )` |
-| :---- |
+```python
+# 从 google.adk.memory 模块导入必要的 VertexAiRagMemoryService 类。
+from google.adk.memory import VertexAiRagMemoryService
+
+RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id"
+
+# 为要检索的最相似结果的数量定义一个可选参数。
+# 这控制 RAG 服务将返回多少相关文档块。
+SIMILARITY_TOP_K = 5
+
+# 为向量距离阈值定义一个可选参数。
+# 此阈值确定检索结果允许的最大语义距离；
+# 距离大于此值的结果可能会被过滤掉。
+VECTOR_DISTANCE_THRESHOLD = 0.7
+
+# 初始化 VertexAiRagMemoryService 的实例。
+# 这设置了与您的 Vertex AI RAG Corpus 的连接。
+# - rag_corpus: 指定您的 RAG Corpus 的唯一标识符。
+# - similarity_top_k: 设置要获取的相似结果的最大数量。
+# - vector_distance_threshold: 定义用于过滤结果的相似度阈值。
+memory_service = VertexAiRagMemoryService(
+    rag_corpus=RAG_CORPUS_RESOURCE_NAME,
+    similarity_top_k=SIMILARITY_TOP_K,
+    vector_distance_threshold=VECTOR_DISTANCE_THRESHOLD
+)
+```
 
 # 实践代码示例（LangChain）
 
 第三，让我们使用 LangChain 走一遍完整的示例。
 
-| `import os import requests from typing import List, Dict, Any, TypedDict from langchain_community.document_loaders import TextLoader from langchain_core.documents import Document from langchain_core.prompts import ChatPromptTemplate from langchain_core.output_parsers import StrOutputParser from langchain_community.embeddings import OpenAIEmbeddings from langchain_community.vectorstores import Weaviate from langchain_openai import ChatOpenAI from langchain.text_splitter import CharacterTextSplitter from langchain.schema.runnable import RunnablePassthrough from langgraph.graph import StateGraph, END import weaviate from weaviate.embedded import EmbeddedOptions import dotenv # 加载环境变量（例如，OPENAI_API_KEY） dotenv.load_dotenv() # 设置您的 OpenAI API 密钥（确保从 .env 加载或在此处设置） # os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY" # --- 1. 数据准备（预处理） --- # 加载数据 url = "https://github.com/langchain-ai/langchain/blob/master/docs/docs/how_to/state_of_the_union.txt" res = requests.get(url) with open("state_of_the_union.txt", "w") as f:    f.write(res.text) loader = TextLoader('./state_of_the_union.txt') documents = loader.load() # 分块文档 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50) chunks = text_splitter.split_documents(documents) # 嵌入并将块存储在 Weaviate 中 client = weaviate.Client(    embedded_options = EmbeddedOptions() ) vectorstore = Weaviate.from_documents(    client = client,    documents = chunks,    embedding = OpenAIEmbeddings(),    by_text = False ) # 定义检索器 retriever = vectorstore.as_retriever() # 初始化 LLM llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0) # --- 2. 为 LangGraph 定义状态 --- class RAGGraphState(TypedDict):    question: str    documents: List[Document]    generation: str # --- 3. 定义节点（函数） --- def retrieve_documents_node(state: RAGGraphState) -> RAGGraphState:    """基于用户的问题检索文档。"""    question = state["question"]    documents = retriever.invoke(question)    return {"documents": documents, "question": question, "generation": ""} def generate_response_node(state: RAGGraphState) -> RAGGraphState:    """基于检索的文档使用 LLM 生成响应。"""    question = state["question"]    documents = state["documents"]    # PDF 中的提示模板    template = """You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise. Question: {question} Context: {context} Answer: """    prompt = ChatPromptTemplate.from_template(template)    # 从文档格式化上下文    context = "\n\n".join([doc.page_content for doc in documents])    # 创建 RAG 链    rag_chain = prompt | llm | StrOutputParser()    # 调用链    generation = rag_chain.invoke({"context": context, "question": question})    return {"question": question, "documents": documents, "generation": generation} # --- 4. 构建 LangGraph 图 --- workflow = StateGraph(RAGGraphState) # 添加节点 workflow.add_node("retrieve", retrieve_documents_node) workflow.add_node("generate", generate_response_node) # 设置入口点 workflow.set_entry_point("retrieve") # 添加边（转换） workflow.add_edge("retrieve", "generate") workflow.add_edge("generate", END) # 编译图 app = workflow.compile() # --- 5. 运行 RAG 应用程序 --- if __name__ == "__main__":    print("\n--- Running RAG Query ---")    query = "What did the president say about Justice Breyer"    inputs = {"question": query}    for s in app.stream(inputs):        print(s)    print("\n--- Running another RAG Query ---")    query_2 = "What did the president say about the economy?"    inputs_2 = {"question": query_2}    for s in app.stream(inputs_2):        print(s)` |
-| :---- |
+```python
+import os
+import requests
+from typing import List, Dict, Any, TypedDict
+from langchain_community.document_loaders import TextLoader
+from langchain_core.documents import Document
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Weaviate
+from langchain_openai import ChatOpenAI
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.schema.runnable import RunnablePassthrough
+from langgraph.graph import StateGraph, END
+import weaviate
+from weaviate.embedded import EmbeddedOptions
+import dotenv
+
+# 加载环境变量（例如，OPENAI_API_KEY）
+dotenv.load_dotenv()
+
+# 设置您的 OpenAI API 密钥（确保从 .env 加载或在此处设置）
+# os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
+
+# --- 1. 数据准备（预处理） ---
+# 加载数据
+url = "https://github.com/langchain-ai/langchain/blob/master/docs/docs/how_to/state_of_the_union.txt"
+res = requests.get(url)
+with open("state_of_the_union.txt", "w") as f:
+    f.write(res.text)
+loader = TextLoader('./state_of_the_union.txt')
+documents = loader.load()
+
+# 分块文档
+text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+chunks = text_splitter.split_documents(documents)
+
+# 嵌入并将块存储在 Weaviate 中
+client = weaviate.Client(
+    embedded_options = EmbeddedOptions()
+)
+vectorstore = Weaviate.from_documents(
+    client = client,
+    documents = chunks,
+    embedding = OpenAIEmbeddings(),
+    by_text = False
+)
+
+# 定义检索器
+retriever = vectorstore.as_retriever()
+
+# 初始化 LLM
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+
+# --- 2. 为 LangGraph 定义状态 ---
+class RAGGraphState(TypedDict):
+    question: str
+    documents: List[Document]
+    generation: str
+
+# --- 3. 定义节点（函数） ---
+def retrieve_documents_node(state: RAGGraphState) -> RAGGraphState:
+    """基于用户的问题检索文档。"""
+    question = state["question"]
+    documents = retriever.invoke(question)
+    return {"documents": documents, "question": question, "generation": ""}
+
+def generate_response_node(state: RAGGraphState) -> RAGGraphState:
+    """基于检索的文档使用 LLM 生成响应。"""
+    question = state["question"]
+    documents = state["documents"]
+    # PDF 中的提示模板
+    template = """You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise. Question: {question} Context: {context} Answer: """
+    prompt = ChatPromptTemplate.from_template(template)
+
+    # 从文档格式化上下文
+    context = "\n\n".join([doc.page_content for doc in documents])
+
+    # 创建 RAG 链
+    rag_chain = prompt | llm | StrOutputParser()
+
+    # 调用链
+    generation = rag_chain.invoke({"context": context, "question": question})
+    return {"question": question, "documents": documents, "generation": generation}
+
+# --- 4. 构建 LangGraph 图 ---
+workflow = StateGraph(RAGGraphState)
+
+# 添加节点
+workflow.add_node("retrieve", retrieve_documents_node)
+workflow.add_node("generate", generate_response_node)
+
+# 设置入口点
+workflow.set_entry_point("retrieve")
+
+# 添加边（转换）
+workflow.add_edge("retrieve", "generate")
+workflow.add_edge("generate", END)
+
+# 编译图
+app = workflow.compile()
+
+# --- 5. 运行 RAG 应用程序 ---
+if __name__ == "__main__":
+    print("\n--- Running RAG Query ---")
+    query = "What did the president say about Justice Breyer"
+    inputs = {"question": query}
+    for s in app.stream(inputs):
+        print(s)
+
+    print("\n--- Running another RAG Query ---")
+    query_2 = "What did the president say about the economy?"
+    inputs_2 = {"question": query_2}
+    for s in app.stream(inputs_2):
+        print(s)
+```
 
 这段 Python 代码说明了使用 LangChain 和 LangGraph 实现的检索增强生成（RAG）管道。该过程从基于文本文档创建知识库开始，该文档被分割成块并转换为嵌入。然后将这些嵌入存储在 Weaviate 向量存储中，便于高效的信息检索。LangGraph 中的 StateGraph 用于管理两个关键函数之间的工作流：`retrieve_documents_node` 和 `generate_response_node`。`retrieve_documents_node` 函数查询向量存储，基于用户的输入识别相关文档块。随后，`generate_response_node` 函数利用检索的信息和预定义的提示模板，使用 OpenAI 大语言模型（LLM）生成响应。`app.stream` 方法允许通过 RAG 管道执行查询，展示系统生成上下文相关输出的能力。
 

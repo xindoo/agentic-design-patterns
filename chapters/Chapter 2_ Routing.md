@@ -68,92 +68,92 @@ from langchain_core.runnables import RunnablePassthrough, RunnableBranch
 # --- 配置 ---
 # 确保设置了您的 API 密钥环境变量（例如，GOOGLE_API_KEY）
 try:
-   llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
-   print(f"语言模型已初始化: {llm.model}")
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
+    print(f"语言模型已初始化: {llm.model}")
 except Exception as e:
-   print(f"初始化语言模型时出错: {e}")
-   llm = None
+    print(f"初始化语言模型时出错: {e}")
+    llm = None
 
 # --- 定义模拟子 Agent 处理程序（相当于 ADK 的 sub_agents）---
 def booking_handler(request: str) -> str:
-   """模拟预订 Agent 处理请求。"""
-   print("\n--- 委托给预订处理程序 ---")
-   return f"预订处理程序处理了请求：'{request}'。结果：模拟预订操作。"
+    """模拟预订 Agent 处理请求。"""
+    print("\n--- 委托给预订处理程序 ---")
+    return f"预订处理程序处理了请求：'{request}'。结果：模拟预订操作。"
 
 def info_handler(request: str) -> str:
-   """模拟信息 Agent 处理请求。"""
-   print("\n--- 委托给信息处理程序 ---")
-   return f"信息处理程序处理了请求：'{request}'。结果：模拟信息检索。"
+    """模拟信息 Agent 处理请求。"""
+    print("\n--- 委托给信息处理程序 ---")
+    return f"信息处理程序处理了请求：'{request}'。结果：模拟信息检索。"
 
 def unclear_handler(request: str) -> str:
-   """处理无法委托的请求。"""
-   print("\n--- 处理不清楚的请求 ---")
-   return f"协调器无法委托请求：'{request}'。请澄清。"
+    """处理无法委托的请求。"""
+    print("\n--- 处理不清楚的请求 ---")
+    return f"协调器无法委托请求：'{request}'。请澄清。"
 
 # --- 定义协调器路由链（相当于 ADK 协调器的指令）---
 # 此链决定应委托给哪个处理程序。
 coordinator_router_prompt = ChatPromptTemplate.from_messages([
-   ("system", """分析用户的请求并确定哪个专家处理程序应处理它。
-    - 如果请求与预订航班或酒店相关，
-       输出 'booker'。
-    - 对于所有其他一般信息问题，输出 'info'。
-    - 如果请求不清楚或不适合任一类别，
-       输出 'unclear'。
-    只输出一个词：'booker'、'info' 或 'unclear'。"""),
-   ("user", "{request}")
+    ("system", """分析用户的请求并确定哪个专家处理程序应处理它。
+     - 如果请求与预订航班或酒店相关，
+        输出 'booker'。
+     - 对于所有其他一般信息问题，输出 'info'。
+     - 如果请求不清楚或不适合任一类别，
+        输出 'unclear'。
+     只输出一个词：'booker'、'info' 或 'unclear'。"""),
+    ("user", "{request}")
 ])
 
 if llm:
-   coordinator_router_chain = coordinator_router_prompt | llm | StrOutputParser()
+    coordinator_router_chain = coordinator_router_prompt | llm | StrOutputParser()
 
 # --- 定义委托逻辑（相当于 ADK 的基于 sub_agents 的自动流）---
 # 使用 RunnableBranch 根据路由链的输出进行路由。
 # 为 RunnableBranch 定义分支
 branches = {
-   "booker": RunnablePassthrough.assign(output=lambda x: booking_handler(x['request']['request'])),
-   "info": RunnablePassthrough.assign(output=lambda x: info_handler(x['request']['request'])),
-   "unclear": RunnablePassthrough.assign(output=lambda x: unclear_handler(x['request']['request'])),
+    "booker": RunnablePassthrough.assign(output=lambda x: booking_handler(x['request']['request'])),
+    "info": RunnablePassthrough.assign(output=lambda x: info_handler(x['request']['request'])),
+    "unclear": RunnablePassthrough.assign(output=lambda x: unclear_handler(x['request']['request'])),
 }
 
 # 创建 RunnableBranch。它接受路由链的输出
 # 并将原始输入（'request'）路由到相应的处理程序。
 delegation_branch = RunnableBranch(
-   (lambda x: x['decision'].strip() == 'booker', branches["booker"]), # 添加了 .strip()
-   (lambda x: x['decision'].strip() == 'info', branches["info"]),     # 添加了 .strip()
-   branches["unclear"] # 'unclear' 或任何其他输出的默认分支
+    (lambda x: x['decision'].strip() == 'booker', branches["booker"]), # 添加了 .strip()
+    (lambda x: x['decision'].strip() == 'info', branches["info"]),     # 添加了 .strip()
+    branches["unclear"] # 'unclear' 或任何其他输出的默认分支
 )
 
 # 将路由链和委托分支组合成单个可运行对象
 # 路由链的输出（'decision'）与原始输入（'request'）一起传递
 # 到 delegation_branch。
 coordinator_agent = {
-   "decision": coordinator_router_chain,
-   "request": RunnablePassthrough()
+    "decision": coordinator_router_chain,
+    "request": RunnablePassthrough()
 } | delegation_branch | (lambda x: x['output']) # 提取最终输出
 
 # --- 示例用法 ---
 def main():
-   if not llm:
-       print("\n由于 LLM 初始化失败，跳过执行。")
-       return
-   
-   print("--- 运行预订请求 ---")
-   request_a = "给我预订去伦敦的航班。"
-   result_a = coordinator_agent.invoke({"request": request_a})
-   print(f"最终结果 A: {result_a}")
-   
-   print("\n--- 运行信息请求 ---")
-   request_b = "意大利的首都是什么？"
-   result_b = coordinator_agent.invoke({"request": request_b})
-   print(f"最终结果 B: {result_b}")
-   
-   print("\n--- 运行不清楚的请求 ---")
-   request_c = "告诉我关于量子物理学的事。"
-   result_c = coordinator_agent.invoke({"request": request_c})
-   print(f"最终结果 C: {result_c}")
+    if not llm:
+        print("\n由于 LLM 初始化失败，跳过执行。")
+        return
+    
+    print("--- 运行预订请求 ---")
+    request_a = "给我预订去伦敦的航班。"
+    result_a = coordinator_agent.invoke({"request": request_a})
+    print(f"最终结果 A: {result_a}")
+    
+    print("\n--- 运行信息请求 ---")
+    request_b = "意大利的首都是什么？"
+    result_b = coordinator_agent.invoke({"request": request_b})
+    print(f"最终结果 B: {result_b}")
+    
+    print("\n--- 运行不清楚的请求 ---")
+    request_c = "告诉我关于量子物理学的事。"
+    result_c = coordinator_agent.invoke({"request": request_c})
+    print(f"最终结果 C: {result_c}")
 
 if __name__ == "__main__":
-   main()
+    main()
 ```
 
 如上所述，这段 Python 代码使用 LangChain 库和 Google 的生成式 AI 模型（特别是 gemini-2.5-flash）构建了一个简单的类 Agent 系统。详细来说，它定义了三个模拟子 Agent 处理程序：booking_handler、info_handler 和 unclear_handler，每个都设计用于处理特定类型的请求。
@@ -184,30 +184,30 @@ from google.adk.events import Event
 # --- 定义工具函数 ---
 # 这些函数模拟专家 Agent 的操作。
 def booking_handler(request: str) -> str:
-   """
-   处理航班和酒店的预订请求。
-   参数：
-       request: 用户的预订请求。
-   返回：
-       确认预订已处理的消息。
-   """
-   print("-------------------------- 调用预订处理程序 ----------------------------")
-   return f"已模拟对 '{request}' 的预订操作。"
+    """
+    处理航班和酒店的预订请求。
+    参数：
+        request: 用户的预订请求。
+    返回：
+        确认预订已处理的消息。
+    """
+    print("-------------------------- 调用预订处理程序 ----------------------------")
+    return f"已模拟对 '{request}' 的预订操作。"
 
 def info_handler(request: str) -> str:
-   """
-   处理一般信息请求。
-   参数：
-       request: 用户的问题。
-   返回：
-       表示信息请求已处理的消息。
-   """
-   print("-------------------------- 调用信息处理程序 ----------------------------")
-   return f"对 '{request}' 的信息请求。结果：模拟信息检索。"
+    """
+    处理一般信息请求。
+    参数：
+        request: 用户的问题。
+    返回：
+        表示信息请求已处理的消息。
+    """
+    print("-------------------------- 调用信息处理程序 ----------------------------")
+    return f"对 '{request}' 的信息请求。结果：模拟信息检索。"
 
 def unclear_handler(request: str) -> str:
-   """处理无法委托的请求。"""
-   return f"协调器无法委托请求：'{request}'。请澄清。"
+    """处理无法委托的请求。"""
+    return f"协调器无法委托请求：'{request}'。请澄清。"
 
 # --- 从函数创建工具 ---
 booking_tool = FunctionTool(booking_handler)
@@ -215,96 +215,96 @@ info_tool = FunctionTool(info_handler)
 
 # 定义配备各自工具的专门子 Agent
 booking_agent = Agent(
-   name="Booker",
-   model="gemini-2.0-flash",
-   description="一个专门的 Agent，通过调用预订工具处理所有航班和酒店预订请求。",
-   tools=[booking_tool]
+    name="Booker",
+    model="gemini-2.0-flash",
+    description="一个专门的 Agent，通过调用预订工具处理所有航班和酒店预订请求。",
+    tools=[booking_tool]
 )
 
 info_agent = Agent(
-   name="Info",
-   model="gemini-2.0-flash",
-   description="一个专门的 Agent，通过调用信息工具提供一般信息并回答用户问题。",
-   tools=[info_tool]
+    name="Info",
+    model="gemini-2.0-flash",
+    description="一个专门的 Agent，通过调用信息工具提供一般信息并回答用户问题。",
+    tools=[info_tool]
 )
 
 # 定义具有明确委托指令的父 Agent
 coordinator = Agent(
-   name="Coordinator",
-   model="gemini-2.0-flash",
-   instruction=(
-       "你是主协调器。你唯一的任务是分析传入的用户请求"
-       "并将它们委托给适当的专家 Agent。不要尝试直接回答用户。\n"
-       "- 对于任何与预订航班或酒店相关的请求，委托给 'Booker' Agent。\n"
-       "- 对于所有其他一般信息问题，委托给 'Info' Agent。"
-   ),
-   description="一个将用户请求路由到正确专家 Agent 的协调器。",
-   # sub_agents 的存在默认启用 LLM 驱动的委托（自动流）。
-   sub_agents=[booking_agent, info_agent]
+    name="Coordinator",
+    model="gemini-2.0-flash",
+    instruction=(
+        "你是主协调器。你唯一的任务是分析传入的用户请求"
+        "并将它们委托给适当的专家 Agent。不要尝试直接回答用户。\n"
+        "- 对于任何与预订航班或酒店相关的请求，委托给 'Booker' Agent。\n"
+        "- 对于所有其他一般信息问题，委托给 'Info' Agent。"
+    ),
+    description="一个将用户请求路由到正确专家 Agent 的协调器。",
+    # sub_agents 的存在默认启用 LLM 驱动的委托（自动流）。
+    sub_agents=[booking_agent, info_agent]
 )
 
 # --- 执行逻辑 ---
 async def run_coordinator(runner: InMemoryRunner, request: str):
-   """使用给定请求运行协调器 Agent 并委托。"""
-   print(f"\n--- 使用请求运行协调器: '{request}' ---")
-   final_result = ""
-   try:
-       user_id = "user_123"
-       session_id = str(uuid.uuid4())
-       await runner.session_service.create_session(
-           app_name=runner.app_name, user_id=user_id, session_id=session_id
-       )
-       
-       for event in runner.run(
-           user_id=user_id,
-           session_id=session_id,
-           new_message=types.Content(
-               role='user',
-               parts=[types.Part(text=request)]
-           ),
-       ):
-           if event.is_final_response() and event.content:
-               # 尝试直接从 event.content 获取文本
-               # 以避免迭代部分
-               if hasattr(event.content, 'text') and event.content.text:
-                   final_result = event.content.text
-               elif event.content.parts:
-                   # 后备：迭代部分并提取文本（可能触发警告）
-                   text_parts = [part.text for part in event.content.parts if part.text]
-                   final_result = "".join(text_parts)
-               # 假设循环应在最终响应后中断
-               break
-       
-       print(f"协调器最终响应: {final_result}")
-       return final_result
-   except Exception as e:
-       print(f"处理您的请求时出错: {e}")
-       return f"处理您的请求时出错: {e}"
+    """使用给定请求运行协调器 Agent 并委托。"""
+    print(f"\n--- 使用请求运行协调器: '{request}' ---")
+    final_result = ""
+    try:
+        user_id = "user_123"
+        session_id = str(uuid.uuid4())
+        await runner.session_service.create_session(
+            app_name=runner.app_name, user_id=user_id, session_id=session_id
+        )
+        
+        for event in runner.run(
+            user_id=user_id,
+            session_id=session_id,
+            new_message=types.Content(
+                role='user',
+                parts=[types.Part(text=request)]
+            ),
+        ):
+            if event.is_final_response() and event.content:
+                # 尝试直接从 event.content 获取文本
+                # 以避免迭代部分
+                if hasattr(event.content, 'text') and event.content.text:
+                    final_result = event.content.text
+                elif event.content.parts:
+                    # 后备：迭代部分并提取文本（可能触发警告）
+                    text_parts = [part.text for part in event.content.parts if part.text]
+                    final_result = "".join(text_parts)
+                # 假设循环应在最终响应后中断
+                break
+        
+        print(f"协调器最终响应: {final_result}")
+        return final_result
+    except Exception as e:
+        print(f"处理您的请求时出错: {e}")
+        return f"处理您的请求时出错: {e}"
 
 async def main():
-   """运行 ADK 示例的主函数。"""
-   print("--- Google ADK 路由示例（ADK 自动流风格）---")
-   print("注意：这需要安装并认证 Google ADK。")
-   
-   runner = InMemoryRunner(coordinator)
-   
-   # 示例用法
-   result_a = await run_coordinator(runner, "给我在巴黎预订一家酒店。")
-   print(f"最终输出 A: {result_a}")
-   
-   result_b = await run_coordinator(runner, "世界上最高的山是什么？")
-   print(f"最终输出 B: {result_b}")
-   
-   result_c = await run_coordinator(runner, "告诉我一个随机事实。") # 应该去 Info
-   print(f"最终输出 C: {result_c}")
-   
-   result_d = await run_coordinator(runner, "查找下个月去东京的航班。") # 应该去 Booker
-   print(f"最终输出 D: {result_d}")
+    """运行 ADK 示例的主函数。"""
+    print("--- Google ADK 路由示例（ADK 自动流风格）---")
+    print("注意：这需要安装并认证 Google ADK。")
+    
+    runner = InMemoryRunner(coordinator)
+    
+    # 示例用法
+    result_a = await run_coordinator(runner, "给我在巴黎预订一家酒店。")
+    print(f"最终输出 A: {result_a}")
+    
+    result_b = await run_coordinator(runner, "世界上最高的山是什么？")
+    print(f"最终输出 B: {result_b}")
+    
+    result_c = await run_coordinator(runner, "告诉我一个随机事实。") # 应该去 Info
+    print(f"最终输出 C: {result_c}")
+    
+    result_d = await run_coordinator(runner, "查找下个月去东京的航班。") # 应该去 Booker
+    print(f"最终输出 D: {result_d}")
 
 if __name__ == "__main__":
-   import nest_asyncio
-   nest_asyncio.apply()
-   await main()
+    import nest_asyncio
+    nest_asyncio.apply()
+    await main()
 ```
 
 此脚本由一个主协调器 Agent 和两个专门的子 Agent 组成：Booker 和 Info。每个专门的 Agent 都配备了一个 FunctionTool，它包装了一个模拟操作的 Python 函数。booking_handler 函数模拟处理航班和酒店预订，而 info_handler 函数模拟检索一般信息。unclear_handler 作为协调器无法委托的请求的后备包含在内，尽管当前协调器逻辑在主 run_coordinator 函数中没有明确使用它进行委托失败。

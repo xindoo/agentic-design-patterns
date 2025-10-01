@@ -109,60 +109,60 @@ from langchain_core.runnables import Runnable, RunnableParallel, RunnablePassthr
 # --- 配置 ---
 # 确保设置了您的 API 密钥环境变量（例如，OPENAI_API_KEY）
 try:
-   llm: Optional[ChatOpenAI] = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    llm: Optional[ChatOpenAI] = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
 except Exception as e:
-   print(f"初始化语言模型时出错: {e}")
-   llm = None
+    print(f"初始化语言模型时出错: {e}")
+    llm = None
 
 # --- 定义独立链 ---
 # 这三个链代表可以并行执行的不同任务。
 summarize_chain: Runnable = (
-   ChatPromptTemplate.from_messages([
-       ("system", "简洁地总结以下主题："),
-       ("user", "{topic}")
-   ])
-   | llm
-   | StrOutputParser()
+    ChatPromptTemplate.from_messages([
+        ("system", "简洁地总结以下主题："),
+        ("user", "{topic}")
+    ])
+    | llm
+    | StrOutputParser()
 )
 
 questions_chain: Runnable = (
-   ChatPromptTemplate.from_messages([
-       ("system", "生成关于以下主题的三个有趣问题："),
-       ("user", "{topic}")
-   ])
-   | llm
-   | StrOutputParser()
+    ChatPromptTemplate.from_messages([
+        ("system", "生成关于以下主题的三个有趣问题："),
+        ("user", "{topic}")
+    ])
+    | llm
+    | StrOutputParser()
 )
 
 terms_chain: Runnable = (
-   ChatPromptTemplate.from_messages([
-       ("system", "从以下主题中识别 5-10 个关键术语，用逗号分隔："),
-       ("user", "{topic}")
-   ])
-   | llm
-   | StrOutputParser()
+    ChatPromptTemplate.from_messages([
+        ("system", "从以下主题中识别 5-10 个关键术语，用逗号分隔："),
+        ("user", "{topic}")
+    ])
+    | llm
+    | StrOutputParser()
 )
 
 # --- 构建并行 + 综合链 ---
 # 1. 定义要并行运行的任务块。这些的结果，
 #    以及原始主题，将被馈送到下一步。
 map_chain = RunnableParallel(
-   {
-       "summary": summarize_chain,
-       "questions": questions_chain,
-       "key_terms": terms_chain,
-       "topic": RunnablePassthrough(),  # 传递原始主题
-   }
+    {
+        "summary": summarize_chain,
+        "questions": questions_chain,
+        "key_terms": terms_chain,
+        "topic": RunnablePassthrough(),  # 传递原始主题
+    }
 )
 
 # 2. 定义将组合并行结果的最终综合提示词。
 synthesis_prompt = ChatPromptTemplate.from_messages([
-   ("system", """基于以下信息：
+    ("system", """基于以下信息：
     摘要：{summary}
     相关问题：{questions}
     关键术语：{key_terms}
     综合一个全面的答案。"""),
-   ("user", "原始主题：{topic}")
+    ("user", "原始主题：{topic}")
 ])
 
 # 3. 通过将并行结果直接管道化
@@ -171,30 +171,30 @@ full_parallel_chain = map_chain | synthesis_prompt | llm | StrOutputParser()
 
 # --- 运行链 ---
 async def run_parallel_example(topic: str) -> None:
-   """
-   异步调用具有特定主题的并行处理链
-   并打印综合结果。
-   参数：
-       topic: 要由 LangChain 链处理的输入主题。
-   """
-   if not llm:
-       print("LLM 未初始化。无法运行示例。")
-       return
-   
-   print(f"\n--- 运行主题的并行 LangChain 示例：'{topic}' ---")
-   try:
-       # `ainvoke` 的输入是单个 'topic' 字符串，
-       # 然后传递给 `map_chain` 中的每个可运行对象。
-       response = await full_parallel_chain.ainvoke(topic)
-       print("\n--- 最终响应 ---")
-       print(response)
-   except Exception as e:
-       print(f"\n链执行期间发生错误：{e}")
+    """
+    异步调用具有特定主题的并行处理链
+    并打印综合结果。
+    参数：
+        topic: 要由 LangChain 链处理的输入主题。
+    """
+    if not llm:
+        print("LLM 未初始化。无法运行示例。")
+        return
+    
+    print(f"\n--- 运行主题的并行 LangChain 示例：'{topic}' ---")
+    try:
+        # `ainvoke` 的输入是单个 'topic' 字符串，
+        # 然后传递给 `map_chain` 中的每个可运行对象。
+        response = await full_parallel_chain.ainvoke(topic)
+        print("\n--- 最终响应 ---")
+        print(response)
+    except Exception as e:
+        print(f"\n链执行期间发生错误：{e}")
 
 if __name__ == "__main__":
-   test_topic = "太空探索的历史"
-   # 在 Python 3.7+ 中，asyncio.run 是运行异步函数的标准方式。
-   asyncio.run(run_parallel_example(test_topic))
+    test_topic = "太空探索的历史"
+    # 在 Python 3.7+ 中，asyncio.run 是运行异步函数的标准方式。
+    asyncio.run(run_parallel_example(test_topic))
 ```
 
 提供的 Python 代码实现了一个 LangChain 应用程序，旨在通过利用并行执行来高效处理给定主题。请注意，asyncio 提供并发性，而不是并行性。它通过使用事件循环在单个线程上实现这一点，该事件循环在任务空闲时（例如，等待网络请求时）智能地在任务之间切换。这创造了多个任务同时进行的效果，但代码本身仍然只由一个线程执行，受 Python 的全局解释器锁（GIL）约束。
@@ -213,7 +213,7 @@ if __name__ == "__main__":
 from google.adk.agents import LlmAgent, ParallelAgent, SequentialAgent
 from google.adk.tools import google_search
 
-GEMINI_MODEL="gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.0-flash"
 
 # --- 1. 定义研究员子 Agent（并行运行）---
 # 研究员 1：可再生能源

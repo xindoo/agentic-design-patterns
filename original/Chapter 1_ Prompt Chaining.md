@@ -26,8 +26,20 @@ This decomposition allows for more granular control over the process. Each step 
 
 For example, the output from the trend identification step could be formatted as a JSON object:
 
-| `{  "trends": [    {      "trend_name": "AI-Powered Personalization",      "supporting_data": "73% of consumers prefer to do business with brands that use personal information to make their shopping experiences more relevant."    },    {      "trend_name": "Sustainable and Ethical Brands",      "supporting_data": "Sales of products with ESG-related claims grew 28% over the last five years, compared to 20% for products without."    }  ] }` |
-| :---- |
+```json
+{
+  "trends": [
+    {
+      "trend_name": "AI-Powered Personalization",
+      "supporting_data": "73% of consumers prefer to do business with brands that use personal information to make their shopping experiences more relevant."
+    },
+    {
+      "trend_name": "Sustainable and Ethical Brands",
+      "supporting_data": "Sales of products with ESG-related claims grew 28% over the last five years, compared to 20% for products without."
+    }
+  ]
+}
+```
 
 This structured format ensures that the data is machine-readable and can be precisely parsed and inserted into the next prompt without ambiguity. This practice minimizes errors that can arise from interpreting natural language and is a key component in building robust, multi-step LLM-based systems. 
 
@@ -116,13 +128,58 @@ The following code implements a two-step prompt chain that functions as a data p
 
 To replicate this procedure, the required libraries must first be installed. This can be accomplished using the following command: 
 
-| `pip install langchain langchain-community langchain-openai langgraph` |
-| :---- |
+```bash
+pip install langchain langchain-community langchain-openai langgraph
+```
 
 Note that langchain-openai can be substituted with the appropriate package for a different model provider. Subsequently, the execution environment must be configured with the necessary API credentials for the selected language model provider, such as OpenAI, Google Gemini, or Anthropic.
 
-| `import os from langchain_openai import ChatOpenAI from langchain_core.prompts import ChatPromptTemplate from langchain_core.output_parsers import StrOutputParser # For better security, load environment variables from a .env file # from dotenv import load_dotenv # load_dotenv() # Make sure your OPENAI_API_KEY is set in the .env file # Initialize the Language Model (using ChatOpenAI is recommended) llm = ChatOpenAI(temperature=0) # --- Prompt 1: Extract Information --- prompt_extract = ChatPromptTemplate.from_template(    "Extract the technical specifications from the following text:\n\n{text_input}" ) # --- Prompt 2: Transform to JSON --- prompt_transform = ChatPromptTemplate.from_template(    "Transform the following specifications into a JSON object with 'cpu', 'memory', and 'storage' as keys:\n\n{specifications}" ) # --- Build the Chain using LCEL --- # The StrOutputParser() converts the LLM's message output to a simple string. extraction_chain = prompt_extract | llm | StrOutputParser() # The full chain passes the output of the extraction chain into the 'specifications' # variable for the transformation prompt. full_chain = (    {"specifications": extraction_chain}    | prompt_transform    | llm    | StrOutputParser() ) # --- Run the Chain --- input_text = "The new laptop model features a 3.5 GHz octa-core processor, 16GB of RAM, and a 1TB NVMe SSD." # Execute the chain with the input text dictionary. final_result = full_chain.invoke({"text_input": input_text}) print("\n--- Final JSON Output ---") print(final_result)` |
-| :---- |
+```python
+import os
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+# For better security, load environment variables from a .env file
+# from dotenv import load_dotenv
+# load_dotenv()
+# Make sure your OPENAI_API_KEY is set in the .env file
+
+# Initialize the Language Model (using ChatOpenAI is recommended)
+llm = ChatOpenAI(temperature=0)
+
+# --- Prompt 1: Extract Information ---
+prompt_extract = ChatPromptTemplate.from_template(
+    "Extract the technical specifications from the following text:\n\n{text_input}"
+)
+
+# --- Prompt 2: Transform to JSON ---
+prompt_transform = ChatPromptTemplate.from_template(
+    "Transform the following specifications into a JSON object with 'cpu', 'memory', and 'storage' as keys:\n\n{specifications}"
+)
+
+# --- Build the Chain using LCEL ---
+# The StrOutputParser() converts the LLM's message output to a simple string.
+extraction_chain = prompt_extract | llm | StrOutputParser()
+
+# The full chain passes the output of the extraction chain into the 'specifications'
+# variable for the transformation prompt.
+full_chain = (
+    {"specifications": extraction_chain}
+    | prompt_transform
+    | llm
+    | StrOutputParser()
+)
+
+# --- Run the Chain ---
+input_text = "The new laptop model features a 3.5 GHz octa-core processor, 16GB of RAM, and a 1TB NVMe SSD."
+
+# Execute the chain with the input text dictionary.
+final_result = full_chain.invoke({"text_input": input_text})
+
+print("\n--- Final JSON Output ---")
+print(final_result)
+```
 
 This Python code demonstrates how to use the LangChain library to process text. It utilizes two separate prompts: one to extract technical specifications from an input string and another to format these specifications into a JSON object. The ChatOpenAI model is employed for language model interactions, and the StrOutputParser ensures the output is in a usable string format. The LangChain Expression Language (LCEL) is used to elegantly chain these prompts and the language model together. The first chain, extraction\_chain, extracts the specifications. The full\_chain then takes the output of the extraction and uses it as input for the transformation prompt. A sample input text describing a laptop is provided. The full\_chain is invoked with this text, processing it through both steps. The final result, a JSON string containing the extracted and formatted specifications, is then printed.
 

@@ -12,8 +12,11 @@ LangChain 是一个用于开发由大语言模型驱动的应用程序的框架�
 
 Python
 
-| `# 一个简单的 LCEL 链概念示例 # （这不是可运行的代码，只是说明流程） chain = prompt | model | output_parse` |
-| :---- |
+```python
+# 一个简单的 LCEL 链概念示例
+# （这不是可运行的代码，只是说明流程）
+chain = prompt | model | output_parse
+```
 
 ### LangGraph 
 
@@ -39,8 +42,66 @@ LangGraph 是建立在 LangChain 之上的库，用于处理更高级的 agentic
 
 Python
 
-| `# 图状态 class State(TypedDict):    topic: str    joke: str    story: str    poem: str    combined_output: str # 节点 def call_llm_1(state: State):    """第一次 LLM 调用以生成初始笑话"""    msg = llm.invoke(f"Write a joke about {state['topic']}")    return {"joke": msg.content} def call_llm_2(state: State):    """第二次 LLM 调用以生成故事"""    msg = llm.invoke(f"Write a story about {state['topic']}")    return {"story": msg.content} def call_llm_3(state: State):    """第三次 LLM 调用以生成诗歌"""    msg = llm.invoke(f"Write a poem about {state['topic']}")    return {"poem": msg.content} def aggregator(state: State):    """将笑话和故事组合成单个输出"""    combined = f"Here's a story, joke, and poem about {state['topic']}!\n\n"    combined += f"STORY:\n{state['story']}\n\n"    combined += f"JOKE:\n{state['joke']}\n\n"    combined += f"POEM:\n{state['poem']}"    return {"combined_output": combined} # 构建工作流 parallel_builder = StateGraph(State) # 添加节点 parallel_builder.add_node("call_llm_1", call_llm_1) parallel_builder.add_node("call_llm_2", call_llm_2) parallel_builder.add_node("call_llm_3", call_llm_3) parallel_builder.add_node("aggregator", aggregator) # 添加边来连接节点 parallel_builder.add_edge(START, "call_llm_1") parallel_builder.add_edge(START, "call_llm_2") parallel_builder.add_edge(START, "call_llm_3") parallel_builder.add_edge("call_llm_1", "aggregator") parallel_builder.add_edge("call_llm_2", "aggregator") parallel_builder.add_edge("call_llm_3", "aggregator") parallel_builder.add_edge("aggregator", END) parallel_workflow = parallel_builder.compile() # 显示工作流 display(Image(parallel_workflow.get_graph().draw_mermaid_png())) # 调用 state = parallel_workflow.invoke({"topic": "cats"}) print(state["combined_output"])` |
-| :---- |
+```python
+# 图状态
+class State(TypedDict):
+    topic: str
+    joke: str
+    story: str
+    poem: str
+    combined_output: str
+
+# 节点
+def call_llm_1(state: State):
+    """第一次 LLM 调用以生成初始笑话"""
+    msg = llm.invoke(f"Write a joke about {state['topic']}")
+    return {"joke": msg.content}
+
+def call_llm_2(state: State):
+    """第二次 LLM 调用以生成故事"""
+    msg = llm.invoke(f"Write a story about {state['topic']}")
+    return {"story": msg.content}
+
+def call_llm_3(state: State):
+    """第三次 LLM 调用以生成诗歌"""
+    msg = llm.invoke(f"Write a poem about {state['topic']}")
+    return {"poem": msg.content}
+
+def aggregator(state: State):
+    """将笑话和故事组合成单个输出"""
+    combined = f"Here's a story, joke, and poem about {state['topic']}!\n\n"
+    combined += f"STORY:\n{state['story']}\n\n"
+    combined += f"JOKE:\n{state['joke']}\n\n"
+    combined += f"POEM:\n{state['poem']}"
+    return {"combined_output": combined}
+
+# 构建工作流
+parallel_builder = StateGraph(State)
+
+# 添加节点
+parallel_builder.add_node("call_llm_1", call_llm_1)
+parallel_builder.add_node("call_llm_2", call_llm_2)
+parallel_builder.add_node("call_llm_3", call_llm_3)
+parallel_builder.add_node("aggregator", aggregator)
+
+# 添加边来连接节点
+parallel_builder.add_edge(START, "call_llm_1")
+parallel_builder.add_edge(START, "call_llm_2")
+parallel_builder.add_edge(START, "call_llm_3")
+parallel_builder.add_edge("call_llm_1", "aggregator")
+parallel_builder.add_edge("call_llm_2", "aggregator")
+parallel_builder.add_edge("call_llm_3", "aggregator")
+parallel_builder.add_edge("aggregator", END)
+
+parallel_workflow = parallel_builder.compile()
+
+# 显示工作流
+display(Image(parallel_workflow.get_graph().draw_mermaid_png()))
+
+# 调用
+state = parallel_workflow.invoke({"topic": "cats"})
+print(state["combined_output"])
+```
 
 这段代码定义并运行了一个并行操作的 LangGraph 工作流。其主要目的是同时生成关于给定主题的笑话、故事和诗歌，然后将它们组合成单个格式化的文本输出。
 
@@ -54,8 +115,18 @@ Google 的 ADK 抽象掉了大部分这种低级图构建。ADK 不要求开发�
 
 Python
 
-| `from google.adk.agents import LlmAgent from google.adk.tools import google_Search dice_agent = LlmAgent(    model="gemini-2.0-flash-exp",     name="question_answer_agent",    description="A helpful assistant agent that can answer questions.",    instruction="""Respond to the query using google search""",    tools=[google_search], )` |
-| :---- |
+```python
+from google.adk.agents import LlmAgent
+from google.adk.tools import google_Search
+
+dice_agent = LlmAgent(
+    model="gemini-2.0-flash-exp",
+    name="question_answer_agent",
+    description="A helpful assistant agent that can answer questions.",
+    instruction="""Respond to the query using google search""",
+    tools=[google_search],
+)
+```
 
 这段代码创建了一个搜索增强的 Agent。当这个 Agent 收到问题时，它不会仅仅依赖其现有知识。相反，按照其指令，它将使用 Google 搜索工具从网络查找相关的实时信息，然后使用该信息构建答案。
 
@@ -69,8 +140,17 @@ CrewAI 提供了一个编排框架，通过专注于协作角色和结构化流�
 
 Python
 
-| `@crew def crew(self) -> Crew:    """创建研究团队"""    return Crew(      agents=self.agents,      tasks=self.tasks,      process=Process.sequential,      verbose=True,    )` |
-| :---- |
+```python
+@crew
+def crew(self) -> Crew:
+    """创建研究团队"""
+    return Crew(
+        agents=self.agents,
+        tasks=self.tasks,
+        process=Process.sequential,
+        verbose=True,
+    )
+```
 
 这段代码为一组 AI Agent 设置了一个顺序工作流，它们按特定顺序处理任务列表，并启用详细日志记录以监控其进度。
 

@@ -31,13 +31,192 @@ It employs a "goal-setting and monitoring" pattern where it doesn't just generat
 
  **Dependencies**: 
 
-| `pip install langchain_openai openai python-dotenv .env file with key in OPENAI_API_KEY` |
-| :---- |
+```
+pip install langchain_openai openai python-dotenv .env file with key in OPENAI_API_KEY
+```
 
 You can best understand this script by imagining it as an autonomous AI programmer assigned to a project (see Fig. 1). The process begins when you hand the AI a detailed project brief, which is the specific coding problem it needs to solve.
 
-| \# MIT License \# Copyright (c) 2025 Mahtab Syed \# https://www.linkedin.com/in/mahtabsyed/ """ Hands-On Code Example \- Iteration 2 \- To illustrate the Goal Setting and Monitoring pattern, we have an example using LangChain and OpenAI APIs: Objective: Build an AI Agent which can write code for a specified use case based on specified goals: \- Accepts a coding problem (use case) in code or can be as input. \- Accepts a list of goals (e.g., "simple", "tested", "handles edge cases")  in code or can be input. \- Uses an LLM (like GPT-4o) to generate and refine Python code until the goals are met. (I am using max 5 iterations, this could be based on a set goal as well) \- To check if we have met our goals I am asking the LLM to judge this and answer just True or False which makes it easier to stop the iterations. \- Saves the final code in a .py file with a clean filename and a header comment. """ import os import random import re from pathlib import Path from langchain\_openai import ChatOpenAI from dotenv import load\_dotenv, find\_dotenv \# 🔐 Load environment variables \_ \= load\_dotenv(find\_dotenv()) OPENAI\_API\_KEY \= os.getenv("OPENAI\_API\_KEY") if not OPENAI\_API\_KEY:    raise EnvironmentError("❌ Please set the OPENAI\_API\_KEY environment variable.") \# ✅ Initialize OpenAI model print("📡 Initializing OpenAI LLM (gpt-4o)...") llm \= ChatOpenAI(    model="gpt-4o", \# If you dont have access to got-4o use other OpenAI LLMs    temperature=0.3,    openai\_api\_key=OPENAI\_API\_KEY, ) \# \--- Utility Functions \--- def generate\_prompt(    use\_case: str, goals: list\[str\], previous\_code: str \= "", feedback: str \= "" ) \-\> str:    print("📝 Constructing prompt for code generation...")    base\_prompt \= f""" You are an AI coding agent. Your job is to write Python code based on the following use case: Use Case: {use\_case} Your goals are: {chr(10).join(f"- {g.strip()}" for g in goals)} """    if previous\_code:        print("🔄 Adding previous code to the prompt for refinement.")        base\_prompt \+= f"\\nPreviously generated code:\\n{previous\_code}"    if feedback:        print("📋 Including feedback for revision.")        base\_prompt \+= f"\\nFeedback on previous version:\\n{feedback}\\n"    base\_prompt \+= "\\nPlease return only the revised Python code. Do not include comments or explanations outside the code."    return base\_prompt def get\_code\_feedback(code: str, goals: list\[str\]) \-\> str:    print("🔍 Evaluating code against the goals...")    feedback\_prompt \= f""" You are a Python code reviewer. A code snippet is shown below. Based on the following goals: {chr(10).join(f"- {g.strip()}" for g in goals)} Please critique this code and identify if the goals are met. Mention if improvements are needed for clarity, simplicity, correctness, edge case handling, or test coverage. Code: {code} """    return llm.invoke(feedback\_prompt) def goals\_met(feedback\_text: str, goals: list\[str\]) \-\> bool:    """    Uses the LLM to evaluate whether the goals have been met based on the feedback text.    Returns True or False (parsed from LLM output).    """    review\_prompt \= f""" You are an AI reviewer. Here are the goals: {chr(10).join(f"- {g.strip()}" for g in goals)} Here is the feedback on the code: \\"\\"\\" {feedback\_text} \\"\\"\\" Based on the feedback above, have the goals been met? Respond with only one word: True or False. """    response \= llm.invoke(review\_prompt).content.strip().lower()    return response \== "true" def clean\_code\_block(code: str) \-\> str:    lines \= code.strip().splitlines()    if lines and lines\[0\].strip().startswith("\`\`\`"):        lines \= lines\[1:\]    if lines and lines\[-1\].strip() \== "\`\`\`":        lines \= lines\[:-1\]    return "\\n".join(lines).strip() def add\_comment\_header(code: str, use\_case: str) \-\> str:    comment \= f"\# This Python program implements the following use case:\\n\# {use\_case.strip()}\\n"    return comment \+ "\\n" \+ code def to\_snake\_case(text: str) \-\> str:    text \= re.sub(r"\[^a-zA-Z0-9 \]", "", text)    return re.sub(r"\\s+", "\_", text.strip().lower()) def save\_code\_to\_file(code: str, use\_case: str) \-\> str:    print("💾 Saving final code to file...")    summary\_prompt \= (        f"Summarize the following use case into a single lowercase word or phrase, "        f"no more than 10 characters, suitable for a Python filename:\\n\\n{use\_case}"    )    raw\_summary \= llm.invoke(summary\_prompt).content.strip()    short\_name \= re.sub(r"\[^a-zA-Z0-9\_\]", "", raw\_summary.replace(" ", "\_").lower())\[:10\]    random\_suffix \= str(random.randint(1000, 9999))    filename \= f"{short\_name}\_{random\_suffix}.py"    filepath \= Path.cwd() / filename    with open(filepath, "w") as f:        f.write(code)    print(f"✅ Code saved to: {filepath}")    return str(filepath) \# \--- Main Agent Function \--- def run\_code\_agent(use\_case: str, goals\_input: str, max\_iterations: int \= 5\) \-\> str:    goals \= \[g.strip() for g in goals\_input.split(",")\]    print(f"\\n🎯 Use Case: {use\_case}")    print("🎯 Goals:")    for g in goals:        print(f"  \- {g}")    previous\_code \= ""    feedback \= ""    for i in range(max\_iterations):        print(f"\\n=== 🔁 Iteration {i \+ 1} of {max\_iterations} \===")        prompt \= generate\_prompt(use\_case, goals, previous\_code, feedback if isinstance(feedback, str) else feedback.content)        print("🚧 Generating code...")        code\_response \= llm.invoke(prompt)        raw\_code \= code\_response.content.strip()        code \= clean\_code\_block(raw\_code)        print("\\n🧾 Generated Code:\\n" \+ "-" \* 50 \+ f"\\n{code}\\n" \+ "-" \* 50\)        print("\\n📤 Submitting code for feedback review...")        feedback \= get\_code\_feedback(code, goals)        feedback\_text \= feedback.content.strip()        print("\\n📥 Feedback Received:\\n" \+ "-" \* 50 \+ f"\\n{feedback\_text}\\n" \+ "-" \* 50\)        if goals\_met(feedback\_text, goals):            print("✅ LLM confirms goals are met. Stopping iteration.")            break        print("🛠️ Goals not fully met. Preparing for next iteration...")        previous\_code \= code    final\_code \= add\_comment\_header(code, use\_case)    return save\_code\_to\_file(final\_code, use\_case) \# \--- CLI Test Run \--- if \_\_name\_\_ \== "\_\_main\_\_":    print("\\n🧠 Welcome to the AI Code Generation Agent")    \# Example 1    use\_case\_input \= "Write code to find BinaryGap of a given positive integer"    goals\_input \= "Code simple to understand, Functionally correct, Handles comprehensive edge cases, Takes positive integer input only, prints the results with few examples"    run\_code\_agent(use\_case\_input, goals\_input)    \# Example 2    \# use\_case\_input \= "Write code to count the number of files in current directory and all its nested sub directories, and print the total count"    \# goals\_input \= (    \#     "Code simple to understand, Functionally correct, Handles comprehensive edge cases, Ignore recommendations for performance, Ignore recommendations for test suite use like unittest or pytest"    \# )    \# run\_code\_agent(use\_case\_input, goals\_input)    \# Example 3    \# use\_case\_input \= "Write code which takes a command line input of a word doc or docx file and opens it and counts the number of words, and characters in it and prints all"    \# goals\_input \= "Code simple to understand, Functionally correct, Handles edge cases"    \# run\_code\_agent(use\_case\_input, goals\_input) |
-| :---- |
+```python
+# MIT License
+# Copyright (c) 2025 Mahtab Syed
+# https://www.linkedin.com/in/mahtabsyed/
+
+"""
+Hands-On Code Example - Iteration 2
+- To illustrate the Goal Setting and Monitoring pattern, we have an example using LangChain and OpenAI APIs:
+
+Objective: Build an AI Agent which can write code for a specified use case based on specified goals:
+- Accepts a coding problem (use case) in code or can be as input.
+- Accepts a list of goals (e.g., "simple", "tested", "handles edge cases") in code or can be input.
+- Uses an LLM (like GPT-4o) to generate and refine Python code until the goals are met. (I am using max 5 iterations, this could be based on a set goal as well)
+- To check if we have met our goals I am asking the LLM to judge this and answer just True or False which makes it easier to stop the iterations.
+- Saves the final code in a .py file with a clean filename and a header comment.
+"""
+
+import os
+import random
+import re
+from pathlib import Path
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv, find_dotenv
+
+# 🔐 Load environment variables
+_ = load_dotenv(find_dotenv())
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise EnvironmentError("❌ Please set the OPENAI_API_KEY environment variable.")
+
+# ✅ Initialize OpenAI model
+print("📡 Initializing OpenAI LLM (gpt-4o)...")
+llm = ChatOpenAI(
+    model="gpt-4o",  # If you dont have access to gpt-4o use other OpenAI LLMs
+    temperature=0.3,
+    openai_api_key=OPENAI_API_KEY,
+)
+
+# --- Utility Functions ---
+def generate_prompt(
+    use_case: str, goals: list[str], previous_code: str = "", feedback: str = ""
+) -> str:
+    print("📝 Constructing prompt for code generation...")
+    base_prompt = f"""
+You are an AI coding agent. Your job is to write Python code based on the following use case:
+Use Case: {use_case}
+Your goals are:
+{chr(10).join(f"- {g.strip()}" for g in goals)}
+"""
+    if previous_code:
+        print("🔄 Adding previous code to the prompt for refinement.")
+        base_prompt += f"\nPreviously generated code:\n{previous_code}"
+    if feedback:
+        print("📋 Including feedback for revision.")
+        base_prompt += f"\nFeedback on previous version:\n{feedback}\n"
+    base_prompt += "\nPlease return only the revised Python code. Do not include comments or explanations outside the code."
+    return base_prompt
+
+
+def get_code_feedback(code: str, goals: list[str]) -> str:
+    print("🔍 Evaluating code against the goals...")
+    feedback_prompt = f"""
+You are a Python code reviewer. A code snippet is shown below. Based on the following goals:
+{chr(10).join(f"- {g.strip()}" for g in goals)}
+Please critique this code and identify if the goals are met. Mention if improvements are needed for clarity, simplicity, correctness, edge case handling, or test coverage.
+Code:
+{code}
+"""
+    return llm.invoke(feedback_prompt)
+
+
+def goals_met(feedback_text: str, goals: list[str]) -> bool:
+    """
+    Uses the LLM to evaluate whether the goals have been met based on the feedback text.
+    Returns True or False (parsed from LLM output).
+    """
+    review_prompt = f"""
+You are an AI reviewer. Here are the goals:
+{chr(10).join(f"- {g.strip()}" for g in goals)}
+Here is the feedback on the code:
+\"\"\"
+{feedback_text}
+\"\"\"
+Based on the feedback above, have the goals been met? Respond with only one word: True or False.
+"""
+    response = llm.invoke(review_prompt).content.strip().lower()
+    return response == "true"
+
+
+def clean_code_block(code: str) -> str:
+    lines = code.strip().splitlines()
+    if lines and lines[0].strip().startswith("```"):
+        lines = lines[1:]
+    if lines and lines[-1].strip() == "```":
+        lines = lines[:-1]
+    return "\n".join(lines).strip()
+
+
+def add_comment_header(code: str, use_case: str) -> str:
+    comment = f"# This Python program implements the following use case:\n# {use_case.strip()}\n"
+    return comment + "\n" + code
+
+
+def to_snake_case(text: str) -> str:
+    text = re.sub(r"[^a-zA-Z0-9 ]", "", text)
+    return re.sub(r"\s+", "_", text.strip().lower())
+
+
+def save_code_to_file(code: str, use_case: str) -> str:
+    print("💾 Saving final code to file...")
+    summary_prompt = (
+        f"Summarize the following use case into a single lowercase word or phrase, "
+        f"no more than 10 characters, suitable for a Python filename:\n\n{use_case}"
+    )
+    raw_summary = llm.invoke(summary_prompt).content.strip()
+    short_name = re.sub(r"[^a-zA-Z0-9_]", "", raw_summary.replace(" ", "_").lower())[:10]
+    random_suffix = str(random.randint(1000, 9999))
+    filename = f"{short_name}_{random_suffix}.py"
+    filepath = Path.cwd() / filename
+    with open(filepath, "w") as f:
+        f.write(code)
+    print(f"✅ Code saved to: {filepath}")
+    return str(filepath)
+
+
+# --- Main Agent Function ---
+def run_code_agent(use_case: str, goals_input: str, max_iterations: int = 5) -> str:
+    goals = [g.strip() for g in goals_input.split(",")]
+    print(f"\n🎯 Use Case: {use_case}")
+    print("🎯 Goals:")
+    for g in goals:
+        print(f"  - {g}")
+
+    previous_code = ""
+    feedback = ""
+    for i in range(max_iterations):
+        print(f"\n=== 🔁 Iteration {i + 1} of {max_iterations} ===")
+        prompt = generate_prompt(
+            use_case, goals, previous_code, feedback if isinstance(feedback, str) else feedback.content
+        )
+        print("🚧 Generating code...")
+        code_response = llm.invoke(prompt)
+        raw_code = code_response.content.strip()
+        code = clean_code_block(raw_code)
+        print("\n🧾 Generated Code:\n" + "-" * 50 + f"\n{code}\n" + "-" * 50)
+        print("\n📤 Submitting code for feedback review...")
+        feedback = get_code_feedback(code, goals)
+        feedback_text = feedback.content.strip()
+        print("\n📥 Feedback Received:\n" + "-" * 50 + f"\n{feedback_text}\n" + "-" * 50)
+        if goals_met(feedback_text, goals):
+            print("✅ LLM confirms goals are met. Stopping iteration.")
+            break
+        print("🛠️ Goals not fully met. Preparing for next iteration...")
+        previous_code = code
+
+    final_code = add_comment_header(code, use_case)
+    return save_code_to_file(final_code, use_case)
+
+
+# --- CLI Test Run ---
+if __name__ == "__main__":
+    print("\n🧠 Welcome to the AI Code Generation Agent")
+    # Example 1
+    use_case_input = "Write code to find BinaryGap of a given positive integer"
+    goals_input = "Code simple to understand, Functionally correct, Handles comprehensive edge cases, Takes positive integer input only, prints the results with few examples"
+    run_code_agent(use_case_input, goals_input)
+
+    # Example 2
+    # use_case_input = "Write code to count the number of files in current directory and all its nested sub directories, and print the total count"
+    # goals_input = (
+    #     "Code simple to understand, Functionally correct, Handles comprehensive edge cases, "
+    #     "Ignore recommendations for performance, Ignore recommendations for test suite use like unittest or pytest"
+    # )
+    # run_code_agent(use_case_input, goals_input)
+
+    # Example 3
+    # use_case_input = "Write code which takes a command line input of a word doc or docx file and opens it and counts the number of words, and characters in it and prints all"
+    # goals_input = "Code simple to understand, Functionally correct, Handles edge cases"
+    # run_code_agent(use_case_input, goals_input)
+```
 
 Along with this brief, you provide a strict quality checklist, which represents the objectives the final code must meet—criteria like "the solution must be simple," "it must be functionally correct," or "it needs to handle unexpected edge cases."
 
@@ -53,8 +232,14 @@ If the verdict is "False," the AI doesn't give up. It enters a thoughtful revisi
 
 Ultimately, LLMs do not produce flawless code by magic; you still need to run and test the produced code. Furthermore, the "monitoring" in the simple example is basic and creates a potential risk of the process running forever. 
 
-| `Act as an expert code reviewer with a deep commitment to producing clean, correct, and simple code. Your core mission is to eliminate code "hallucinations" by ensuring every suggestion is grounded in reality and best practices. When I provide you with a code snippet, I want you to: -- Identify and Correct Errors: Point out any logical flaws, bugs, or potential runtime errors. -- Simplify and Refactor: Suggest changes that make the code more readable, efficient, and maintainable without sacrificing correctness. -- Provide Clear Explanations: For every suggested change, explain why it is an improvement, referencing principles of clean code, performance, or security. -- Offer Corrected Code: Show the "before" and "after" of your suggested changes so the improvement is clear. Your feedback should be direct, constructive, and always aimed at improving the quality of the code.` |
-| :---- |
+```
+Act as an expert code reviewer with a deep commitment to producing clean, correct, and simple code. Your core mission is to eliminate code "hallucinations" by ensuring every suggestion is grounded in reality and best practices. When I provide you with a code snippet, I want you to:
+-- Identify and Correct Errors: Point out any logical flaws, bugs, or potential runtime errors.
+-- Simplify and Refactor: Suggest changes that make the code more readable, efficient, and maintainable without sacrificing correctness.
+-- Provide Clear Explanations: For every suggested change, explain why it is an improvement, referencing principles of clean code, performance, or security.
+-- Offer Corrected Code: Show the "before" and "after" of your suggested changes so the improvement is clear.
+Your feedback should be direct, constructive, and always aimed at improving the quality of the code.
+```
 
 A more robust approach involves separating these concerns by giving specific roles to a crew of agents. For instance, I have built a personal crew of AI agents using Gemini where each has a specific role:
 

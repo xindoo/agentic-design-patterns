@@ -27,15 +27,58 @@ Google 的 ADK 通过其多 Agent 架构支持这种方法，允许模块化和�
 
 接下来，将定义两个具有相同设置但使用不同模型和成本的 Agent。
 
-| `# 概念性的类 Python 结构，非可运行代码 from google.adk.agents import Agent # from google.adk.models.lite_llm import LiteLlm # 如果使用 ADK 默认 Agent 不直接支持的模型 # 使用更昂贵的 Gemini Pro 2.5 的 Agent gemini_pro_agent = Agent(    name="GeminiProAgent",    model="gemini-2.5-pro", # 如果实际模型名称不同，这是占位符    description="A highly capable agent for complex queries.",    instruction="You are an expert assistant for complex problem-solving." ) # 使用更便宜的 Gemini Flash 2.5 的 Agent gemini_flash_agent = Agent(    name="GeminiFlashAgent",    model="gemini-2.5-flash", # 如果实际模型名称不同，这是占位符    description="A fast and efficient agent for simple queries.",    instruction="You are a quick assistant for straightforward questions." )` |
-| :---- |
+```python
+# 概念性的类 Python 结构，非可运行代码
+from google.adk.agents import Agent
+# from google.adk.models.lite_llm import LiteLlm # 如果使用 ADK 默认 Agent 不直接支持的模型
+
+# 使用更昂贵的 Gemini Pro 2.5 的 Agent
+gemini_pro_agent = Agent(
+    name="GeminiProAgent",
+    model="gemini-2.5-pro", # 如果实际模型名称不同，这是占位符
+    description="A highly capable agent for complex queries.",
+    instruction="You are an expert assistant for complex problem-solving."
+)
+
+# 使用更便宜的 Gemini Flash 2.5 的 Agent
+gemini_flash_agent = Agent(
+    name="GeminiFlashAgent",
+    model="gemini-2.5-flash", # 如果实际模型名称不同，这是占位符
+    description="A fast and efficient agent for simple queries.",
+    instruction="You are a quick assistant for straightforward questions."
+)
+```
 
 路由器 Agent 可以基于简单的指标（如查询长度）引导查询，其中较短的查询转到较便宜的模型，较长的查询转到更强大的模型。然而，更复杂的路由器 Agent 可以利用 LLM 或 ML 模型来分析查询的细微差别和复杂性。这个 LLM 路由器可以确定哪个下游语言模型最合适。例如，请求事实回忆的查询被路由到 flash 模型，而需要深入分析的复杂查询被路由到 pro 模型。
 
 优化技术可以进一步增强 LLM 路由器的有效性。提示词调优涉及精心设计提示词以指导路由器 LLM 做出更好的路由决策。在查询及其最优模型选择的数据集上微调 LLM 路由器可提高其准确性和效率。这种动态路由能力在响应质量和成本效益之间取得平衡。
 
-| `# 概念性的类 Python 结构，非可运行代码 from google.adk.agents import Agent, BaseAgent from google.adk.events import Event from google.adk.agents.invocation_context import InvocationContext import asyncio class QueryRouterAgent(BaseAgent):    name: str = "QueryRouter"    description: str = "Routes user queries to the appropriate LLM agent based on complexity."    async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:        user_query = context.current_message.text # 假设文本输入        query_length = len(user_query.split()) # 简单指标：单词数        if query_length < 20: # 示例阈值，用于简单性与复杂性的区分            print(f"Routing to Gemini Flash Agent for short query (length: {query_length})")            # 在真实的 ADK 设置中，您会使用 'transfer_to_agent' 或直接调用            # 为了演示，我们将模拟一个调用并产生其响应            response = await gemini_flash_agent.run_async(context.current_message)            yield Event(author=self.name, content=f"Flash Agent processed: {response}")        else:            print(f"Routing to Gemini Pro Agent for long query (length: {query_length})")            response = await gemini_pro_agent.run_async(context.current_message)            yield Event(author=self.name, content=f"Pro Agent processed: {response}")` |
-| :---- |
+```python
+# 概念性的类 Python 结构，非可运行代码
+from google.adk.agents import Agent, BaseAgent
+from google.adk.events import Event
+from google.adk.agents.invocation_context import InvocationContext
+import asyncio
+
+class QueryRouterAgent(BaseAgent):
+    name: str = "QueryRouter"
+    description: str = "Routes user queries to the appropriate LLM agent based on complexity."
+
+    async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:
+        user_query = context.current_message.text # 假设文本输入
+        query_length = len(user_query.split()) # 简单指标：单词数
+
+        if query_length < 20: # 示例阈值，用于简单性与复杂性的区分
+            print(f"Routing to Gemini Flash Agent for short query (length: {query_length})")
+            # 在真实的 ADK 设置中，您会使用 'transfer_to_agent' 或直接调用
+            # 为了演示，我们将模拟一个调用并产生其响应
+            response = await gemini_flash_agent.run_async(context.current_message)
+            yield Event(author=self.name, content=f"Flash Agent processed: {response}")
+        else:
+            print(f"Routing to Gemini Pro Agent for long query (length: {query_length})")
+            response = await gemini_pro_agent.run_async(context.current_message)
+            yield Event(author=self.name, content=f"Pro Agent processed: {response}")
+```
 
 批评 Agent 评估语言模型的响应，提供具有多种功能的反馈。对于自我纠正，它识别错误或不一致，促使回答 Agent 改进其输出以提高质量。它还系统地评估响应以进行性能监控，跟踪准确性和相关性等指标，用于优化。
 
@@ -43,8 +86,17 @@ Google 的 ADK 通过其多 Agent 架构支持这种方法，允许模块化和�
 
 批评 Agent 可以配置为仅审查回答 Agent 生成的文本，或同时审查原始查询和生成的文本，从而能够全面评估响应与初始问题的一致性。
 
-| `CRITIC_SYSTEM_PROMPT = """ You are the **Critic Agent**, serving as the quality assurance arm of our collaborative research assistant system. Your primary function is to **meticulously review and challenge** information from the Researcher Agent, guaranteeing **accuracy, completeness, and unbiased presentation**. Your duties encompass: * **Assessing research findings** for factual correctness, thoroughness, and potential leanings. * **Identifying any missing data** or inconsistencies in reasoning. * **Raising critical questions** that could refine or expand the current understanding. * **Offering constructive suggestions** for enhancement or exploring different angles. * **Validating that the final output is comprehensive** and balanced. All criticism must be constructive. Your goal is to fortify the research, not invalidate it. Structure your feedback clearly, drawing attention to specific points for revision. Your overarching aim is to ensure the final research product meets the highest possible quality standards. """` |
-| :---- |
+```text
+CRITIC_SYSTEM_PROMPT = """
+You are the **Critic Agent**, serving as the quality assurance arm of our collaborative research assistant system. Your primary function is to **meticulously review and challenge** information from the Researcher Agent, guaranteeing **accuracy, completeness, and unbiased presentation**. Your duties encompass:
+* **Assessing research findings** for factual correctness, thoroughness, and potential leanings.
+* **Identifying any missing data** or inconsistencies in reasoning.
+* **Raising critical questions** that could refine or expand the current understanding.
+* **Offering constructive suggestions** for enhancement or exploring different angles.
+* **Validating that the final output is comprehensive** and balanced.
+All criticism must be constructive. Your goal is to fortify the research, not invalidate it. Structure your feedback clearly, drawing attention to specific points for revision. Your overarching aim is to ensure the final research product meets the highest possible quality standards.
+"""
+```
 
 批评 Agent 基于预定义的系统提示词运行，该提示词概述其角色、职责和反馈方法。为此 Agent 设计良好的提示词必须清楚地确立其作为评估者的功能。它应指定批评重点领域，并强调提供建设性反馈而不仅仅是拒绝。提示词还应鼓励识别优势和弱点，并且必须指导 Agent 如何构建和呈现其反馈。
 
@@ -58,8 +110,131 @@ Google 的 ADK 通过其多 Agent 架构支持这种方法，允许模块化和�
 
 代码在 MIT 许可证下，可在 Github 上获取：([https://github.com/mahtabsyed/21-Agentic-Patterns/blob/main/16\_Resource\_Aware\_Opt\_LLM\_Reflection\_v2.ipynb](https://github.com/mahtabsyed/21-Agentic-Patterns/blob/main/16_Resource_Aware_Opt_LLM_Reflection_v2.ipynb))
 
-| `# MIT License # Copyright (c) 2025 Mahtab Syed # https://www.linkedin.com/in/mahtabsyed/ import os import requests import json from dotenv import load_dotenv from openai import OpenAI # 加载环境变量 load_dotenv() OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") GOOGLE_CUSTOM_SEARCH_API_KEY = os.getenv("GOOGLE_CUSTOM_SEARCH_API_KEY") GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID") if not OPENAI_API_KEY or not GOOGLE_CUSTOM_SEARCH_API_KEY or not GOOGLE_CSE_ID:    raise ValueError(        "Please set OPENAI_API_KEY, GOOGLE_CUSTOM_SEARCH_API_KEY, and GOOGLE_CSE_ID in your .env file."    ) client = OpenAI(api_key=OPENAI_API_KEY) # --- 步骤 1：分类提示词 --- def classify_prompt(prompt: str) -> dict:    system_message = {        "role": "system",        "content": (            "You are a classifier that analyzes user prompts and returns one of three categories ONLY:\n\n"            "- simple\n"            "- reasoning\n"            "- internet_search\n\n"            "Rules:\n"            "- Use 'simple' for direct factual questions that need no reasoning or current events.\n"            "- Use 'reasoning' for logic, math, or multi-step inference questions.\n"            "- Use 'internet_search' if the prompt refers to current events, recent data, or things not in your training data.\n\n"            "Respond ONLY with JSON like:\n"            '{ "classification": "simple" }'        ),    }    user_message = {"role": "user", "content": prompt}    response = client.chat.completions.create(        model="gpt-4o", messages=[system_message, user_message], temperature=1    )    reply = response.choices[0].message.content    return json.loads(reply) # --- 步骤 2：Google 搜索 --- def google_search(query: str, num_results=1) -> list:    url = "https://www.googleapis.com/customsearch/v1"    params = {        "key": GOOGLE_CUSTOM_SEARCH_API_KEY,        "cx": GOOGLE_CSE_ID,        "q": query,        "num": num_results,    }    try:        response = requests.get(url, params=params)        response.raise_for_status()        results = response.json()        if "items" in results and results["items"]:            return [                {                    "title": item.get("title"),                    "snippet": item.get("snippet"),                    "link": item.get("link"),                }                for item in results["items"]            ]        else:            return []    except requests.exceptions.RequestException as e:        return {"error": str(e)} # --- 步骤 3：生成响应 --- def generate_response(prompt: str, classification: str, search_results=None) -> str:    if classification == "simple":        model = "gpt-4o-mini"        full_prompt = prompt    elif classification == "reasoning":        model = "o4-mini"        full_prompt = prompt    elif classification == "internet_search":        model = "gpt-4o"        # 将每个搜索结果字典转换为可读字符串        if search_results:            search_context = "\n".join(                [                    f"Title: {item.get('title')}\nSnippet: {item.get('snippet')}\nLink: {item.get('link')}"                    for item in search_results                ]            )        else:            search_context = "No search results found."        full_prompt = f"""Use the following web results to answer the user query: {search_context} Query: {prompt}"""    response = client.chat.completions.create(        model=model,        messages=[{"role": "user", "content": full_prompt}],        temperature=1,    )    return response.choices[0].message.content, model # --- 步骤 4：组合路由器 --- def handle_prompt(prompt: str) -> dict:    classification_result = classify_prompt(prompt)    # 删除或注释掉下一行以避免重复打印    # print("\n🔍 Classification Result:", classification_result)    classification = classification_result["classification"]    search_results = None    if classification == "internet_search":        search_results = google_search(prompt)        # print("\n🔍 Search Results:", search_results)    answer, model = generate_response(prompt, classification, search_results)    return {"classification": classification, "response": answer, "model": model} test_prompt = "What is the capital of Australia?" # test_prompt = "Explain the impact of quantum computing on cryptography." # test_prompt = "When does the Australian Open 2026 start, give me full date?" result = handle_prompt(test_prompt) print("🔍 Classification:", result["classification"]) print("🧠 Model Used:", result["model"]) print("🧠 Response:\n", result["response"])` |
-| :---- |
+```python
+# MIT License
+# Copyright (c) 2025 Mahtab Syed
+# https://www.linkedin.com/in/mahtabsyed/
+
+import os
+import requests
+import json
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# 加载环境变量
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GOOGLE_CUSTOM_SEARCH_API_KEY = os.getenv("GOOGLE_CUSTOM_SEARCH_API_KEY")
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
+
+if not OPENAI_API_KEY or not GOOGLE_CUSTOM_SEARCH_API_KEY or not GOOGLE_CSE_ID:
+    raise ValueError(
+        "Please set OPENAI_API_KEY, GOOGLE_CUSTOM_SEARCH_API_KEY, and GOOGLE_CSE_ID in your .env file."
+    )
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+# --- 步骤 1：分类提示词 ---
+def classify_prompt(prompt: str) -> dict:
+    system_message = {
+        "role": "system",
+        "content": (
+            "You are a classifier that analyzes user prompts and returns one of three categories ONLY:\n\n"
+            "- simple\n"
+            "- reasoning\n"
+            "- internet_search\n\n"
+            "Rules:\n"
+            "- Use 'simple' for direct factual questions that need no reasoning or current events.\n"
+            "- Use 'reasoning' for logic, math, or multi-step inference questions.\n"
+            "- Use 'internet_search' if the prompt refers to current events, recent data, or things not in your training data.\n\n"
+            "Respond ONLY with JSON like:\n"
+            '{ "classification": "simple" }'
+        ),
+    }
+    user_message = {"role": "user", "content": prompt}
+    response = client.chat.completions.create(
+        model="gpt-4o", messages=[system_message, user_message], temperature=1
+    )
+    reply = response.choices[0].message.content
+    return json.loads(reply)
+
+# --- 步骤 2：Google 搜索 ---
+def google_search(query: str, num_results=1) -> list:
+    url = "https://www.googleapis.com/customsearch/v1"
+    params = {
+        "key": GOOGLE_CUSTOM_SEARCH_API_KEY,
+        "cx": GOOGLE_CSE_ID,
+        "q": query,
+        "num": num_results,
+    }
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        results = response.json()
+        if "items" in results and results["items"]:
+            return [
+                {
+                    "title": item.get("title"),
+                    "snippet": item.get("snippet"),
+                    "link": item.get("link"),
+                }
+                for item in results["items"]
+            ]
+        else:
+            return []
+    except requests.exceptions.RequestException as e:
+        return {"error": str(e)}
+
+# --- 步骤 3：生成响应 ---
+def generate_response(prompt: str, classification: str, search_results=None) -> str:
+    if classification == "simple":
+        model = "gpt-4o-mini"
+        full_prompt = prompt
+    elif classification == "reasoning":
+        model = "o4-mini"
+        full_prompt = prompt
+    elif classification == "internet_search":
+        model = "gpt-4o"
+        # 将每个搜索结果字典转换为可读字符串
+        if search_results:
+            search_context = "\n".join(
+                [
+                    f"Title: {item.get('title')}\nSnippet: {item.get('snippet')}\nLink: {item.get('link')}"
+                    for item in search_results
+                ]
+            )
+        else:
+            search_context = "No search results found."
+        full_prompt = f"""Use the following web results to answer the user query: {search_context} Query: {prompt}"""
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": full_prompt}],
+        temperature=1,
+    )
+    return response.choices[0].message.content, model
+
+# --- 步骤 4：组合路由器 ---
+def handle_prompt(prompt: str) -> dict:
+    classification_result = classify_prompt(prompt)
+    # 删除或注释掉下一行以避免重复打印
+    # print("\n🔍 Classification Result:", classification_result)
+    classification = classification_result["classification"]
+    search_results = None
+    if classification == "internet_search":
+        search_results = google_search(prompt)
+        # print("\n🔍 Search Results:", search_results)
+    answer, model = generate_response(prompt, classification, search_results)
+    return {"classification": classification, "response": answer, "model": model}
+
+test_prompt = "What is the capital of Australia?"
+# test_prompt = "Explain the impact of quantum computing on cryptography."
+# test_prompt = "When does the Australian Open 2026 start, give me full date?"
+result = handle_prompt(test_prompt)
+print("🔍 Classification:", result["classification"])
+print("🧠 Model Used:", result["model"])
+print("🧠 Response:\n", result["response"])
+```
 
 这段 Python 代码实现了一个提示词路由系统来回答用户问题。它首先从 .env 文件加载 OpenAI 和 Google 自定义搜索的必要 API 密钥。核心功能在于将用户的提示词分类为三个类别：simple、reasoning 或 internet search。专用函数利用 OpenAI 模型进行此分类步骤。如果提示词需要当前信息，则使用 Google 自定义搜索 API 执行 Google 搜索。另一个函数然后生成最终响应，根据分类选择适当的 OpenAI 模型。对于互联网搜索查询，搜索结果作为上下文提供给模型。主 handle_prompt 函数编排此工作流，在生成响应之前调用分类和搜索（如果需要）函数。它返回分类、使用的模型和生成的答案。该系统有效地将不同类型的查询引导到优化的方法以获得更好的响应。
 
@@ -67,8 +242,28 @@ Google 的 ADK 通过其多 Agent 架构支持这种方法，允许模块化和�
 
 OpenRouter 通过单个 API 端点提供对数百个 AI 模型的统一接口。它提供自动故障转移和成本优化，可通过您首选的 SDK 或框架轻松集成。
 
-| `import requests import json response = requests.post(  url="https://openrouter.ai/api/v1/chat/completions",  headers={    "Authorization": "Bearer <OPENROUTER_API_KEY>",    "HTTP-Referer": "<YOUR_SITE_URL>", # 可选。用于 openrouter.ai 上排名的网站 URL。    "X-Title": "<YOUR_SITE_NAME>", # 可选。用于 openrouter.ai 上排名的网站标题。  },  data=json.dumps({    "model": "openai/gpt-4o", # 可选    "messages": [      {        "role": "user",        "content": "What is the meaning of life?"      }    ]  }) )` |
-| :---- |
+```python
+import requests
+import json
+
+response = requests.post(
+  url="https://openrouter.ai/api/v1/chat/completions",
+  headers={
+    "Authorization": "Bearer <OPENROUTER_API_KEY>",
+    "HTTP-Referer": "<YOUR_SITE_URL>", # 可选。用于 openrouter.ai 上排名的网站 URL。
+    "X-Title": "<YOUR_SITE_NAME>", # 可选。用于 openrouter.ai 上排名的网站标题。
+  },
+  data=json.dumps({
+    "model": "openai/gpt-4o", # 可选
+    "messages": [
+      {
+        "role": "user",
+        "content": "What is the meaning of life?"
+      }
+    ]
+  })
+)
+```
 
 这段代码片段使用 requests 库与 OpenRouter API 交互。它向聊天完成端点发送带有用户消息的 POST 请求。请求包括带有 API 密钥和可选网站信息的授权头。目标是从指定的语言模型（在本例中为"openai/gpt-4o"）获得响应。
 
@@ -76,13 +271,21 @@ Openrouter 提供两种不同的方法来路由和确定用于处理给定请求
 
 * **自动模型选择**：此功能将请求路由到从一组精选可用模型中选择的优化模型。选择基于用户提示词的特定内容。最终处理请求的模型的标识符在响应的元数据中返回。
 
-| `{  "model": "openrouter/auto",  ... // 其他参数 }` |
-| :---- |
+```json
+{
+  "model": "openrouter/auto",
+  ... // 其他参数
+}
+```
 
 * **顺序模型回退**：此机制通过允许用户指定分层模型列表来提供运营冗余。系统将首先尝试使用序列中指定的主要模型处理请求。如果此主要模型由于任何错误条件（如服务不可用、速率限制或内容过滤）而无法响应，系统将自动将请求重新路由到序列中的下一个指定模型。此过程继续，直到列表中的模型成功执行请求或列表耗尽。操作的最终成本和响应中返回的模型标识符将对应于成功完成计算的模型。
 
-| `{  "models": ["anthropic/claude-3.5-sonnet", "gryphe/mythomax-l2-13b"],  ... // 其他参数 }` |
-| :---- |
+```json
+{
+  "models": ["anthropic/claude-3.5-sonnet", "gryphe/mythomax-l2-13b"],
+  ... // 其他参数
+}
+```
 
 OpenRouter 提供详细的排行榜（[https://openrouter.ai/rankings](https://openrouter.ai/rankings)），根据可用 AI 模型的累积 token 生成对其进行排名。它还提供来自不同提供商（ChatGPT、Gemini、Claude）的最新模型（见图 1）
 

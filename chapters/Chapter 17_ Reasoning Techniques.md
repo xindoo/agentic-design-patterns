@@ -25,8 +25,44 @@
 
 接下来，示例展示了 CoT 过程的实际应用。标记为"Agent 的思考过程"的部分是模型执行指示步骤的内部独白。这是字面上的"思维链"。最后，"Agent 的最终答案"是由于仔细的、逐步推理过程而生成的精炼的、全面的输出。
 
-| `You are an Information Retrieval Agent. Your goal is to answer the user's question comprehensively and accurately by thinking step-by-step. Here's the process you must follow: 1.  **Analyze the Query:** Understand the core subject and specific requirements of the user's question. Identify key entities, keywords, and the type of information being sought. 2.  **Formulate Search Queries (for Knowledge Base):** Based on your analysis, generate a list of precise search queries that you would use to retrieve relevant information from a knowledge base or external tools. 3.  **Simulate Information Retrieval (Self-Correction/Reasoning):** For each search query, mentally consider what kind of information you expect to find. If you were to retrieve the content, what would be the most relevant snippets? Think about potential ambiguities or missing pieces. 4.  **Synthesize Information:** Based on the simulated retrieval and your understanding of the user's original query, synthesize the gathered information into a coherent and complete answer. Ensure all aspects of the query are addressed. 5.  **Review and Refine:** Before finalizing, critically evaluate your answer. Is it accurate? Is it comprehensive? Is it easy to understand? Is it concise? If not, identify what needs to be improved and how. **User Query:** "Explain the main differences between classical computers and quantum computers, and briefly describe a potential application of quantum computing." **Agent's Thought Process (Internal CoT Output - encouraged by the prompt):** **Thought 1 (Analyze Query):** The user wants two things: 1.  Main differences between classical and quantum computers. 2.  One potential application of quantum computing. Keywords: classical computers, quantum computers, differences, potential application. **Thought 2 (Formulate Search Queries):** - "differences classical vs quantum computers" - "how quantum computers work" - "how classical computers work" - "applications of quantum computing" **Thought 3 (Simulate Information Retrieval & Identify Key Concepts):** - From "differences": Expect concepts like bits vs. qubits, superposition, entanglement, probabilistic nature, computational power for specific problems. - From "how they work": Classical uses transistors/binary. Quantum uses quantum mechanics. - From "applications": Expect drug discovery, material science, cryptography, optimization. **Thought 4 (Synthesize Information):** Classical computers use bits (0 or 1), processing information sequentially. Quantum computers use qubits, which can be 0, 1, or both simultaneously (superposition), and can be entangled, allowing for vastly different computational approaches. This enables them to solve certain problems (like factoring large numbers or simulating complex molecules) far more efficiently than classical computers. A potential application is in drug discovery, where quantum computers could simulate molecular interactions with unprecedented accuracy, accelerating the development of new medicines. **Thought 5 (Review and Refine):** - Differences are covered (bits vs qubits, superposition, entanglement, processing). - Application is given (drug discovery). - Is it brief? Yes. - Is it clear? Yes. - Looks good. **Agent's Final Answer (Output to User):** Classical computers process information using bits, which can be either a 0 or a 1 at any given time, performing operations sequentially. In contrast, quantum computers utilize qubits, which can exist in multiple states simultaneously through superposition and can be linked through entanglement, allowing for exponentially more complex computations. This fundamental difference enables quantum machines to tackle certain problems, such as simulating molecular structures or breaking complex encryption, that are intractable for even the most powerful classical supercomputers. A significant potential application of quantum computing lies in drug discovery, where its ability to precisely model molecular behavior could revolutionize the development of new pharmaceuticals.` |
-| :---- |
+```text
+You are an Information Retrieval Agent. Your goal is to answer the user's question comprehensively and accurately by thinking step-by-step. Here's the process you must follow:
+1.  **Analyze the Query:** Understand the core subject and specific requirements of the user's question. Identify key entities, keywords, and the type of information being sought.
+2.  **Formulate Search Queries (for Knowledge Base):** Based on your analysis, generate a list of precise search queries that you would use to retrieve relevant information from a knowledge base or external tools.
+3.  **Simulate Information Retrieval (Self-Correction/Reasoning):** For each search query, mentally consider what kind of information you expect to find. If you were to retrieve the content, what would be the most relevant snippets? Think about potential ambiguities or missing pieces.
+4.  **Synthesize Information:** Based on the simulated retrieval and your understanding of the user's original query, synthesize the gathered information into a coherent and complete answer. Ensure all aspects of the query are addressed.
+5.  **Review and Refine:** Before finalizing, critically evaluate your answer. Is it accurate? Is it comprehensive? Is it easy to understand? Is it concise? If not, identify what needs to be improved and how.
+
+**User Query:** "Explain the main differences between classical computers and quantum computers, and briefly describe a potential application of quantum computing."
+
+**Agent's Thought Process (Internal CoT Output - encouraged by the prompt):**
+**Thought 1 (Analyze Query):** The user wants two things:
+1.  Main differences between classical and quantum computers.
+2.  One potential application of quantum computing.
+Keywords: classical computers, quantum computers, differences, potential application.
+
+**Thought 2 (Formulate Search Queries):**
+- "differences classical vs quantum computers"
+- "how quantum computers work"
+- "how classical computers work"
+- "applications of quantum computing"
+
+**Thought 3 (Simulate Information Retrieval & Identify Key Concepts):**
+- From "differences": Expect concepts like bits vs. qubits, superposition, entanglement, probabilistic nature, computational power for specific problems.
+- From "how they work": Classical uses transistors/binary. Quantum uses quantum mechanics.
+- From "applications": Expect drug discovery, material science, cryptography, optimization.
+
+**Thought 4 (Synthesize Information):** Classical computers use bits (0 or 1), processing information sequentially. Quantum computers use qubits, which can be 0, 1, or both simultaneously (superposition), and can be entangled, allowing for vastly different computational approaches. This enables them to solve certain problems (like factoring large numbers or simulating complex molecules) far more efficiently than classical computers. A potential application is in drug discovery, where quantum computers could simulate molecular interactions with unprecedented accuracy, accelerating the development of new medicines.
+
+**Thought 5 (Review and Refine):**
+- Differences are covered (bits vs qubits, superposition, entanglement, processing).
+- Application is given (drug discovery).
+- Is it brief? Yes.
+- Is it clear? Yes.
+- Looks good.
+
+**Agent's Final Answer (Output to User):** Classical computers process information using bits, which can be either a 0 or a 1 at any given time, performing operations sequentially. In contrast, quantum computers utilize qubits, which can exist in multiple states simultaneously through superposition and can be linked through entanglement, allowing for exponentially more complex computations. This fundamental difference enables quantum machines to tackle certain problems, such as simulating molecular structures or breaking complex encryption, that are intractable for even the most powerful classical supercomputers. A significant potential application of quantum computing lies in drug discovery, where its ability to precisely model molecular behavior could revolutionize the development of new pharmaceuticals.
+```
 
 **思维树（Tree-of-Thought，ToT）**是一种建立在思维链（CoT）基础上的推理技术。它允许大语言模型通过分支到不同的中间步骤来探索多个推理路径，形成树结构（见图 2）。这种方法通过支持回溯、自我纠正和探索替代解决方案来支持复杂的问题解决。维护可能性树允许模型在最终确定答案之前评估各种推理轨迹。这种迭代过程增强了模型处理需要战略规划和决策的挑战性任务的能力。
 ![][image2]  
@@ -36,15 +72,85 @@
 
 这个例子展示了自我纠正的系统过程，这对于改进 AI 生成的内容至关重要。它涉及起草、根据原始要求进行审查和实施具体改进的迭代循环。插图首先概述了 AI 作为"自我纠正 Agent"的功能，并定义了五步分析和修订工作流程。然后，呈现了社交媒体帖子的糟糕"初稿"。"自我纠正 Agent 的思考过程"构成了演示的核心。在这里，Agent 根据其指令批判性地评估草稿，指出诸如低参与度和模糊的号召性用语等弱点。然后它提出具体的增强建议，包括使用更有影响力的动词和表情符号。该过程以"最终修订内容"结束，这是一个整合了自我识别调整的精炼和显著改进的版本。
 
-| `You are a highly critical and detail-oriented Self-Correction Agent. Your task is to review a previously generated piece of content against its original requirements and identify areas for improvement. Your goal is to refine the content to be more accurate, comprehensive, engaging, and aligned with the prompt. Here's the process you must follow for self-correction: 1.  **Understand Original Requirements:** Review the initial prompt/requirements that led to the content's creation. What was the *original intent*? What were the key constraints or goals? 2.  **Analyze Current Content:** Read the provided content carefully. 3.  **Identify Discrepancies/Weaknesses:** Compare the current content against the original requirements. Look for:    * **Accuracy Issues:** Are there any factual errors or misleading statements?    * **Completeness Gaps:** Does it fully address all aspects of the original prompt? Is anything missing?    * **Clarity & Coherence:** Is the language clear, concise, and easy to understand? Does it flow logically?    * **Tone & Style:** Does it match the desired tone and style (e.g., professional, engaging, concise)?    * **Engagement:** Is it captivating? Does it hold the reader's attention?    * **Redundancy/Verbosity:** Can any parts be condensed or removed without losing meaning? 4.  **Propose Specific Improvements:** For each identified weakness, suggest concrete and actionable changes. Do not just state the problem; propose a solution. 5.  **Generate Revised Content:** Based on your proposed improvements, rewrite the original content to incorporate all the necessary changes. Ensure the revised content is polished and ready for final use. **Original Prompt/Requirements:** "Write a short, engaging social media post (max 150 characters) announcing a new eco-friendly product line: 'GreenTech Gadgets'." **Initial Draft (Content to be corrected):** "We have new products. They are green and techy. Buy GreenTech Gadgets now!" **Self-Correction Agent's Thought Process (Internal CoT Output - encouraged by the prompt):** **Thought 1 (Understand Original Requirements):** - Short, engaging social media post. - Max 150 characters. - Announce "GreenTech Gadgets" - a new eco-friendly product line. **Thought 2 (Analyze Current Content):** "We have new products. They are green and techy. Buy GreenTech Gadgets now!" (64 characters) **Thought 3 (Identify Discrepancies/Weaknesses):** - **Engaging:** Not very engaging. Sounds generic. - **Eco-friendly:** Implied by "green," but not explicitly highlighted as a benefit. - **Call to Action:** "Buy now!" is okay, but could be more compelling. - **Conciseness:** It's short, but could use stronger verbs/phrasing. - **Impact:** Lacks excitement for a new product launch. **Thought 4 (Propose Specific Improvements):** - Make it more dynamic and exciting. - Emphasize "eco-friendly" and "innovation." - Use stronger verbs and more active voice. - Add a clear, engaging call to action. - Ensure it stays under 150 characters. **Thought 5 (Generate Revised Content):** Original: "We have new products. They are green and techy. Buy GreenTech Gadgets now!" Revised idea 1: "🌱 Discover GreenTech Gadgets! Our new eco-friendly line blends innovation with sustainability. Go green, go smart! Shop now! #EcoFriendly #GreenTech" (148 characters) This revision directly addresses eco-friendliness, uses emojis for engagement, adds a stronger call to action, and includes relevant hashtags while staying within the character limit. **Self-Correction Agent's Final Revised Content (Output to User):** 🌱 Discover GreenTech Gadgets! Our new eco-friendly line blends innovation with sustainability. Go green, go smart! Shop now! #EcoFriendly #GreenTech` |
-| :---- |
+```text
+You are a highly critical and detail-oriented Self-Correction Agent. Your task is to review a previously generated piece of content against its original requirements and identify areas for improvement. Your goal is to refine the content to be more accurate, comprehensive, engaging, and aligned with the prompt. Here's the process you must follow for self-correction:
+1.  **Understand Original Requirements:** Review the initial prompt/requirements that led to the content's creation. What was the *original intent*? What were the key constraints or goals?
+2.  **Analyze Current Content:** Read the provided content carefully.
+3.  **Identify Discrepancies/Weaknesses:** Compare the current content against the original requirements. Look for:
+    * **Accuracy Issues:** Are there any factual errors or misleading statements?
+    * **Completeness Gaps:** Does it fully address all aspects of the original prompt? Is anything missing?
+    * **Clarity & Coherence:** Is the language clear, concise, and easy to understand? Does it flow logically?
+    * **Tone & Style:** Does it match the desired tone and style (e.g., professional, engaging, concise)?
+    * **Engagement:** Is it captivating? Does it hold the reader's attention?
+    * **Redundancy/Verbosity:** Can any parts be condensed or removed without losing meaning?
+4.  **Propose Specific Improvements:** For each identified weakness, suggest concrete and actionable changes. Do not just state the problem; propose a solution.
+5.  **Generate Revised Content:** Based on your proposed improvements, rewrite the original content to incorporate all the necessary changes. Ensure the revised content is polished and ready for final use.
+
+**Original Prompt/Requirements:** "Write a short, engaging social media post (max 150 characters) announcing a new eco-friendly product line: 'GreenTech Gadgets'."
+**Initial Draft (Content to be corrected):** "We have new products. They are green and techy. Buy GreenTech Gadgets now!"
+
+**Self-Correction Agent's Thought Process (Internal CoT Output - encouraged by the prompt):**
+**Thought 1 (Understand Original Requirements):**
+- Short, engaging social media post.
+- Max 150 characters.
+- Announce "GreenTech Gadgets" - a new eco-friendly product line.
+
+**Thought 2 (Analyze Current Content):** "We have new products. They are green and techy. Buy GreenTech Gadgets now!" (64 characters)
+
+**Thought 3 (Identify Discrepancies/Weaknesses):**
+- **Engaging:** Not very engaging. Sounds generic.
+- **Eco-friendly:** Implied by "green," but not explicitly highlighted as a benefit.
+- **Call to Action:** "Buy now!" is okay, but could be more compelling.
+- **Conciseness:** It's short, but could use stronger verbs/phrasing.
+- **Impact:** Lacks excitement for a new product launch.
+
+**Thought 4 (Propose Specific Improvements):**
+- Make it more dynamic and exciting.
+- Emphasize "eco-friendly" and "innovation."
+- Use stronger verbs and more active voice.
+- Add a clear, engaging call to action.
+- Ensure it stays under 150 characters.
+
+**Thought 5 (Generate Revised Content):** Original: "We have new products. They are green and techy. Buy GreenTech Gadgets now!" Revised idea 1: "🌱 Discover GreenTech Gadgets! Our new eco-friendly line blends innovation with sustainability. Go green, go smart! Shop now! #EcoFriendly #GreenTech" (148 characters) This revision directly addresses eco-friendliness, uses emojis for engagement, adds a stronger call to action, and includes relevant hashtags while staying within the character limit.
+
+**Self-Correction Agent's Final Revised Content (Output to User):** 🌱 Discover GreenTech Gadgets! Our new eco-friendly line blends innovation with sustainability. Go green, go smart! Shop now! #EcoFriendly #GreenTech
+```
 
 从根本上说，这种技术将质量控制措施直接集成到 Agent 的内容生成中，产生更精炼、精确和优质的结果，更有效地满足复杂的用户需求。
 
 **程序辅助语言模型（Program-Aided Language Models，PALMs）**将 LLM 与符号推理能力集成。这种集成允许 LLM 在其问题解决过程中生成和执行代码，例如 Python。PALMs 将复杂的计算、逻辑操作和数据操作卸载到确定性编程环境中。这种方法利用传统编程的优势来处理 LLM 在准确性或一致性方面可能表现出局限性的任务。当面对符号挑战时，模型可以生成代码、执行它，并将结果转换为自然语言。这种混合方法结合了 LLM 的理解和生成能力与精确计算，使模型能够以潜在更高的可靠性和准确性解决更广泛的复杂问题。这对 Agent 很重要，因为它允许它们通过在理解和生成能力之外利用精确计算来执行更准确和可靠的动作。一个例子是在 Google 的 ADK 中使用外部工具生成代码。
 
-| `from google.adk.tools import agent_tool from google.adk.agents import Agent from google.adk.tools import google_search from google.adk.code_executors import BuiltInCodeExecutor search_agent = Agent(    model='gemini-2.0-flash',    name='SearchAgent',    instruction="""    You're a specialist in Google Search    """,    tools=[google_search], ) coding_agent = Agent(    model='gemini-2.0-flash',    name='CodeAgent',    instruction="""    You're a specialist in Code Execution    """,    code_executor=[BuiltInCodeExecutor], ) root_agent = Agent(    name="RootAgent",    model="gemini-2.0-flash",    description="Root Agent",    tools=[agent_tool.AgentTool(agent=search_agent), agent_tool.AgentTool(agent=coding_agent)], )` |
-| :---- |
+```python
+from google.adk.tools import agent_tool
+from google.adk.agents import Agent
+from google.adk.tools import google_search
+from google.adk.code_executors import BuiltInCodeExecutor
+
+search_agent = Agent(
+    model='gemini-2.0-flash',
+    name='SearchAgent',
+    instruction="""
+    You're a specialist in Google Search
+    """,
+    tools=[google_search],
+)
+
+coding_agent = Agent(
+    model='gemini-2.0-flash',
+    name='CodeAgent',
+    instruction="""
+    You're a specialist in Code Execution
+    """,
+    code_executor=[BuiltInCodeExecutor],
+)
+
+root_agent = Agent(
+    name="RootAgent",
+    model="gemini-2.0-flash",
+    description="Root Agent",
+    tools=[agent_tool.AgentTool(agent=search_agent), agent_tool.AgentTool(agent=coding_agent)],
+)
+```
 
 **可验证奖励强化学习（Reinforcement Learning with Verifiable Rewards，RLVR）**：虽然有效，但许多 LLM 使用的标准思维链（CoT）提示词是一种相对基本的推理方法。它生成单一的、预定的思路，而不适应问题的复杂性。为了克服这些限制，开发了一类新的专门"推理模型"。这些模型的运行方式不同，在提供答案之前专门花费可变量的"思考"时间。这个"思考"过程产生更广泛和动态的思维链，可能长达数千个 token。这种扩展推理允许更复杂的行为，如自我纠正和回溯，模型在更困难的问题上投入更多努力。实现这些模型的关键创新是一种称为可验证奖励强化学习（RLVR）的训练策略。通过在具有已知正确答案的问题（如数学或代码）上训练模型，它通过试错学习生成有效的、长篇推理。这允许模型在没有直接人类监督的情况下发展其问题解决能力。最终，这些推理模型不仅产生答案；它们生成展示规划、监控和评估等高级技能的"推理轨迹"。这种增强的推理和策略能力是开发自主 AI Agent 的基础，它们可以在最少人类干预的情况下分解和解决复杂任务。
 
@@ -123,8 +229,38 @@ Google 开源的 DeepSearch 代码可通过 gemini-fullstack-langgraph-quickstar
 
 该项目提供了一个具有 React 前端和 LangGraph 后端的全栈应用程序，专为高级研究和对话式 AI 而设计。LangGraph Agent 使用 Google Gemini 模型动态生成搜索查询，并通过 Google Search API 集成网络研究。系统采用反思推理来识别知识差距、迭代改进搜索并综合带引用的答案。前端和后端支持热重载。项目结构包括单独的 frontend/ 和 backend/ 目录。设置要求包括 Node.js、npm、Python 3.8+ 和 Google Gemini API 密钥。在后端的 .env 文件中配置 API 密钥后，可以为后端（使用 pip install .）和前端（npm install）安装依赖项。开发服务器可以使用 make dev 同时运行或单独运行。在 backend/src/agent/graph.py 中定义的后端 Agent 生成初始搜索查询、进行网络研究、执行知识差距分析、迭代改进查询并使用 Gemini 模型综合带引用的答案。生产部署涉及后端服务器提供静态前端构建，并需要 Redis 用于流式实时输出和 Postgres 数据库用于管理数据。可以使用 docker-compose up 构建和运行 Docker 镜像，这也需要 docker-compose.yml 示例的 LangSmith API 密钥。该应用程序使用带 Vite 的 React、Tailwind CSS、Shadcn UI、LangGraph 和 Google Gemini。该项目在 Apache License 2.0 下授权。
 
-| ``# 创建我们的 Agent 图 builder = StateGraph(OverallState, config_schema=Configuration) # 定义我们将循环的节点 builder.add_node("generate_query", generate_query) builder.add_node("web_research", web_research) builder.add_node("reflection", reflection) builder.add_node("finalize_answer", finalize_answer) # 将入口点设置为 `generate_query` # 这意味着此节点是第一个被调用的 builder.add_edge(START, "generate_query") # 添加条件边以在并行分支中继续搜索查询 builder.add_conditional_edges(    "generate_query", continue_to_web_research, ["web_research"] ) # 反思网络研究 builder.add_edge("web_research", "reflection") # 评估研究 builder.add_conditional_edges(    "reflection", evaluate_research, ["web_research", "finalize_answer"] ) # 完成答案 builder.add_edge("finalize_answer", END) graph = builder.compile(name="pro-search-agent")`` |
-| :---- |
+```python
+# 创建我们的 Agent 图
+builder = StateGraph(OverallState, config_schema=Configuration)
+
+# 定义我们将循环的节点
+builder.add_node("generate_query", generate_query)
+builder.add_node("web_research", web_research)
+builder.add_node("reflection", reflection)
+builder.add_node("finalize_answer", finalize_answer)
+
+# 将入口点设置为 `generate_query`
+# 这意味着此节点是第一个被调用的
+builder.add_edge(START, "generate_query")
+
+# 添加条件边以在并行分支中继续搜索查询
+builder.add_conditional_edges(
+    "generate_query", continue_to_web_research, ["web_research"]
+)
+
+# 反思网络研究
+builder.add_edge("web_research", "reflection")
+
+# 评估研究
+builder.add_conditional_edges(
+    "reflection", evaluate_research, ["web_research", "finalize_answer"]
+)
+
+# 完成答案
+builder.add_edge("finalize_answer", END)
+
+graph = builder.compile(name="pro-search-agent")
+```
 
 图 4：使用 LangGraph 的 DeepSearch 示例（来自 backend/src/agent/graph.py 的代码）
 

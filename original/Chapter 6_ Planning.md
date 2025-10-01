@@ -26,8 +26,62 @@ In essence, the Planning pattern allows an agent to move beyond simple, reactive
 
 The following section will demonstrate an implementation of the Planner pattern using the Crew AI framework. This pattern involves an agent that first formulates a multi-step plan to address a complex query and then executes that plan sequentially.
 
-| `import os from dotenv import load_dotenv from crewai import Agent, Task, Crew, Process from langchain_openai import ChatOpenAI # Load environment variables from .env file for security load_dotenv() # 1. Explicitly define the language model for clarity llm = ChatOpenAI(model="gpt-4-turbo") # 2. Define a clear and focused agent planner_writer_agent = Agent(    role='Article Planner and Writer',    goal='Plan and then write a concise, engaging summary on a specified topic.',    backstory=(        'You are an expert technical writer and content strategist. '        'Your strength lies in creating a clear, actionable plan before writing, '        'ensuring the final summary is both informative and easy to digest.'    ),    verbose=True,    allow_delegation=False,    llm=llm # Assign the specific LLM to the agent ) # 3. Define a task with a more structured and specific expected output topic = "The importance of Reinforcement Learning in AI" high_level_task = Task(    description=(        f"1. Create a bullet-point plan for a summary on the topic: '{topic}'.\n"        f"2. Write the summary based on your plan, keeping it around 200 words."    ),    expected_output=(        "A final report containing two distinct sections:\n\n"        "### Plan\n"        "- A bulleted list outlining the main points of the summary.\n\n"        "### Summary\n"        "- A concise and well-structured summary of the topic."    ),    agent=planner_writer_agent, ) # Create the crew with a clear process crew = Crew(    agents=[planner_writer_agent],    tasks=[high_level_task],    process=Process.sequential, ) # Execute the task print("## Running the planning and writing task ##") result = crew.kickoff() print("\n\n---\n## Task Result ##\n---") print(result)` |
-| :---- |
+```python
+import os
+from dotenv import load_dotenv
+from crewai import Agent, Task, Crew, Process
+from langchain_openai import ChatOpenAI
+
+# Load environment variables from .env file for security
+load_dotenv()
+
+# 1. Explicitly define the language model for clarity
+llm = ChatOpenAI(model="gpt-4-turbo")
+
+# 2. Define a clear and focused agent
+planner_writer_agent = Agent(
+   role='Article Planner and Writer',
+   goal='Plan and then write a concise, engaging summary on a specified topic.',
+   backstory=(
+       'You are an expert technical writer and content strategist. '
+       'Your strength lies in creating a clear, actionable plan before writing, '
+       'ensuring the final summary is both informative and easy to digest.'
+   ),
+   verbose=True,
+   allow_delegation=False,
+   llm=llm # Assign the specific LLM to the agent
+)
+
+# 3. Define a task with a more structured and specific expected output
+topic = "The importance of Reinforcement Learning in AI"
+high_level_task = Task(
+   description=(
+       f"1. Create a bullet-point plan for a summary on the topic: '{topic}'.\n"
+       f"2. Write the summary based on your plan, keeping it around 200 words."
+   ),
+   expected_output=(
+       "A final report containing two distinct sections:\n\n"
+       "### Plan\n"
+       "- A bulleted list outlining the main points of the summary.\n\n"
+       "### Summary\n"
+       "- A concise and well-structured summary of the topic."
+   ),
+   agent=planner_writer_agent,
+)
+
+# Create the crew with a clear process
+crew = Crew(
+   agents=[planner_writer_agent],
+   tasks=[high_level_task],
+   process=Process.sequential,
+)
+
+# Execute the task
+print("## Running the planning and writing task ##")
+result = crew.kickoff()
+print("\n\n---\n## Task Result ##\n---")
+print(result)
+```
 
 This code uses the CrewAI library to create an AI agent that plans and writes a summary on a given topic. It starts by importing necessary libraries, including Crew.ai and langchain\_openai, and loading environment variables from a .env file. A ChatOpenAI language model is explicitly defined for use with the agent. An Agent named planner\_writer\_agent is created with a specific role and goal: to plan and then write a concise summary. The agent's backstory emphasizes its expertise in planning and technical writing. A Task is defined with a clear description to first create a plan and then write a summary on the topic "The importance of Reinforcement Learning in AI", with a specific format for the expected output. A Crew is assembled with the agent and task, set to process them sequentially. Finally, the crew.kickoff() method is called to execute the defined task and the result is printed.
 
@@ -68,8 +122,86 @@ The Deep Research API is useful because it automates what would otherwise be hou
 
 To use the API, you send a request to the client.responses.create endpoint, specifying a model, an input prompt, and the tools the agent can use. The input typically includes a system\_message that defines the agent's persona and desired output format, along with the user\_query. You must also include the web\_search\_preview tool and can optionally add others like code\_interpreter or custom MCP tools (see Chapter 10\) for internal data.
 
-| ````from openai import OpenAI # Initialize the client with your API key client = OpenAI(api_key="YOUR_OPENAI_API_KEY") # Define the agent's role and the user's research question system_message = """You are a professional researcher preparing a structured, data-driven report. Focus on data-rich insights, use reliable sources, and include inline citations.""" user_query = "Research the economic impact of semaglutide on global healthcare systems." # Create the Deep Research API call response = client.responses.create(  model="o3-deep-research-2025-06-26",  input=[    {      "role": "developer",      "content": [{"type": "input_text", "text": system_message}]    },    {      "role": "user",      "content": [{"type": "input_text", "text": user_query}]    }  ],  reasoning={"summary": "auto"},  tools=[{"type": "web_search_preview"}] ) # Access and print the final report from the response final_report = response.output[-1].content[0].text print(final_report) # --- ACCESS INLINE CITATIONS AND METADATA --- print("--- CITATIONS ---") annotations = response.output[-1].content[0].annotations if not annotations:    print("No annotations found in the report.") else:    for i, citation in enumerate(annotations):        # The text span the citation refers to        cited_text = final_report[citation.start_index:citation.end_index]        print(f"Citation {i+1}:")        print(f"  Cited Text: {cited_text}")        print(f"  Title: {citation.title}")        print(f"  URL: {citation.url}")        print(f"  Location: chars {citation.start_index}–{citation.end_index}") print("\n" + "="*50 + "\n") # --- INSPECT INTERMEDIATE STEPS --- print("--- INTERMEDIATE STEPS ---") # 1. Reasoning Steps: Internal plans and summaries generated by the model. try:    reasoning_step = next(item for item in response.output if item.type == "reasoning")    print("\n[Found a Reasoning Step]")    for summary_part in reasoning_step.summary:        print(f"  - {summary_part.text}") except StopIteration:    print("\nNo reasoning steps found.") # 2. Web Search Calls: The exact search queries the agent executed. try:    search_step = next(item for item in response.output if item.type == "web_search_call")    print("\n[Found a Web Search Call]")    print(f"  Query Executed: '{search_step.action['query']}'")    print(f"  Status: {search_step.status}") except StopIteration:    print("\nNo web search steps found.") # 3. Code Execution: Any code run by the agent using the code interpreter. try:    code_step = next(item for item in response.output if item.type == "code_interpreter_call")    print("\n[Found a Code Execution Step]")    print("  Code Input:")    print(f"  ```python\n{code_step.input}\n  ```")    print("  Code Output:")    print(f"  {code_step.output}") except StopIteration:    print("\nNo code execution steps found.")```` |
-| :---- |
+```python
+from openai import OpenAI
+
+# Initialize the client with your API key
+client = OpenAI(api_key="YOUR_OPENAI_API_KEY")
+
+# Define the agent's role and the user's research question
+system_message = """You are a professional researcher preparing a structured, data-driven report. Focus on data-rich insights, use reliable sources, and include inline citations."""
+user_query = "Research the economic impact of semaglutide on global healthcare systems."
+
+# Create the Deep Research API call
+response = client.responses.create(
+ model="o3-deep-research-2025-06-26",
+ input=[
+   {
+     "role": "developer",
+     "content": [{"type": "input_text", "text": system_message}]
+   },
+   {
+     "role": "user",
+     "content": [{"type": "input_text", "text": user_query}]
+   }
+ ],
+ reasoning={"summary": "auto"},
+ tools=[{"type": "web_search_preview"}]
+)
+
+# Access and print the final report from the response
+final_report = response.output[-1].content[0].text
+print(final_report)
+
+# --- ACCESS INLINE CITATIONS AND METADATA ---
+print("--- CITATIONS ---")
+annotations = response.output[-1].content[0].annotations
+if not annotations:
+   print("No annotations found in the report.")
+else:
+   for i, citation in enumerate(annotations):
+       # The text span the citation refers to
+       cited_text = final_report[citation.start_index:citation.end_index]
+       print(f"Citation {i+1}:")
+       print(f"  Cited Text: {cited_text}")
+       print(f"  Title: {citation.title}")
+       print(f"  URL: {citation.url}")
+       print(f"  Location: chars {citation.start_index}–{citation.end_index}")
+
+print("\n" + "="*50 + "\n")
+
+# --- INSPECT INTERMEDIATE STEPS ---
+print("--- INTERMEDIATE STEPS ---")
+
+# 1. Reasoning Steps: Internal plans and summaries generated by the model.
+try:
+   reasoning_step = next(item for item in response.output if item.type == "reasoning")
+   print("\n[Found a Reasoning Step]")
+   for summary_part in reasoning_step.summary:
+       print(f"  - {summary_part.text}")
+except StopIteration:
+   print("\nNo reasoning steps found.")
+
+# 2. Web Search Calls: The exact search queries the agent executed.
+try:
+   search_step = next(item for item in response.output if item.type == "web_search_call")
+   print("\n[Found a Web Search Call]")
+   print(f"  Query Executed: '{search_step.action['query']}'")
+   print(f"  Status: {search_step.status}")
+except StopIteration:
+   print("\nNo web search steps found.")
+
+# 3. Code Execution: Any code run by the agent using the code interpreter.
+try:
+   code_step = next(item for item in response.output if item.type == "code_interpreter_call")
+   print("\n[Found a Code Execution Step]")
+   print("  Code Input:")
+   print(f"  ```python\n{code_step.input}\n  ```")
+   print("  Code Output:")
+   print(f"  {code_step.output}")
+except StopIteration:
+   print("\nNo code execution steps found.")
+```
 
 This code snippet utilizes the OpenAI API to perform a "Deep Research" task. It starts by initializing the OpenAI client with your API key, which is crucial for authentication. Then, it defines the role of the AI agent as a professional researcher and sets the user's research question about the economic impact of semaglutide. The code constructs an API call to the o3-deep-research-2025-06-26 model, providing the defined system message and user query as input. It also requests an automatic summary of the reasoning and enables web search capabilities. After making the API call, it extracts and prints the final generated report. 
 
