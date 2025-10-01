@@ -142,8 +142,54 @@ Few-shot 提示通过提供几个示例（通常是三到五个）的输入-输�
 
 您可以使用 model\_validate\_json 方法直接将来自 LLM 的 JSON 字符串解析为 Pydantic 对象。这特别有用，因为它在一个步骤中结合了解析和验证。
 
-| `from pydantic import BaseModel, EmailStr, Field, ValidationError from typing import List, Optional from datetime import date # --- Pydantic 模型定义（来自上面）--- class User(BaseModel):    name: str = Field(..., description="用户的全名。")    email: EmailStr = Field(..., description="用户的电子邮件地址。")    date_of_birth: Optional[date] = Field(None, description="用户的出生日期。")    interests: List[str] = Field(default_factory=list, description="用户兴趣列表。") # --- 假设的 LLM 输出 --- llm_output_json = """ {    "name": "Alice Wonderland",    "email": "alice.w@example.com",    "date_of_birth": "1995-07-21",    "interests": [        "Natural Language Processing",        "Python Programming",        "Gardening"    ] } """ # --- 解析和验证 --- try:    # 使用 model_validate_json 类方法解析 JSON 字符串。    # 这一步解析 JSON 并根据 User 模型验证数据。    user_object = User.model_validate_json(llm_output_json)    # 现在你可以使用干净、类型安全的 Python 对象。    print("成功创建 User 对象！")    print(f"姓名：{user_object.name}")    print(f"电子邮件：{user_object.email}")    print(f"出生日期：{user_object.date_of_birth}")    print(f"第一个兴趣：{user_object.interests[0]}")    # 您可以像任何其他 Python 对象属性一样访问数据。    # Pydantic 已将 'date_of_birth' 字符串转换为 datetime.date 对象。    print(f"date_of_birth 的类型：{type(user_object.date_of_birth)}") except ValidationError as e:    # 如果 JSON 格式错误或数据与模型的类型不匹配，    # Pydantic 将引发 ValidationError。    print("无法验证来自 LLM 的 JSON。")    print(e)` |
-| :---- |
+```python
+from pydantic import BaseModel, EmailStr, Field, ValidationError
+from typing import List, Optional
+from datetime import date
+
+# --- Pydantic 模型定义（来自上面）---
+class User(BaseModel):
+    name: str = Field(..., description="用户的全名。")
+    email: EmailStr = Field(..., description="用户的电子邮件地址。")
+    date_of_birth: Optional[date] = Field(None, description="用户的出生日期。")
+    interests: List[str] = Field(default_factory=list, description="用户兴趣列表。")
+
+# --- 假设的 LLM 输出 ---
+llm_output_json = """
+{
+    "name": "Alice Wonderland",
+    "email": "alice.w@example.com",
+    "date_of_birth": "1995-07-21",
+    "interests": [
+        "Natural Language Processing",
+        "Python Programming",
+        "Gardening"
+    ]
+}
+"""
+
+# --- 解析和验证 ---
+try:
+    # 使用 model_validate_json 类方法解析 JSON 字符串。
+    # 这一步解析 JSON 并根据 User 模型验证数据。
+    user_object = User.model_validate_json(llm_output_json)
+
+    # 现在你可以使用干净、类型安全的 Python 对象。
+    print("成功创建 User 对象！")
+    print(f"姓名：{user_object.name}")
+    print(f"电子邮件：{user_object.email}")
+    print(f"出生日期：{user_object.date_of_birth}")
+    print(f"第一个兴趣：{user_object.interests[0]}")
+    # 您可以像任何其他 Python 对象属性一样访问数据。
+    # Pydantic 已将 'date_of_birth' 字符串转换为 datetime.date 对象。
+    print(f"date_of_birth 的类型：{type(user_object.date_of_birth)}")
+
+except ValidationError as e:
+    # 如果 JSON 格式错误或数据与模型的类型不匹配，
+    # Pydantic 将引发 ValidationError。
+    print("无法验证来自 LLM 的 JSON。")
+    print(e)
+```
 
 这段 Python 代码演示了如何使用 Pydantic 库定义数据模型和验证 JSON 数据。它定义了一个 User 模型，其中包含姓名、电子邮件、出生日期和兴趣字段，包括类型提示和描述。然后，代码使用 User 模型的 model\_validate\_json 方法解析来自大型语言模型（LLM）的假设 JSON 输出。此方法根据模型的结构和类型处理 JSON 解析和数据验证。最后，代码从结果 Python 对象访问验证的数据，并包括 ValidationError 的错误处理，以防 JSON 无效。
 

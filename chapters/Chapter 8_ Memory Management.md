@@ -71,11 +71,11 @@ session_service = DatabaseSessionService(db_url=db_url)
 # 需要：pip install google-adk[vertexai] 和 GCP 设置/身份验证
 from google.adk.sessions import VertexAiSessionService
 
-PROJECT_ID = "your-gcp-project-id" # 替换为您的 GCP 项目 ID
-LOCATION = "us-central1" # 替换为您想要的 GCP 位置
+PROJECT_ID = "your-gcp-project-id"  # 替换为您的 GCP 项目 ID
+LOCATION = "us-central1"  # 替换为您想要的 GCP 位置
 
 # 与此服务一起使用的 app_name 应对应于 Reasoning Engine ID 或名称
-REASONING_ENGINE_APP_NAME = "projects/your-gcp-project-id/locations/us-central1/reasoningEngines/your-engine-id" # 替换为您的 Reasoning Engine 资源名称
+REASONING_ENGINE_APP_NAME = "projects/your-gcp-project-id/locations/us-central1/reasoningEngines/your-engine-id"  # 替换为您的 Reasoning Engine 资源名称
 
 session_service = VertexAiSessionService(project=PROJECT_ID, location=LOCATION)
 
@@ -117,25 +117,25 @@ from google.genai.types import Content, Part
 
 # 定义带有 output_key 的 LlmAgent。
 greeting_agent = LlmAgent(
-   name="Greeter",
-   model="gemini-2.0-flash",
-   instruction="生成一个简短、友好的问候语。",
-   output_key="last_greeting"
+    name="Greeter",
+    model="gemini-2.0-flash",
+    instruction="生成一个简短、友好的问候语。",
+    output_key="last_greeting"
 )
 
 # --- 设置 Runner 和 Session ---
 app_name, user_id, session_id = "state_app", "user1", "session1"
 session_service = InMemorySessionService()
 runner = Runner(
-   agent=greeting_agent,
-   app_name=app_name,
-   session_service=session_service
+    agent=greeting_agent,
+    app_name=app_name,
+    session_service=session_service
 )
 
 session = session_service.create_session(
-   app_name=app_name,
-   user_id=user_id,
-   session_id=session_id
+    app_name=app_name,
+    user_id=user_id,
+    session_id=session_id
 )
 
 print(f"初始状态：{session.state}")
@@ -144,12 +144,12 @@ print(f"初始状态：{session.state}")
 user_message = Content(parts=[Part(text="你好")])
 print("\n--- 运行 agent ---")
 for event in runner.run(
-   user_id=user_id,
-   session_id=session_id,
-   new_message=user_message
+    user_id=user_id,
+    session_id=session_id,
+    new_message=user_message
 ):
-   if event.is_final_response():
-     print("Agent 已响应。")
+    if event.is_final_response():
+        print("Agent 已响应。")
 
 # --- 检查更新的状态 ---
 # 在 runner 完成处理所有事件*之后*正确检查状态。
@@ -168,31 +168,31 @@ from google.adk.sessions import InMemorySessionService
 
 # --- 定义推荐的基于工具的方法 ---
 def log_user_login(tool_context: ToolContext) -> dict:
-   """
-   在用户登录事件时更新会话状态。
-   此工具封装了与用户登录相关的所有状态更改。
-   参数：
-       tool_context：由 ADK 自动提供，提供对会话状态的访问。
-   返回：
-       确认操作成功的字典。
-   """
-   # 通过提供的上下文直接访问状态。
-   state = tool_context.state
-   
-   # 获取当前值或默认值，然后更新状态。
-   # 这更加清晰并将逻辑共置。
-   login_count = state.get("user:login_count", 0) + 1
-   state["user:login_count"] = login_count
-   state["task_status"] = "active"
-   state["user:last_login_ts"] = time.time()
-   state["temp:validation_needed"] = True
-   
-   print("从 `log_user_login` 工具内部更新了状态。")
-   
-   return {
-       "status": "success",
-       "message": f"已跟踪用户登录。总登录次数：{login_count}。"
-   }
+    """
+    在用户登录事件时更新会话状态。
+    此工具封装了与用户登录相关的所有状态更改。
+    参数：
+        tool_context：由 ADK 自动提供，提供对会话状态的访问。
+    返回：
+        确认操作成功的字典。
+    """
+    # 通过提供的上下文直接访问状态。
+    state = tool_context.state
+
+    # 获取当前值或默认值，然后更新状态。
+    # 这更加清晰并将逻辑共置。
+    login_count = state.get("user:login_count", 0) + 1
+    state["user:login_count"] = login_count
+    state["task_status"] = "active"
+    state["user:last_login_ts"] = time.time()
+    state["temp:validation_needed"] = True
+
+    print("从 `log_user_login` 工具内部更新了状态。")
+
+    return {
+        "status": "success",
+        "message": f"已跟踪用户登录。总登录次数：{login_count}。"
+    }
 
 # --- 使用演示 ---
 # 在真实应用程序中，LLM Agent 会决定调用此工具。
@@ -202,10 +202,10 @@ def log_user_login(tool_context: ToolContext) -> dict:
 session_service = InMemorySessionService()
 app_name, user_id, session_id = "state_app_tool", "user3", "session3"
 session = session_service.create_session(
-   app_name=app_name,
-   user_id=user_id,
-   session_id=session_id,
-   state={"user:login_count": 0, "task_status": "idle"}
+    app_name=app_name,
+    user_id=user_id,
+    session_id=session_id,
+    state={"user:login_count": 0, "task_status": "idle"}
 )
 
 print(f"初始状态：{session.state}")
@@ -214,10 +214,10 @@ print(f"初始状态：{session.state}")
 # 我们仅为此独立示例手动创建 ToolContext。
 from google.adk.tools.tool_context import InvocationContext
 mock_context = ToolContext(
-   invocation_context=InvocationContext(
-       app_name=app_name, user_id=user_id, session_id=session_id,
-       session=session, session_service=session_service
-   )
+    invocation_context=InvocationContext(
+        app_name=app_name, user_id=user_id, session_id=session_id,
+        session=session, session_service=session_service
+    )
 )
 
 # 3. 执行工具
@@ -268,16 +268,16 @@ ADK 提供了几种实现来创建这个长期知识存储。InMemoryMemoryServi
 from google.adk.memory import VertexAiRagMemoryService
 
 # 您的 Vertex AI RAG Corpus 的资源名称
-RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id" # 替换为您的 Corpus 资源名称
+RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id"  # 替换为您的 Corpus 资源名称
 
 # 检索行为的可选配置
-SIMILARITY_TOP_K = 5 # 要检索的顶部结果数
-VECTOR_DISTANCE_THRESHOLD = 0.7 # 向量相似度阈值
+SIMILARITY_TOP_K = 5  # 要检索的顶部结果数
+VECTOR_DISTANCE_THRESHOLD = 0.7  # 向量相似度阈值
 
 memory_service = VertexAiRagMemoryService(
-   rag_corpus=RAG_CORPUS_RESOURCE_NAME,
-   similarity_top_k=SIMILARITY_TOP_K,
-   vector_distance_threshold=VECTOR_DISTANCE_THRESHOLD
+    rag_corpus=RAG_CORPUS_RESOURCE_NAME,
+    similarity_top_k=SIMILARITY_TOP_K,
+    vector_distance_threshold=VECTOR_DISTANCE_THRESHOLD
 )
 
 # 使用此服务时，像 add_session_to_memory
@@ -371,20 +371,20 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import (
-   ChatPromptTemplate,
-   MessagesPlaceholder,
-   SystemMessagePromptTemplate,
-   HumanMessagePromptTemplate,
+    ChatPromptTemplate,
+    MessagesPlaceholder,
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
 )
 
 # 1. 定义聊天模型和提示词
 llm = ChatOpenAI()
 prompt = ChatPromptTemplate(
-   messages=[
-       SystemMessagePromptTemplate.from_template("你是一个友好的助手。"),
-       MessagesPlaceholder(variable_name="chat_history"),
-       HumanMessagePromptTemplate.from_template("{question}")
-   ]
+    messages=[
+        SystemMessagePromptTemplate.from_template("你是一个友好的助手。"),
+        MessagesPlaceholder(variable_name="chat_history"),
+        HumanMessagePromptTemplate.from_template("{question}")
+    ]
 )
 
 # 2. 配置内存
@@ -412,33 +412,33 @@ print(response)
 ```python
 # 更新 agent 指令的节点
 def update_instructions(state: State, store: BaseStore):
-   namespace = ("instructions",)
-   # 从存储中获取当前指令
-   current_instructions = store.search(namespace)[0]
-   
-   # 创建提示词要求 LLM 反思对话
-   # 并生成新的、改进的指令
-   prompt = prompt_template.format(
-       instructions=current_instructions.value["instructions"],
-       conversation=state["messages"]
-   )
-   
-   # 从 LLM 获取新指令
-   output = llm.invoke(prompt)
-   new_instructions = output['new_instructions']
-   
-   # 将更新的指令保存回存储
-   store.put(("agent_instructions",), "agent_a", {"instructions": new_instructions})
+    namespace = ("instructions",)
+    # 从存储中获取当前指令
+    current_instructions = store.search(namespace)[0]
+
+    # 创建提示词要求 LLM 反思对话
+    # 并生成新的、改进的指令
+    prompt = prompt_template.format(
+        instructions=current_instructions.value["instructions"],
+        conversation=state["messages"]
+    )
+
+    # 从 LLM 获取新指令
+    output = llm.invoke(prompt)
+    new_instructions = output['new_instructions']
+
+    # 将更新的指令保存回存储
+    store.put(("agent_instructions",), "agent_a", {"instructions": new_instructions})
 
 # 使用指令生成响应的节点
 def call_model(state: State, store: BaseStore):
-   namespace = ("agent_instructions", )
-   # 从存储中检索最新指令
-   instructions = store.get(namespace, key="agent_a")[0]
-   
-   # 使用检索到的指令格式化提示词
-   prompt = prompt_template.format(instructions=instructions.value["instructions"])
-   # ... 应用程序逻辑继续
+    namespace = ("agent_instructions", )
+    # 从存储中检索最新指令
+    instructions = store.get(namespace, key="agent_a")[0]
+
+    # 使用检索到的指令格式化提示词
+    prompt = prompt_template.format(instructions=instructions.value["instructions"])
+    # ... 应用程序逻辑继续
 ```
 
 LangGraph 将长期记忆存储为存储中的 JSON 文档。每个记忆都在自定义命名空间（如文件夹）和不同的键（如文件名）下组织。这种分层结构允许轻松组织和检索信息。以下代码演示了如何使用 InMemoryStore 放置、获取和搜索记忆。
@@ -448,8 +448,8 @@ from langgraph.store.memory import InMemoryStore
 
 # 真实嵌入函数的占位符
 def embed(texts: list[str]) -> list[list[float]]:
-   # 在真实应用程序中，使用适当的嵌入模型
-   return [[1.0, 2.0] for _ in texts]
+    # 在真实应用程序中，使用适当的嵌入模型
+    return [[1.0, 2.0] for _ in texts]
 
 # 初始化内存存储。对于生产，使用数据库支持的存储。
 store = InMemoryStore(index={"embed": embed, "dims": 2})
@@ -461,15 +461,15 @@ namespace = (user_id, application_context)
 
 # 1. 将记忆放入存储
 store.put(
-   namespace,
-   "a-memory",  # 此记忆的键
-   {
-       "rules": [
-           "用户喜欢简短、直接的语言",
-           "用户只说英语和 python",
-       ],
-       "my-key": "my-value",
-   },
+    namespace,
+    "a-memory",  # 此记忆的键
+    {
+        "rules": [
+            "用户喜欢简短、直接的语言",
+            "用户只说英语和 python",
+        ],
+        "my-key": "my-value",
+    },
 )
 
 # 2. 通过其命名空间和键获取记忆
@@ -479,9 +479,9 @@ print("检索的项目：", item)
 # 3. 在命名空间内搜索记忆，按内容过滤
 # 并按与查询的向量相似度排序。
 items = store.search(
-   namespace,
-   filter={"my-key": "my-value"},
-   query="语言偏好"
+    namespace,
+    filter={"my-key": "my-value"},
+    query="语言偏好"
 )
 print("搜索结果：", items)
 ```
@@ -499,15 +499,15 @@ from google.adk.memory import VertexAiMemoryBankService
 
 agent_engine_id = agent_engine.api_resource.name.split("/")[-1]
 memory_service = VertexAiMemoryBankService(
-   project="PROJECT_ID",
-   location="LOCATION",
-   agent_engine_id=agent_engine_id
+    project="PROJECT_ID",
+    location="LOCATION",
+    agent_engine_id=agent_engine_id
 )
 
 session = await session_service.get_session(
-   app_name=app_name,
-   user_id="USER_ID",
-   session_id=session.id
+    app_name=app_name,
+    user_id="USER_ID",
+    session_id=session.id
 )
 
 await memory_service.add_session_to_memory(session)

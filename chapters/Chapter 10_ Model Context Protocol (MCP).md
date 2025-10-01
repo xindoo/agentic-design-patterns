@@ -101,28 +101,28 @@ TARGET_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "m
 os.makedirs(TARGET_FOLDER_PATH, exist_ok=True)
 
 root_agent = LlmAgent(
-   model='gemini-2.0-flash',
-   name='filesystem_assistant_agent',
-   instruction=(
-       'Help the user manage their files. You can list files, read files, and write files. '
-       f'You are operating in the following directory: {TARGET_FOLDER_PATH}'
-   ),
-   tools=[
-       MCPToolset(
-           connection_params=StdioServerParameters(
-               command='npx',
-               args=[
-                   "-y",  # npx 的参数，用于自动确认安装
-                   "@modelcontextprotocol/server-filesystem",
-                   # 这必须是文件夹的绝对路径。
-                   TARGET_FOLDER_PATH,
-               ],
-           ),
-           # 可选：您可以过滤从 MCP 服务器公开的工具。
-           # 例如，仅允许读取：
-           # tool_filter=['list_directory', 'read_file']
-       )
-   ],
+    model='gemini-2.0-flash',
+    name='filesystem_assistant_agent',
+    instruction=(
+        'Help the user manage their files. You can list files, read files, and write files. '
+        f'You are operating in the following directory: {TARGET_FOLDER_PATH}'
+    ),
+    tools=[
+        MCPToolset(
+            connection_params=StdioServerParameters(
+                command='npx',
+                args=[
+                    "-y",  # npx 的参数，用于自动确认安装
+                    "@modelcontextprotocol/server-filesystem",
+                    # 这必须是文件夹的绝对路径。
+                    TARGET_FOLDER_PATH,
+                ],
+            ),
+            # 可选：您可以过滤从 MCP 服务器公开的工具。
+            # 例如，仅允许读取：
+            # tool_filter=['list_directory', 'read_file']
+        )
+    ],
 )
 ```
 
@@ -139,14 +139,14 @@ from . import agent
 
 ```python
 connection_params = StdioConnectionParams(
- server_params={
-     "command": "python3",
-     "args": ["./agent/mcp_server.py"],
-     "env": {
-       "SERVICE_ACCOUNT_PATH":SERVICE_ACCOUNT_PATH,
-       "DRIVE_FOLDER_ID": DRIVE_FOLDER_ID
-     }
- }
+    server_params={
+        "command": "python3",
+        "args": ["./agent/mcp_server.py"],
+        "env": {
+            "SERVICE_ACCOUNT_PATH": SERVICE_ACCOUNT_PATH,
+            "DRIVE_FOLDER_ID": DRIVE_FOLDER_ID
+        }
+    }
 )
 ```
 
@@ -154,14 +154,14 @@ connection_params = StdioConnectionParams(
 
 ```python
 connection_params = StdioConnectionParams(
- server_params={
-   "command": "uvx",
-   "args": ["mcp-google-sheets@latest"],
-   "env": {
-     "SERVICE_ACCOUNT_PATH":SERVICE_ACCOUNT_PATH,
-     "DRIVE_FOLDER_ID": DRIVE_FOLDER_ID
-   }
- }
+    server_params={
+        "command": "uvx",
+        "args": ["mcp-google-sheets@latest"],
+        "env": {
+            "SERVICE_ACCOUNT_PATH": SERVICE_ACCOUNT_PATH,
+            "DRIVE_FOLDER_ID": DRIVE_FOLDER_ID
+        }
+    }
 )
 ```
 
@@ -214,10 +214,10 @@ mcp_server = FastMCP()
 def greet(name: str) -> str:
     """
     生成个性化的问候语。
-    
+
     参数：
         name: 要问候的人的名字。
-    
+
     返回：
         问候语字符串。
     """
@@ -255,19 +255,19 @@ from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, HttpServerParamete
 FASTMCP_SERVER_URL = "http://localhost:8000"
 
 root_agent = LlmAgent(
-   model='gemini-2.0-flash', # 或您首选的模型
-   name='fastmcp_greeter_agent',
-   instruction='You are a friendly assistant that can greet people by their name. Use the "greet" tool.',
-   tools=[
-       MCPToolset(
-           connection_params=HttpServerParameters(
-               url=FASTMCP_SERVER_URL,
-           ),
-           # 可选：过滤从 MCP 服务器公开的工具
-           # 对于此示例，我们只期望 'greet'
-           tool_filter=['greet']
-       )
-   ],
+    model='gemini-2.0-flash',  # 或您首选的模型
+    name='fastmcp_greeter_agent',
+    instruction='You are a friendly assistant that can greet people by their name. Use the "greet" tool.',
+    tools=[
+        MCPToolset(
+            connection_params=HttpServerParameters(
+                url=FASTMCP_SERVER_URL,
+            ),
+            # 可选：过滤从 MCP 服务器公开的工具
+            # 对于此示例，我们只期望 'greet'
+            tool_filter=['greet']
+        )
+    ],
 )
 ```
 

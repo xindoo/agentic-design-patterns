@@ -40,40 +40,40 @@ llm = ChatOpenAI(model="gpt-4-turbo")
 
 # 2. 定义一个清晰且专注的 Agent
 planner_writer_agent = Agent(
-   role='文章规划者和撰写者',
-   goal='规划然后撰写关于指定主题的简洁、引人入胜的摘要。',
-   backstory=(
-       '你是一位专业的技术作家和内容策略师。'
-       '你的优势在于在写作之前创建清晰、可操作的计划，'
-       '确保最终摘要既信息丰富又易于理解。'
-   ),
-   verbose=True,
-   allow_delegation=False,
-   llm=llm # 将特定 LLM 分配给 Agent
+    role='文章规划者和撰写者',
+    goal='规划然后撰写关于指定主题的简洁、引人入胜的摘要。',
+    backstory=(
+        '你是一位专业的技术作家和内容策略师。'
+        '你的优势在于在写作之前创建清晰、可操作的计划，'
+        '确保最终摘要既信息丰富又易于理解。'
+    ),
+    verbose=True,
+    allow_delegation=False,
+    llm=llm # 将特定 LLM 分配给 Agent
 )
 
 # 3. 定义具有更结构化和具体的预期输出的任务
 topic = "强化学习在 AI 中的重要性"
 high_level_task = Task(
-   description=(
-       f"1. 为主题'{topic}'的摘要创建要点计划。\n"
-       f"2. 根据您的计划撰写摘要，保持在 200 字左右。"
-   ),
-   expected_output=(
-       "包含两个不同部分的最终报告：\n\n"
-       "### 计划\n"
-       "- 概述摘要要点的项目符号列表。\n\n"
-       "### 摘要\n"
-       "- 主题的简洁且结构良好的摘要。"
-   ),
-   agent=planner_writer_agent,
+    description=(
+        f"1. 为主题'{topic}'的摘要创建要点计划。\n"
+        f"2. 根据您的计划撰写摘要，保持在 200 字左右。"
+    ),
+    expected_output=(
+        "包含两个不同部分的最终报告：\n\n"
+        "### 计划\n"
+        "- 概述摘要要点的项目符号列表。\n\n"
+        "### 摘要\n"
+        "- 主题的简洁且结构良好的摘要。"
+    ),
+    agent=planner_writer_agent,
 )
 
 # 使用清晰的流程创建团队
 crew = Crew(
-   agents=[planner_writer_agent],
-   tasks=[high_level_task],
-   process=Process.sequential,
+    agents=[planner_writer_agent],
+    tasks=[high_level_task],
+    process=Process.sequential,
 )
 
 # 执行任务
@@ -135,19 +135,19 @@ user_query = "研究司美格鲁肽对全球医疗保健系统的经济影响。
 
 # 创建 Deep Research API 调用
 response = client.responses.create(
- model="o3-deep-research-2025-06-26",
- input=[
-   {
-     "role": "developer",
-     "content": [{"type": "input_text", "text": system_message}]
-   },
-   {
-     "role": "user",
-     "content": [{"type": "input_text", "text": user_query}]
-   }
- ],
- reasoning={"summary": "auto"},
- tools=[{"type": "web_search_preview"}]
+    model="o3-deep-research-2025-06-26",
+    input=[
+        {
+            "role": "developer",
+            "content": [{"type": "input_text", "text": system_message}]
+        },
+        {
+            "role": "user",
+            "content": [{"type": "input_text", "text": user_query}]
+        }
+    ],
+    reasoning={"summary": "auto"},
+    tools=[{"type": "web_search_preview"}]
 )
 
 # 从响应中访问并打印最终报告
@@ -159,16 +159,16 @@ print("--- 引用 ---")
 annotations = response.output[-1].content[0].annotations
 
 if not annotations:
-   print("报告中未找到注释。")
+    print("报告中未找到注释。")
 else:
-   for i, citation in enumerate(annotations):
-       # 引用所指的文本范围
-       cited_text = final_report[citation.start_index:citation.end_index]
-       print(f"引用 {i+1}:")
-       print(f"  引用文本：{cited_text}")
-       print(f"  标题：{citation.title}")
-       print(f"  URL：{citation.url}")
-       print(f"  位置：字符 {citation.start_index}–{citation.end_index}")
+    for i, citation in enumerate(annotations):
+        # 引用所指的文本范围
+        cited_text = final_report[citation.start_index:citation.end_index]
+        print(f"引用 {i+1}:")
+        print(f"  引用文本：{cited_text}")
+        print(f"  标题：{citation.title}")
+        print(f"  URL：{citation.url}")
+        print(f"  位置：字符 {citation.start_index}–{citation.end_index}")
 
 print("\n" + "="*50 + "\n")
 
@@ -177,32 +177,32 @@ print("--- 中间步骤 ---")
 
 # 1. 推理步骤：模型生成的内部计划和摘要。
 try:
-   reasoning_step = next(item for item in response.output if item.type == "reasoning")
-   print("\n[找到推理步骤]")
-   for summary_part in reasoning_step.summary:
-       print(f"  - {summary_part.text}")
+    reasoning_step = next(item for item in response.output if item.type == "reasoning")
+    print("\n[找到推理步骤]")
+    for summary_part in reasoning_step.summary:
+        print(f"  - {summary_part.text}")
 except StopIteration:
-   print("\n未找到推理步骤。")
+    print("\n未找到推理步骤。")
 
 # 2. 网络搜索调用：Agent 执行的确切搜索查询。
 try:
-   search_step = next(item for item in response.output if item.type == "web_search_call")
-   print("\n[找到网络搜索调用]")
-   print(f"  执行的查询：'{search_step.action['query']}'")
-   print(f"  状态：{search_step.status}")
+    search_step = next(item for item in response.output if item.type == "web_search_call")
+    print("\n[找到网络搜索调用]")
+    print(f"  执行的查询：'{search_step.action['query']}'")
+    print(f"  状态：{search_step.status}")
 except StopIteration:
-   print("\n未找到网络搜索步骤。")
+    print("\n未找到网络搜索步骤。")
 
 # 3. 代码执行：Agent 使用代码解释器运行的任何代码。
 try:
-   code_step = next(item for item in response.output if item.type == "code_interpreter_call")
-   print("\n[找到代码执行步骤]")
-   print("  代码输入：")
-   print(f"  ```python\n{code_step.input}\n  ```")
-   print("  代码输出：")
-   print(f"  {code_step.output}")
+    code_step = next(item for item in response.output if item.type == "code_interpreter_call")
+    print("\n[找到代码执行步骤]")
+    print("  代码输入：")
+    print(f"  ```python\n{code_step.input}\n  ```")
+    print("  代码输出：")
+    print(f"  {code_step.output}")
 except StopIteration:
-   print("\n未找到代码执行步骤。")
+    print("\n未找到代码执行步骤。")
 ```
 
 此代码片段利用 OpenAI API 执行"深度研究"任务。它首先使用您的 API 密钥初始化 OpenAI 客户端，这对于身份验证至关重要。然后，它将 AI Agent 的角色定义为专业研究员，并设置用户关于司美格鲁肽经济影响的研究问题。代码构造对 o3-deep-research-2025-06-26 模型的 API 调用，提供定义的系统消息和用户查询作为输入。它还请求推理的自动摘要并启用网络搜索功能。进行 API 调用后，它提取并打印最终生成的报告。

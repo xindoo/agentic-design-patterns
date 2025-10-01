@@ -100,70 +100,70 @@ os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google API key: ")
 os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter your OpenAI API key: ")
 
 try:
-  # 需要具有函数/工具调用能力的模型。
-  llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0)
-  print(f"✅ 语言模型已初始化：{llm.model}")
+    # 需要具有函数/工具调用能力的模型。
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0)
+    print(f"✅ 语言模型已初始化：{llm.model}")
 except Exception as e:
-  print(f"🛑 初始化语言模型时出错：{e}")
-  llm = None
+    print(f"🛑 初始化语言模型时出错：{e}")
+    llm = None
 
 # --- 定义工具 ---
 @langchain_tool
 def search_information(query: str) -> str:
-  """
-  提供有关给定主题的事实信息。使用此工具查找诸如"法国首都"或"伦敦的天气？"等短语的答案。
-  """
-  print(f"\n--- 🛠️ 工具调用：search_information，查询：'{query}' ---")
-  
-  # 使用预定义结果字典模拟搜索工具。
-  simulated_results = {
-      "weather in london": "伦敦目前多云，温度为 15°C。",
-      "capital of france": "法国的首都是巴黎。",
-      "population of earth": "地球的估计人口约为 80 亿人。",
-      "tallest mountain": "珠穆朗玛峰是海拔最高的山峰。",
-      "default": f"'{query}' 的模拟搜索结果：未找到特定信息，但该主题似乎很有趣。"
-  }
-  
-  result = simulated_results.get(query.lower(), simulated_results["default"])
-  print(f"--- 工具结果：{result} ---")
-  return result
+    """
+    提供有关给定主题的事实信息。使用此工具查找诸如"法国首都"或"伦敦的天气？"等短语的答案。
+    """
+    print(f"\n--- 🛠️ 工具调用：search_information，查询：'{query}' ---")
+    
+    # 使用预定义结果字典模拟搜索工具。
+    simulated_results = {
+        "weather in london": "伦敦目前多云，温度为 15°C。",
+        "capital of france": "法国的首都是巴黎。",
+        "population of earth": "地球的估计人口约为 80 亿人。",
+        "tallest mountain": "珠穆朗玛峰是海拔最高的山峰。",
+        "default": f"'{query}' 的模拟搜索结果：未找到特定信息，但该主题似乎很有趣。"
+    }
+    
+    result = simulated_results.get(query.lower(), simulated_results["default"])
+    print(f"--- 工具结果：{result} ---")
+    return result
 
 tools = [search_information]
 
 # --- 创建工具调用 Agent ---
 if llm:
-  # 此提示词模板需要一个 `agent_scratchpad` 占位符用于 Agent 的内部步骤。
-  agent_prompt = ChatPromptTemplate.from_messages([
-      ("system", "你是一个有用的助手。"),
-      ("human", "{input}"),
-      ("placeholder", "{agent_scratchpad}"),
-  ])
-  
-  # 创建 Agent，将 LLM、工具和提示词绑定在一起。
-  agent = create_tool_calling_agent(llm, tools, agent_prompt)
-  
-  # AgentExecutor 是调用 Agent 并执行所选工具的运行时。
-  # 这里不需要 'tools' 参数，因为它们已经绑定到 Agent。
-  agent_executor = AgentExecutor(agent=agent, verbose=True, tools=tools)
+    # 此提示词模板需要一个 `agent_scratchpad` 占位符用于 Agent 的内部步骤。
+    agent_prompt = ChatPromptTemplate.from_messages([
+        ("system", "你是一个有用的助手。"),
+        ("human", "{input}"),
+        ("placeholder", "{agent_scratchpad}"),
+    ])
+    
+    # 创建 Agent，将 LLM、工具和提示词绑定在一起。
+    agent = create_tool_calling_agent(llm, tools, agent_prompt)
+    
+    # AgentExecutor 是调用 Agent 并执行所选工具的运行时。
+    # 这里不需要 'tools' 参数，因为它们已经绑定到 Agent。
+    agent_executor = AgentExecutor(agent=agent, verbose=True, tools=tools)
 
 async def run_agent_with_tool(query: str):
-  """使用查询调用 Agent 执行器并打印最终响应。"""
-  print(f"\n--- 🏃 使用查询运行 Agent：'{query}' ---")
-  try:
-      response = await agent_executor.ainvoke({"input": query})
-      print("\n--- ✅ 最终 Agent 响应 ---")
-      print(response["output"])
-  except Exception as e:
-      print(f"\n🛑 Agent 执行期间发生错误：{e}")
+    """使用查询调用 Agent 执行器并打印最终响应。"""
+    print(f"\n--- 🏃 使用查询运行 Agent：'{query}' ---")
+    try:
+        response = await agent_executor.ainvoke({"input": query})
+        print("\n--- ✅ 最终 Agent 响应 ---")
+        print(response["output"])
+    except Exception as e:
+        print(f"\n🛑 Agent 执行期间发生错误：{e}")
 
 async def main():
-  """并发运行所有 Agent 查询。"""
-  tasks = [
-      run_agent_with_tool("法国的首都是什么？"),
-      run_agent_with_tool("伦敦的天气怎么样？"),
-      run_agent_with_tool("告诉我一些关于狗的事情。") # 应该触发默认工具响应
-  ]
-  await asyncio.gather(*tasks)
+    """并发运行所有 Agent 查询。"""
+    tasks = [
+        run_agent_with_tool("法国的首都是什么？"),
+        run_agent_with_tool("伦敦的天气怎么样？"),
+        run_agent_with_tool("告诉我一些关于狗的事情。") # 应该触发默认工具响应
+    ]
+    await asyncio.gather(*tasks)
 
 nest_asyncio.apply()
 asyncio.run(main())
@@ -199,85 +199,85 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # 这使其更可重用，并强制 Agent 正确处理结果。
 @tool("Stock Price Lookup Tool")
 def get_stock_price(ticker: str) -> float:
-   """
-   获取给定股票代码符号的最新模拟股票价格。
-   以浮点数形式返回价格。如果未找到代码，则引发 ValueError。
-   """
-   logging.info(f"工具调用：get_stock_price，代码为 '{ticker}'")
-   
-   simulated_prices = {
-       "AAPL": 178.15,
-       "GOOGL": 1750.30,
-       "MSFT": 425.50,
-   }
-   
-   price = simulated_prices.get(ticker.upper())
-   if price is not None:
-       return price
-   else:
-       # 引发特定错误比返回字符串更好。
-       # Agent 配备了处理异常的能力，可以决定下一步行动。
-       raise ValueError(f"未找到代码 '{ticker.upper()}' 的模拟价格。")
+    """
+    获取给定股票代码符号的最新模拟股票价格。
+    以浮点数形式返回价格。如果未找到代码，则引发 ValueError。
+    """
+    logging.info(f"工具调用：get_stock_price，代码为 '{ticker}'")
+    
+    simulated_prices = {
+        "AAPL": 178.15,
+        "GOOGL": 1750.30,
+        "MSFT": 425.50,
+    }
+    
+    price = simulated_prices.get(ticker.upper())
+    if price is not None:
+        return price
+    else:
+        # 引发特定错误比返回字符串更好。
+        # Agent 配备了处理异常的能力，可以决定下一步行动。
+        raise ValueError(f"未找到代码 '{ticker.upper()}' 的模拟价格。")
 
 # --- 2. 定义 Agent ---
 # Agent 定义保持不变，但它现在将利用改进的工具。
 financial_analyst_agent = Agent(
- role='高级财务分析师',
- goal='使用提供的工具分析股票数据并报告关键价格。',
- backstory="你是一位经验丰富的财务分析师，擅长使用数据源查找股票信息。你提供清晰、直接的答案。",
- verbose=True,
- tools=[get_stock_price],
- # 允许委托可能很有用，但对于这个简单任务不是必需的。
- allow_delegation=False,
+    role='高级财务分析师',
+    goal='使用提供的工具分析股票数据并报告关键价格。',
+    backstory="你是一位经验丰富的财务分析师，擅长使用数据源查找股票信息。你提供清晰、直接的答案。",
+    verbose=True,
+    tools=[get_stock_price],
+    # 允许委托可能很有用，但对于这个简单任务不是必需的。
+    allow_delegation=False,
 )
 
 # --- 3. 精炼任务：更清晰的说明和错误处理 ---
 # 任务描述更具体，并指导 Agent 如何应对
 # 成功的数据检索和潜在错误。
 analyze_aapl_task = Task(
- description=(
-     "Apple（代码：AAPL）的当前模拟股票价格是多少？"
-     "使用 'Stock Price Lookup Tool' 查找它。"
-     "如果未找到代码，你必须报告无法检索价格。"
- ),
- expected_output=(
-     "一个清晰的句子，说明 AAPL 的模拟股票价格。"
-     "例如：'AAPL 的模拟股票价格是 $178.15。'"
-     "如果无法找到价格，请明确说明。"
- ),
- agent=financial_analyst_agent,
+    description=(
+        "Apple（代码：AAPL）的当前模拟股票价格是多少？"
+        "使用 'Stock Price Lookup Tool' 查找它。"
+        "如果未找到代码，你必须报告无法检索价格。"
+    ),
+    expected_output=(
+        "一个清晰的句子，说明 AAPL 的模拟股票价格。"
+        "例如：'AAPL 的模拟股票价格是 $178.15。'"
+        "如果无法找到价格，请明确说明。"
+    ),
+    agent=financial_analyst_agent,
 )
 
 # --- 4. 组建团队 ---
 # 团队协调 Agent 和任务如何协同工作。
 financial_crew = Crew(
- agents=[financial_analyst_agent],
- tasks=[analyze_aapl_task],
- verbose=True # 在生产环境中设置为 False 以获得较少的详细日志
+    agents=[financial_analyst_agent],
+    tasks=[analyze_aapl_task],
+    verbose=True # 在生产环境中设置为 False 以获得较少的详细日志
 )
 
 # --- 5. 在主执行块中运行团队 ---
 # 使用 __name__ == "__main__": 块是标准 Python 最佳实践。
 def main():
-   """运行团队的主函数。"""
-   # 在启动前检查 API 密钥以避免运行时错误。
-   if not os.environ.get("OPENAI_API_KEY"):
-       print("错误：未设置 OPENAI_API_KEY 环境变量。")
-       print("请在运行脚本之前设置它。")
-       return
-   
-   print("\n## 启动财务团队...")
-   print("---------------------------------")
-   
-   # kickoff 方法启动执行。
-   result = financial_crew.kickoff()
-   
-   print("\n---------------------------------")
-   print("## 团队执行完成。")
-   print("\n最终结果：\n", result)
+    """运行团队的主函数。"""
+    # 在启动前检查 API 密钥以避免运行时错误。
+    if not os.environ.get("OPENAI_API_KEY"):
+        print("错误：未设置 OPENAI_API_KEY 环境变量。")
+        print("请在运行脚本之前设置它。")
+        return
+    
+    print("\n## 启动财务团队...")
+    print("---------------------------------")
+    
+    # kickoff 方法启动执行。
+    result = financial_crew.kickoff()
+    
+    print("\n---------------------------------")
+    print("## 团队执行完成。")
+    print("\n最终结果：\n", result)
 
 if __name__ == "__main__":
-   main()
+    main()
 ```
 
 此代码演示了使用 Crew.ai 库模拟财务分析任务的简单应用程序。它定义了一个自定义工具 get_stock_price，模拟查找预定义代码的股票价格。该工具设计为对有效代码返回浮点数，或对无效代码引发 ValueError。创建了一个名为 financial_analyst_agent 的 Crew.ai Agent，角色为高级财务分析师。该 Agent 被赋予 get_stock_price 工具进行交互。定义了一个任务 analyze_aapl_task，专门指示 Agent 使用工具查找 AAPL 的模拟股票价格。任务描述包括关于使用工具时如何处理成功和失败情况的明确说明。组建了一个团队，包含 financial_analyst_agent 和 analyze_aapl_task。为 Agent 和团队启用了详细设置，以在执行期间提供详细日志。脚本的主要部分在标准 if __name__ == "__main__": 块中使用 kickoff() 方法运行团队的任务。在启动团队之前，它会检查是否设置了 OPENAI_API_KEY 环境变量，这是 Agent 运行所必需的。然后将团队执行的结果（即任务的输出）打印到控制台。代码还包括基本日志配置，以更好地跟踪团队的行动和工具调用。它使用环境变量进行 API 密钥管理，尽管它指出对于生产环境建议使用更安全的方法。简而言之，核心逻辑展示了如何定义工具、Agent 和任务，以在 Crew.ai 中创建协作工作流。
@@ -345,7 +345,7 @@ from typing import List
 from dotenv import load_dotenv
 import logging
 
-from google.adk.agents import Agent as ADKAgent, LlmAgent
+from google.adk.agents import LlmAgent # Removed ADKAgent as it's deprecated
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools import google_search
@@ -353,83 +353,83 @@ from google.adk.code_executors import BuiltInCodeExecutor
 from google.genai import types
 
 # 定义会话设置和 Agent 执行所需的变量
-APP_NAME="calculator"
-USER_ID="user1234"
-SESSION_ID="session_code_exec_async"
+APP_NAME = "calculator"
+USER_ID = "user1234"
+SESSION_ID = "session_code_exec_async"
 
 # Agent 定义
 code_agent = LlmAgent(
-  name="calculator_agent",
-  model="gemini-2.0-flash",
-  code_executor=BuiltInCodeExecutor(),
-  instruction="""你是一个计算器 Agent。
-  当给定数学表达式时，编写并执行 Python 代码来计算结果。
-  仅返回最终的数值结果作为纯文本，不带 markdown 或代码块。
-  """,
-  description="执行 Python 代码以进行计算。",
+    name="calculator_agent",
+    model="gemini-2.0-flash",
+    code_executor=BuiltInCodeExecutor(),
+    instruction="""你是一个计算器 Agent。
+    当给定数学表达式时，编写并执行 Python 代码来计算结果。
+    仅返回最终的数值结果作为纯文本，不带 markdown 或代码块。
+    """,
+    description="执行 Python 代码以进行计算。",
 )
 
 # Agent 交互（异步）
 async def call_agent_async(query):
-  # 会话和运行器
-  session_service = InMemorySessionService()
-  session = await session_service.create_session(app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID)
-  runner = Runner(agent=code_agent, app_name=APP_NAME, session_service=session_service)
-  
-  content = types.Content(role='user', parts=[types.Part(text=query)])
-  
-  print(f"\n--- 运行查询：{query} ---")
-  final_response_text = "未捕获最终文本响应。"
-  
-  try:
-      # 使用 run_async
-      async for event in runner.run_async(user_id=USER_ID, session_id=SESSION_ID, new_message=content):
-          print(f"事件 ID：{event.id}，作者：{event.author}")
-          
-          # --- 首先检查特定部分 ---
-          # has_specific_part = False
-          if event.content and event.content.parts and event.is_final_response():
-              for part in event.content.parts: # 遍历所有部分
-                  if part.executable_code:
-                      # 通过 .code 访问实际代码字符串
-                      print(f"  调试：Agent 生成的代码：\n```python\n{part.executable_code.code}\n```")
-                      has_specific_part = True
-                  elif part.code_execution_result:
-                      # 正确访问结果和输出
-                      print(f"  调试：代码执行结果：{part.code_execution_result.outcome} - 输出：\n{part.code_execution_result.output}")
-                      has_specific_part = True
-                  # 也打印在任何事件中找到的任何文本部分以进行调试
-                  elif part.text and not part.text.isspace():
-                      print(f"  文本：'{part.text.strip()}'")
-                      # 不要在这里设置 has_specific_part=True，因为我们希望下面的最终响应逻辑
-              
-              # --- 在特定部分之后检查最终响应 ---
-              text_parts = [part.text for part in event.content.parts if part.text]
-              final_result = "".join(text_parts)
-              print(f"==> 最终 Agent 响应：{final_result}")
-  except Exception as e:
-      print(f"Agent 运行期间出错：{e}")
-  
-  print("-" * 30)
+    # 会话和运行器
+    session_service = InMemorySessionService()
+    session = await session_service.create_session(app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID)
+    runner = Runner(agent=code_agent, app_name=APP_NAME, session_service=session_service)
+    
+    content = types.Content(role='user', parts=[types.Part(text=query)])
+    
+    print(f"\n--- 运行查询：{query} ---")
+    final_response_text = "未捕获最终文本响应。"
+    
+    try:
+        # 使用 run_async
+        async for event in runner.run_async(user_id=USER_ID, session_id=SESSION_ID, new_message=content):
+            print(f"事件 ID：{event.id}，作者：{event.author}")
+            
+            # --- 首先检查特定部分 ---
+            # has_specific_part = False
+            if event.content and event.content.parts and event.is_final_response():
+                for part in event.content.parts: # 遍历所有部分
+                    if part.executable_code:
+                        # 通过 .code 访问实际代码字符串
+                        print(f"  调试：Agent 生成的代码：\n```python\n{part.executable_code.code}\n```")
+                        # has_specific_part = True # Removed as it's not used
+                    elif part.code_execution_result:
+                        # 正确访问结果和输出
+                        print(f"  调试：代码执行结果：{part.code_execution_result.outcome} - 输出：\n{part.code_execution_result.output}")
+                        # has_specific_part = True # Removed as it's not used
+                    # 也打印在任何事件中找到的任何文本部分以进行调试
+                    elif part.text and not part.text.isspace():
+                        print(f"  文本：'{part.text.strip()}'")
+                        # 不要在这里设置 has_specific_part=True，因为我们希望下面的最终响应逻辑
+                
+                # --- 在特定部分之后检查最终响应 ---
+                text_parts = [part.text for part in event.content.parts if part.text]
+                final_result = "".join(text_parts)
+                print(f"==> 最终 Agent 响应：{final_result}")
+    except Exception as e:
+        print(f"Agent 运行期间出错：{e}")
+    
+    print("-" * 30)
 
 # 运行示例的主异步函数
 async def main():
-  await call_agent_async("计算 (5 + 7) * 3 的值")
-  await call_agent_async("10 的阶乘是多少？")
+    await call_agent_async("计算 (5 + 7) * 3 的值")
+    await call_agent_async("10 的阶乘是多少？")
 
 # 执行主异步函数
 try:
-  nest_asyncio.apply()
-  asyncio.run(main())
+    nest_asyncio.apply()
+    asyncio.run(main())
 except RuntimeError as e:
-  # 在已运行的循环中运行 asyncio.run 时处理特定错误（如 Jupyter/Colab）
-  if "cannot be called from a running event loop" in str(e):
-      print("\n在现有事件循环中运行（如 Colab/Jupyter）。")
-      print("请在笔记本单元格中运行 `await main()` 代替。")
-      # 如果在交互式环境（如笔记本）中，您可能需要运行：
-      # await main()
-  else:
-      raise e # 重新引发其他运行时错误
+    # 在已运行的循环中运行 asyncio.run 时处理特定错误（如 Jupyter/Colab）
+    if "cannot be called from a running event loop" in str(e):
+        print("\n在现有事件循环中运行（如 Colab/Jupyter）。")
+        print("请在笔记本单元格中运行 `await main()` 代替。")
+        # 如果在交互式环境（如笔记本）中，您可能需要运行：
+        # await main()
+    else:
+        raise e # 重新引发其他运行时错误
 ```
 
 此脚本使用 Google 的 Agent Development Kit (ADK) 创建一个通过编写和执行 Python 代码解决数学问题的 Agent。它定义了一个 LlmAgent，专门指示其充当计算器，为其配备 built_in_code_execution 工具。主要逻辑位于 call_agent_async 函数中，该函数向 Agent 的运行器发送用户查询并处理结果事件。在此函数内部，异步循环遍历事件，打印生成的 Python 代码及其执行结果以进行调试。代码仔细区分这些中间步骤和包含数值答案的最终事件。最后，main 函数使用两个不同的数学表达式运行 Agent，以演示其执行计算的能力。
@@ -459,73 +459,73 @@ SESSION_ID = "session_456" # 示例会话 ID
 
 # --- Agent 定义（根据指南的示例更新） ---
 vsearch_agent = agents.VSearchAgent(
-   name="q2_strategy_vsearch_agent",
-   description="使用 Vertex AI 搜索回答有关 Q2 战略文档的问题。",
-   model="gemini-2.0-flash-exp", # 根据指南示例更新模型
-   datastore_id=DATASTORE_ID,
-   model_parameters={"temperature": 0.0}
+    name="q2_strategy_vsearch_agent",
+    description="使用 Vertex AI 搜索回答有关 Q2 战略文档的问题。",
+    model="gemini-2.0-flash-exp", # 根据指南示例更新模型
+    datastore_id=DATASTORE_ID,
+    model_parameters={"temperature": 0.0}
 )
 
 # --- 运行器和会话初始化 ---
 runner = Runner(
-   agent=vsearch_agent,
-   app_name=APP_NAME,
-   session_service=InMemorySessionService(),
+    agent=vsearch_agent,
+    app_name=APP_NAME,
+    session_service=InMemorySessionService(),
 )
 
 # --- Agent 调用逻辑 ---
 async def call_vsearch_agent_async(query: str):
-   """初始化会话并流式传输 Agent 的响应。"""
-   print(f"用户：{query}")
-   print("Agent：", end="", flush=True)
-   
-   try:
-       # 正确构造消息内容
-       content = types.Content(role='user', parts=[types.Part(text=query)])
-       
-       # 从异步运行器处理到达的事件
-       async for event in runner.run_async(
-           user_id=USER_ID,
-           session_id=SESSION_ID,
-           new_message=content
-       ):
-           # 用于响应文本的逐令牌流式传输
-           if hasattr(event, 'content_part_delta') and event.content_part_delta:
-               print(event.content_part_delta.text, end="", flush=True)
-           
-           # 处理最终响应及其关联的元数据
-           if event.is_final_response():
-               print() # 流式响应后换行
-               if event.grounding_metadata:
-                   print(f"  (来源归因：找到 {len(event.grounding_metadata.grounding_attributions)} 个来源)")
-               else:
-                   print("  (未找到基础元数据)")
-               print("-" * 30)
-   except Exception as e:
-       print(f"\n发生错误：{e}")
-       print("请确保您的数据存储 ID 正确，并且服务帐户具有必要的权限。")
-       print("-" * 30)
+    """初始化会话并流式传输 Agent 的响应。"""
+    print(f"用户：{query}")
+    print("Agent：", end="", flush=True)
+    
+    try:
+        # 正确构造消息内容
+        content = types.Content(role='user', parts=[types.Part(text=query)])
+        
+        # 从异步运行器处理到达的事件
+        async for event in runner.run_async(
+            user_id=USER_ID,
+            session_id=SESSION_ID,
+            new_message=content
+        ):
+            # 用于响应文本的逐令牌流式传输
+            if hasattr(event, 'content_part_delta') and event.content_part_delta:
+                print(event.content_part_delta.text, end="", flush=True)
+            
+            # 处理最终响应及其关联的元数据
+            if event.is_final_response():
+                print() # 流式响应后换行
+                if event.grounding_metadata:
+                    print(f"  (来源归因：找到 {len(event.grounding_metadata.grounding_attributions)} 个来源)")
+                else:
+                    print("  (未找到基础元数据)")
+                print("-" * 30)
+    except Exception as e:
+        print(f"\n发生错误：{e}")
+        print("请确保您的数据存储 ID 正确，并且服务帐户具有必要的权限。")
+        print("-" * 30)
 
 # --- 运行示例 ---
 async def run_vsearch_example():
-   # 替换为与您的数据存储内容相关的问题
-   await call_vsearch_agent_async("总结 Q2 战略文档的要点。")
-   await call_vsearch_agent_async("实验室 X 提到了哪些安全程序？")
+    # 替换为与您的数据存储内容相关的问题
+    await call_vsearch_agent_async("总结 Q2 战略文档的要点。")
+    await call_vsearch_agent_async("实验室 X 提到了哪些安全程序？")
 
 # --- 执行 ---
 if __name__ == "__main__":
-   if not DATASTORE_ID:
-       print("错误：未设置 DATASTORE_ID 环境变量。")
-   else:
-       try:
-           asyncio.run(run_vsearch_example())
-       except RuntimeError as e:
-           # 这处理在已有运行事件循环的环境中调用 asyncio.run 的情况
-           # （如 Jupyter 笔记本）。
-           if "cannot be called from a running event loop" in str(e):
-               print("在运行事件循环中跳过执行。请直接运行此脚本。")
-           else:
-               raise e
+    if not DATASTORE_ID:
+        print("错误：未设置 DATASTORE_ID 环境变量。")
+    else:
+        try:
+            asyncio.run(run_vsearch_example())
+        except RuntimeError as e:
+            # 这处理在已有运行事件循环的环境中调用 asyncio.run 的情况
+            # （如 Jupyter 笔记本）。
+            if "cannot be called from a running event loop" in str(e):
+                print("在运行事件循环中跳过执行。请直接运行此脚本。")
+            else:
+                raise e
 ```
 
 总的来说，此代码为构建利用 Vertex AI 搜索根据存储在数据存储中的信息回答问题的对话式 AI 应用程序提供了基本框架。它演示了如何定义 Agent、设置运行器以及在流式传输响应的同时异步与 Agent 交互。重点是从特定数据存储检索和综合信息以回答用户查询。

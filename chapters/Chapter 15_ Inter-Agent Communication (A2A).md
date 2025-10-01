@@ -24,8 +24,72 @@ A2A 协议为 Agent 交互提供了结构化的方法，建立在几个核心概
 
 **Agent 卡片**：Agent 的数字身份由其 Agent 卡片定义，通常是一个 JSON 文件。此文件包含用于客户端交互和自动发现的关键信息，包括 Agent 的身份、端点 URL 和版本。它还详细说明了支持的功能，如流式传输或推送通知、特定技能、默认输入/输出模式以及身份验证要求。以下是 WeatherBot 的 Agent 卡片示例。
 
-| `{  "name": "WeatherBot",  "description": "Provides accurate weather forecasts and historical data.",  "url": "http://weather-service.example.com/a2a",  "version": "1.0.0",  "capabilities": {    "streaming": true,    "pushNotifications": false,    "stateTransitionHistory": true  },  "authentication": {    "schemes": [      "apiKey"    ]  },  "defaultInputModes": [    "text"  ],  "defaultOutputModes": [    "text"  ],  "skills": [    {      "id": "get_current_weather",      "name": "Get Current Weather",      "description": "Retrieve real-time weather for any location.",      "inputModes": [        "text"      ],      "outputModes": [        "text"      ],      "examples": [        "What's the weather in Paris?",        "Current conditions in Tokyo"      ],      "tags": [        "weather",        "current",        "real-time"      ]    },    {      "id": "get_forecast",      "name": "Get Forecast",      "description": "Get 5-day weather predictions.",      "inputModes": [        "text"      ],      "outputModes": [        "text"      ],      "examples": [        "5-day forecast for New York",        "Will it rain in London this weekend?"      ],      "tags": [        "weather",        "forecast",        "prediction"      ]    }  ] }` |
-| :---- |
+```json
+{
+  "name": "WeatherBot",
+  "description": "Provides accurate weather forecasts and historical data.",
+  "url": "http://weather-service.example.com/a2a",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "authentication": {
+    "schemes": [
+      "apiKey"
+    ]
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "get_current_weather",
+      "name": "Get Current Weather",
+      "description": "Retrieve real-time weather for any location.",
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ],
+      "examples": [
+        "What's the weather in Paris?",
+        "Current conditions in Tokyo"
+      ],
+      "tags": [
+        "weather",
+        "current",
+        "real-time"
+      ]
+    },
+    {
+      "id": "get_forecast",
+      "name": "Get Forecast",
+      "description": "Get 5-day weather predictions.",
+      "inputModes": [
+        "text"
+      ],
+      "outputModes": [
+        "text"
+      ],
+      "examples": [
+        "5-day forecast for New York",
+        "Will it rain in London this weekend?"
+      ],
+      "tags": [
+        "weather",
+        "forecast",
+        "prediction"
+      ]
+    }
+  ]
+}
+```
 
 **Agent 发现**：它允许客户端找到描述可用 A2A 服务器能力的 Agent 卡片。这个过程存在几种策略：
 
@@ -48,13 +112,55 @@ A2A 协议为 Agent 交互提供了结构化的方法，建立在几个核心概
 
 Agent 卡片指定 Agent 是否支持流式传输或推送通知功能。此外，A2A 是模态无关的，这意味着它不仅可以为文本促进这些交互模式，还可以为音频和视频等其他数据类型促进，从而实现丰富的多模态 AI 应用。流式传输和推送通知功能都在 Agent 卡片中指定。
 
-| `# 同步请求示例 {  "jsonrpc": "2.0",  "id": "1",  "method": "sendTask",  "params": {    "id": "task-001",    "sessionId": "session-001",    "message": {      "role": "user",      "parts": [        {          "type": "text",          "text": "What is the exchange rate from USD to EUR?"        }      ]    },    "acceptedOutputModes": ["text/plain"],    "historyLength": 5  } }` |
-| :---- |
+```json
+# 同步请求示例
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "sendTask",
+  "params": {
+    "id": "task-001",
+    "sessionId": "session-001",
+    "message": {
+      "role": "user",
+      "parts": [
+        {
+          "type": "text",
+          "text": "What is the exchange rate from USD to EUR?"
+        }
+      ]
+    },
+    "acceptedOutputModes": ["text/plain"],
+    "historyLength": 5
+  }
+}
+```
 
 同步请求使用 sendTask 方法，其中客户端请求并期望对其查询的单个完整答案。相比之下，流式请求使用 sendTaskSubscribe 方法建立持久连接，允许 Agent 随时间发送多个增量更新或部分结果。
 
-| `# 流式请求示例 {  "jsonrpc": "2.0",  "id": "2",  "method": "sendTaskSubscribe",  "params": {    "id": "task-002",    "sessionId": "session-001",    "message": {      "role": "user",      "parts": [        {          "type": "text",          "text": "What's the exchange rate for JPY to GBP today?"        }      ]    },    "acceptedOutputModes": ["text/plain"],    "historyLength": 5  } }` |
-| :---- |
+```json
+# 流式请求示例
+{
+  "jsonrpc": "2.0",
+  "id": "2",
+  "method": "sendTaskSubscribe",
+  "params": {
+    "id": "task-002",
+    "sessionId": "session-001",
+    "message": {
+      "role": "user",
+      "parts": [
+        {
+          "type": "text",
+          "text": "What's the exchange rate for JPY to GBP today?"
+        }
+      ]
+    },
+    "acceptedOutputModes": ["text/plain"],
+    "historyLength": 5
+  }
+}
+```
 
 **安全性**：Agent 间通信（A2A）：Agent 间通信（A2A）是系统架构的重要组成部分，能够在 Agent 之间实现安全和无缝的数据交换。它通过几个内置机制确保稳健性和完整性。
 
@@ -88,15 +194,104 @@ Agent 间通信对于跨不同领域构建复杂的 AI 解决方案不可或缺�
 
 让我们检查 A2A 协议的实际应用。位于 [https://github.com/google-a2a/a2a-samples/tree/main/samples](https://github.com/google-a2a/a2a-samples/tree/main/samples) 的存储库提供了 Java、Go 和 Python 中的示例，说明了各种 Agent 框架（如 LangGraph、CrewAI、Azure AI Foundry 和 AG2）如何使用 A2A 进行通信。此存储库中的所有代码都在 Apache 2.0 许可证下发布。为了进一步说明 A2A 的核心概念，我们将审查代码摘录，重点是使用基于 ADK 的 Agent 和 Google 身份验证工具设置 A2A 服务器。查看 [https://github.com/google-a2a/a2a-samples/blob/main/samples/python/agents/birthday\_planner\_adk/calendar\_agent/adk\_agent.py](https://github.com/google-a2a/a2a-samples/blob/main/samples/python/agents/birthday_planner_adk/calendar_agent/adk_agent.py)
 
-| `import datetime from google.adk.agents import LlmAgent # type: ignore[import-untyped] from google.adk.tools.google_api_tool import CalendarToolset # type: ignore[import-untyped] async def create_agent(client_id, client_secret) -> LlmAgent:    """构造 ADK agent。"""    toolset = CalendarToolset(client_id=client_id, client_secret=client_secret)    return LlmAgent(        model='gemini-2.0-flash-001',        name='calendar_agent',        description="An agent that can help manage a user's calendar",        instruction=f""" You are an agent that can help manage a user's calendar. Users will request information about the state of their calendar  or to make changes to their calendar. Use the provided tools for interacting with the calendar API. If not specified, assume the calendar the user wants is the 'primary' calendar. When using the Calendar API tools, use well-formed RFC3339 timestamps. Today is {datetime.datetime.now()}. """,        tools=await toolset.get_tools(),    )` |
-| :---- |
+```python
+import datetime
+from google.adk.agents import LlmAgent  # type: ignore[import-untyped]
+from google.adk.tools.google_api_tool import CalendarToolset  # type: ignore[import-untyped]
+
+async def create_agent(client_id, client_secret) -> LlmAgent:
+    """构造 ADK agent。"""
+    toolset = CalendarToolset(client_id=client_id, client_secret=client_secret)
+    return LlmAgent(
+        model='gemini-2.0-flash-001',
+        name='calendar_agent',
+        description="An agent that can help manage a user's calendar",
+        instruction=f"""
+You are an agent that can help manage a user's calendar. Users will request information about the state of their calendar  or to make changes to their calendar. Use the provided tools for interacting with the calendar API. If not specified, assume the calendar the user wants is the 'primary' calendar. When using the Calendar API tools, use well-formed RFC3339 timestamps. Today is {datetime.datetime.now()}.
+""",
+        tools=await toolset.get_tools(),
+    )
+```
 
 这段 Python 代码定义了一个异步函数 `create_agent`，用于构造 ADK LlmAgent。它首先使用提供的客户端凭据初始化 `CalendarToolset`，以访问 Google Calendar API。随后，创建一个 `LlmAgent` 实例，配置了指定的 Gemini 模型、描述性名称和管理用户日历的指令。Agent 配备了来自 `CalendarToolset` 的日历工具，使其能够与 Calendar API 交互并响应有关日历状态或修改的用户查询。Agent 的指令动态合并当前日期以提供时间上下文。为了说明如何构造 Agent，让我们检查 GitHub 上 A2A 示例中 calendar_agent 的关键部分。
 
 下面的代码显示了 Agent 如何使用其特定指令和工具定义。请注意，仅显示了解释此功能所需的代码；您可以在此处访问完整文件：[https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/birthday\_planner\_adk/calendar\_agent/\_\_main\_\_.py](https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/birthday_planner_adk/calendar_agent/__main__.py)
 
-| `def main(host: str, port: int):    # 验证是否设置了 API 密钥。    # 如果使用 Vertex AI API，则不需要。    if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') != 'TRUE' and not os.getenv(        'GOOGLE_API_KEY'    ):        raise ValueError(            'GOOGLE_API_KEY environment variable not set and '            'GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'        )    skill = AgentSkill(        id='check_availability',        name='Check Availability',        description="Checks a user's availability for a time using their Google Calendar",        tags=['calendar'],        examples=['Am I free from 10am to 11am tomorrow?'],    )    agent_card = AgentCard(        name='Calendar Agent',        description="An agent that can manage a user's calendar",        url=f'http://{host}:{port}/',        version='1.0.0',        defaultInputModes=['text'],        defaultOutputModes=['text'],        capabilities=AgentCapabilities(streaming=True),        skills=[skill],    )    adk_agent = asyncio.run(create_agent(        client_id=os.getenv('GOOGLE_CLIENT_ID'),        client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),    ))    runner = Runner(        app_name=agent_card.name,        agent=adk_agent,        artifact_service=InMemoryArtifactService(),        session_service=InMemorySessionService(),        memory_service=InMemoryMemoryService(),    )    agent_executor = ADKAgentExecutor(runner, agent_card)    async def handle_auth(request: Request) -> PlainTextResponse:        await agent_executor.on_auth_callback(            str(request.query_params.get('state')), str(request.url)        )        return PlainTextResponse('Authentication successful.')    request_handler = DefaultRequestHandler(        agent_executor=agent_executor, task_store=InMemoryTaskStore()    )    a2a_app = A2AStarletteApplication(        agent_card=agent_card, http_handler=request_handler    )    routes = a2a_app.routes()    routes.append(        Route(            path='/authenticate',            methods=['GET'],            endpoint=handle_auth,        )    )    app = Starlette(routes=routes)    uvicorn.run(app, host=host, port=port) if __name__ == '__main__':    main()` |
-| :---- |
+```python
+def main(host: str, port: int):
+    # 验证是否设置了 API 密钥。
+    # 如果使用 Vertex AI API，则不需要。
+    if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') != 'TRUE' and not os.getenv(
+        'GOOGLE_API_KEY'
+    ):
+        raise ValueError(
+            'GOOGLE_API_KEY environment variable not set and '
+            'GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
+        )
+
+    skill = AgentSkill(
+        id='check_availability',
+        name='Check Availability',
+        description="Checks a user's availability for a time using their Google Calendar",
+        tags=['calendar'],
+        examples=['Am I free from 10am to 11am tomorrow?'],
+    )
+
+    agent_card = AgentCard(
+        name='Calendar Agent',
+        description="An agent that can manage a user's calendar",
+        url=f'http://{host}:{port}/',
+        version='1.0.0',
+        defaultInputModes=['text'],
+        defaultOutputModes=['text'],
+        capabilities=AgentCapabilities(streaming=True),
+        skills=[skill],
+    )
+
+    adk_agent = asyncio.run(create_agent(
+        client_id=os.getenv('GOOGLE_CLIENT_ID'),
+        client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    ))
+
+    runner = Runner(
+        app_name=agent_card.name,
+        agent=adk_agent,
+        artifact_service=InMemoryArtifactService(),
+        session_service=InMemorySessionService(),
+        memory_service=InMemoryMemoryService(),
+    )
+
+    agent_executor = ADKAgentExecutor(runner, agent_card)
+
+    async def handle_auth(request: Request) -> PlainTextResponse:
+        await agent_executor.on_auth_callback(
+            str(request.query_params.get('state')), str(request.url)
+        )
+        return PlainTextResponse('Authentication successful.')
+
+    request_handler = DefaultRequestHandler(
+        agent_executor=agent_executor, task_store=InMemoryTaskStore()
+    )
+
+    a2a_app = A2AStarletteApplication(
+        agent_card=agent_card, http_handler=request_handler
+    )
+
+    routes = a2a_app.routes()
+    routes.append(
+        Route(
+            path='/authenticate',
+            methods=['GET'],
+            endpoint=handle_auth,
+        )
+    )
+
+    app = Starlette(routes=routes)
+    uvicorn.run(app, host=host, port=port)
+
+if __name__ == '__main__':
+    main()
+```
 
 这段 Python 代码演示了设置符合 A2A 的"日历 Agent"，用于使用 Google Calendar 检查用户可用性。它涉及验证 API 密钥或 Vertex AI 配置以用于身份验证目的。Agent 的能力（包括"check_availability"技能）在 AgentCard 中定义，该卡片还指定 Agent 的网络地址。随后，创建 ADK agent，配置内存服务以管理工件、会话和内存。然后代码初始化 Starlette Web 应用程序，合并身份验证回调和 A2A 协议处理程序，并使用 Uvicorn 执行它以通过 HTTP 公开 Agent。
 
@@ -104,7 +299,7 @@ Agent 间通信对于跨不同领域构建复杂的 AI 解决方案不可或缺�
 
 建议通过 [https://www.trickle.so/blog/how-to-build-google-a2a-project](https://www.trickle.so/blog/how-to-build-google-a2a-project) 上的代码演示进一步探索 A2A。此链接提供的资源包括 Python 和 JavaScript 中的示例 A2A 客户端和服务器、多 Agent Web 应用程序、命令行界面以及各种 Agent 框架的示例实现。
 
-# 一览
+# 概览
 
 **什么**：单个 AI Agent，特别是那些基于不同框架构建的 Agent，在处理复杂、多方面的问题时通常会遇到困难。主要挑战是缺乏允许它们有效通信和协作的通用语言或协议。这种隔离阻止了创建复杂系统，其中多个专门的 Agent 可以结合其独特的技能来解决更大的任务。如果没有标准化的方法，集成这些不同的 Agent 既昂贵又耗时，并阻碍了更强大、更具凝聚力的 AI 解决方案的开发。
 

@@ -77,74 +77,74 @@ from crewai import Agent, Task, Crew, Process
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 def setup_environment():
-   """加载环境变量并检查所需的 API 密钥。"""
-   load_dotenv()
-   if not os.getenv("GOOGLE_API_KEY"):
-       raise ValueError("未找到 GOOGLE_API_KEY。请在您的 .env 文件中设置它。")
+    """加载环境变量并检查所需的 API 密钥。"""
+    load_dotenv()
+    if not os.getenv("GOOGLE_API_KEY"):
+        raise ValueError("未找到 GOOGLE_API_KEY。请在您的 .env 文件中设置它。")
 
 def main():
-   """
-   使用最新的 Gemini 模型初始化并运行用于内容创建的 AI 团队。
-   """
-   setup_environment()
-   
-   # 定义要使用的语言模型。
-   # 更新为 Gemini 2.0 系列中的模型以获得更好的性能和功能。
-   # 对于尖端（预览）功能，您可以使用 "gemini-2.5-flash"。
-   llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
-   
-   # 定义具有特定角色和目标的 Agent
-   researcher = Agent(
-       role='高级研究分析师',
-       goal='查找并总结 AI 的最新趋势。',
-       backstory="你是一位经验丰富的研究分析师，擅长识别关键趋势和综合信息。",
-       verbose=True,
-       allow_delegation=False,
-   )
-   
-   writer = Agent(
-       role='技术内容作家',
-       goal='基于研究发现撰写清晰且引人入胜的博客文章。',
-       backstory="你是一位熟练的作家，可以将复杂的技术主题转化为易于理解的内容。",
-       verbose=True,
-       allow_delegation=False,
-   )
-   
-   # 为 Agent 定义任务
-   research_task = Task(
-       description="研究 2024-2025 年人工智能中出现的前 3 个趋势。重点关注实际应用和潜在影响。",
-       expected_output="前 3 个 AI 趋势的详细摘要，包括关键点和来源。",
-       agent=researcher,
-   )
-   
-   writing_task = Task(
-       description="基于研究发现撰写一篇 500 字的博客文章。文章应该引人入胜且易于普通读者理解。",
-       expected_output="一篇关于最新 AI 趋势的完整 500 字博客文章。",
-       agent=writer,
-       context=[research_task],
-   )
-   
-   # 创建团队
-   blog_creation_crew = Crew(
-       agents=[researcher, writer],
-       tasks=[research_task, writing_task],
-       process=Process.sequential,
-       llm=llm,
-       verbose=2 # 为详细的团队执行日志设置详细程度
-   )
-   
-   # 执行团队
-   print("## 使用 Gemini 2.0 Flash 运行博客创建团队... ##")
-   try:
-       result = blog_creation_crew.kickoff()
-       print("\n------------------\n")
-       print("## 团队最终输出 ##")
-       print(result)
-   except Exception as e:
-       print(f"\n发生意外错误：{e}")
+    """
+    使用最新的 Gemini 模型初始化并运行用于内容创建的 AI 团队。
+    """
+    setup_environment()
+    
+    # 定义要使用的语言模型。
+    # 更新为 Gemini 2.0 系列中的模型以获得更好的性能和功能。
+    # 对于尖端（预览）功能，您可以使用 "gemini-2.5-flash"。
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+    
+    # 定义具有特定角色和目标的 Agent
+    researcher = Agent(
+        role='高级研究分析师',
+        goal='查找并总结 AI 的最新趋势。',
+        backstory="你是一位经验丰富的研究分析师，擅长识别关键趋势和综合信息。",
+        verbose=True,
+        allow_delegation=False,
+    )
+    
+    writer = Agent(
+        role='技术内容作家',
+        goal='基于研究发现撰写清晰且引人入胜的博客文章。',
+        backstory="你是一位熟练的作家，可以将复杂的技术主题转化为易于理解的内容。",
+        verbose=True,
+        allow_delegation=False,
+    )
+    
+    # 为 Agent 定义任务
+    research_task = Task(
+        description="研究 2024-2025 年人工智能中出现的前 3 个趋势。重点关注实际应用和潜在影响。",
+        expected_output="前 3 个 AI 趋势的详细摘要，包括关键点和来源。",
+        agent=researcher,
+    )
+    
+    writing_task = Task(
+        description="基于研究发现撰写一篇 500 字的博客文章。文章应该引人入胜且易于普通读者理解。",
+        expected_output="一篇关于最新 AI 趋势的完整 500 字博客文章。",
+        agent=writer,
+        context=[research_task],
+    )
+    
+    # 创建团队
+    blog_creation_crew = Crew(
+        agents=[researcher, writer],
+        tasks=[research_task, writing_task],
+        process=Process.sequential,
+        llm=llm,
+        verbose=2 # 为详细的团队执行日志设置详细程度
+    )
+    
+    # 执行团队
+    print("## 使用 Gemini 2.0 Flash 运行博客创建团队... ##")
+    try:
+        result = blog_creation_crew.kickoff()
+        print("\n------------------\n")
+        print("## 团队最终输出 ##")
+        print(result)
+    except Exception as e:
+        print(f"\n发生意外错误：{e}")
 
 if __name__ == "__main__":
-   main()
+    main()
 ```
 
 我们现在将深入研究 Google ADK 框架中的更多示例，特别强调层次化、并行和顺序协调范式，以及将 Agent 实现为操作工具。
@@ -161,22 +161,22 @@ from typing import AsyncGenerator
 
 # 通过扩展 BaseAgent 正确实现自定义 Agent
 class TaskExecutor(BaseAgent):
-   """具有自定义非 LLM 行为的专门 Agent。"""
-   name: str = "TaskExecutor"
-   description: str = "执行预定义的任务。"
-   
-   async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:
-       """任务的自定义实现逻辑。"""
-       # 这是您的自定义逻辑所在的地方。
-       # 对于此示例，我们只会生成一个简单的事件。
-       yield Event(author=self.name, content="任务成功完成。")
+    """具有自定义非 LLM 行为的专门 Agent。"""
+    name: str = "TaskExecutor"
+    description: str = "执行预定义的任务。"
+    
+    async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:
+        """任务的自定义实现逻辑。"""
+        # 这是您的自定义逻辑所在的地方。
+        # 对于此示例，我们只会生成一个简单的事件。
+        yield Event(author=self.name, content="任务成功完成。")
 
 # 使用适当的初始化定义单个 Agent
 # LlmAgent 需要指定模型。
 greeter = LlmAgent(
-   name="Greeter",
-   model="gemini-2.0-flash-exp",
-   instruction="你是一个友好的欢迎者。"
+    name="Greeter",
+    model="gemini-2.0-flash-exp",
+    instruction="你是一个友好的欢迎者。"
 )
 
 task_doer = TaskExecutor() # 实例化我们的具体自定义 Agent
@@ -184,14 +184,14 @@ task_doer = TaskExecutor() # 实例化我们的具体自定义 Agent
 # 创建父 Agent 并分配其子 Agent
 # 父 Agent 的描述和指令应该引导其委托逻辑。
 coordinator = LlmAgent(
-   name="Coordinator",
-   model="gemini-2.0-flash-exp",
-   description="可以欢迎用户并执行任务的协调者。",
-   instruction="当被要求欢迎时，委托给 Greeter。当被要求执行任务时，委托给 TaskExecutor。",
-   sub_agents=[
-       greeter,
-       task_doer
-   ]
+    name="Coordinator",
+    model="gemini-2.0-flash-exp",
+    description="可以欢迎用户并执行任务的协调者。",
+    instruction="当被要求欢迎时，委托给 Greeter。当被要求执行任务时，委托给 TaskExecutor。",
+    sub_agents=[
+        greeter,
+        task_doer
+    ]
 )
 
 # ADK 框架自动建立父子关系。
@@ -213,39 +213,39 @@ from google.adk.agents.invocation_context import InvocationContext
 
 # 最佳实践：将自定义 Agent 定义为完整的、自描述的类。
 class ConditionChecker(BaseAgent):
-   """检查会话状态中"completed"状态的自定义 Agent。"""
-   name: str = "ConditionChecker"
-   description: str = "检查流程是否完成并向循环发出停止信号。"
-   
-   async def _run_async_impl(
-       self, context: InvocationContext
-   ) -> AsyncGenerator[Event, None]:
-       """检查状态并生成事件以继续或停止循环。"""
-       status = context.session.state.get("status", "pending")
-       is_done = (status == "completed")
-       
-       if is_done:
-           # 在满足条件时升级以终止循环。
-           yield Event(author=self.name, actions=EventActions(escalate=True))
-       else:
-           # 生成简单事件以继续循环。
-           yield Event(author=self.name, content="条件未满足，继续循环。")
+    """检查会话状态中"completed"状态的自定义 Agent。"""
+    name: str = "ConditionChecker"
+    description: str = "检查流程是否完成并向循环发出停止信号。"
+    
+    async def _run_async_impl(
+        self, context: InvocationContext
+    ) -> AsyncGenerator[Event, None]:
+        """检查状态并生成事件以继续或停止循环。"""
+        status = context.session.state.get("status", "pending")
+        is_done = (status == "completed")
+        
+        if is_done:
+            # 在满足条件时升级以终止循环。
+            yield Event(author=self.name, actions=EventActions(escalate=True))
+        else:
+            # 生成简单事件以继续循环。
+            yield Event(author=self.name, content="条件未满足，继续循环。")
 
 # 更正：LlmAgent 必须有模型和清晰的指令。
 process_step = LlmAgent(
-   name="ProcessingStep",
-   model="gemini-2.0-flash-exp",
-   instruction="你是较长流程中的一步。执行你的任务。如果你是最后一步，通过将 'status' 设置为 'completed' 来更新会话状态。"
+    name="ProcessingStep",
+    model="gemini-2.0-flash-exp",
+    instruction="你是较长流程中的一步。执行你的任务。如果你是最后一步，通过将 'status' 设置为 'completed' 来更新会话状态。"
 )
 
 # LoopAgent 编排工作流。
 poller = LoopAgent(
-   name="StatusPoller",
-   max_iterations=10,
-   sub_agents=[
-       process_step,
-       ConditionChecker() # 实例化定义良好的自定义 Agent。
-   ]
+    name="StatusPoller",
+    max_iterations=10,
+    sub_agents=[
+        process_step,
+        ConditionChecker() # 实例化定义良好的自定义 Agent。
+    ]
 )
 
 # 此轮询器现在将执行 'process_step'
@@ -257,21 +257,22 @@ poller = LoopAgent(
 此代码摘录阐明了 Google ADK 中的 SequentialAgent 模式，专为构建线性工作流而设计。此代码使用 google.adk.agents 库定义顺序 Agent 管道。管道由两个 Agent 组成，step1 和 step2。step1 命名为"Step1_Fetch"，其输出将存储在会话状态中的键"data"下。step2 命名为"Step2_Process"，并被指示分析存储在 session.state["data"] 中的信息并提供摘要。名为"MyPipeline"的 SequentialAgent 编排这些子 Agent 的执行。当使用初始输入运行管道时，step1 将首先执行。来自 step1 的响应将保存到键"data"下的会话状态中。随后，step2 将执行，根据其指令利用 step1 放入状态的信息。此结构允许构建工作流，其中一个 Agent 的输出成为下一个 Agent 的输入。这是创建多步 AI 或数据处理管道的常见模式。
 
 ```python
-from google.adk.agents import SequentialAgent, Agent
+from google.adk.agents import SequentialAgent, LlmAgent # Changed Agent to LlmAgent
 
 # 此 Agent 的输出将保存到 session.state["data"]
-step1 = Agent(name="Step1_Fetch", output_key="data")
+step1 = LlmAgent(name="Step1_Fetch", output_key="data", model="gemini-2.0-flash-exp") # Added model for LlmAgent
 
 # 此 Agent 将使用前一步的数据。
 # 我们指示它如何查找和使用此数据。
-step2 = Agent(
-   name="Step2_Process",
-   instruction="分析在 state['data'] 中找到的信息并提供摘要。"
+step2 = LlmAgent( # Changed Agent to LlmAgent
+    name="Step2_Process",
+    instruction="分析在 state['data'] 中找到的信息并提供摘要。",
+    model="gemini-2.0-flash-exp" # Added model for LlmAgent
 )
 
 pipeline = SequentialAgent(
-   name="MyPipeline",
-   sub_agents=[step1, step2]
+    name="MyPipeline",
+    sub_agents=[step1, step2]
 )
 
 # 当使用初始输入运行管道时，Step1 将执行，
@@ -282,34 +283,34 @@ pipeline = SequentialAgent(
 以下代码示例说明了 Google ADK 中的 ParallelAgent 模式，它促进多个 Agent 任务的并发执行。data_gatherer 设计为并发运行两个子 Agent：weather_fetcher 和 news_fetcher。weather_fetcher Agent 被指示获取给定位置的天气并将结果存储在 session.state["weather_data"] 中。同样，news_fetcher Agent 被指示检索给定主题的头条新闻故事并将其存储在 session.state["news_data"] 中。每个子 Agent 都配置为使用"gemini-2.0-flash-exp"模型。ParallelAgent 编排这些子 Agent 的执行，允许它们并行工作。来自 weather_fetcher 和 news_fetcher 的结果将被收集并存储在会话状态中。最后，示例展示了如何在 Agent 执行完成后从 final_state 访问收集的天气和新闻数据。
 
 ```python
-from google.adk.agents import Agent, ParallelAgent
+from google.adk.agents import LlmAgent, ParallelAgent # Changed Agent to LlmAgent
 
 # 最好将获取逻辑定义为 Agent 的工具
 # 为了简化此示例，我们将逻辑嵌入 Agent 的指令中。
 # 在实际场景中，您将使用工具。
 
 # 定义将并行运行的各个 Agent
-weather_fetcher = Agent(
-   name="weather_fetcher",
-   model="gemini-2.0-flash-exp",
-   instruction="获取给定位置的天气并仅返回天气报告。",
-   output_key="weather_data"  # 结果将存储在 session.state["weather_data"] 中
+weather_fetcher = LlmAgent( # Changed Agent to LlmAgent
+    name="weather_fetcher",
+    model="gemini-2.0-flash-exp",
+    instruction="获取给定位置的天气并仅返回天气报告。",
+    output_key="weather_data"  # 结果将存储在 session.state["weather_data"] 中
 )
 
-news_fetcher = Agent(
-   name="news_fetcher",
-   model="gemini-2.0-flash-exp",
-   instruction="获取给定主题的头条新闻故事并仅返回该故事。",
-   output_key="news_data"      # 结果将存储在 session.state["news_data"] 中
+news_fetcher = LlmAgent( # Changed Agent to LlmAgent
+    name="news_fetcher",
+    model="gemini-2.0-flash-exp",
+    instruction="获取给定主题的头条新闻故事并仅返回该故事。",
+    output_key="news_data"      # 结果将存储在 session.state["news_data"] 中
 )
 
 # 创建 ParallelAgent 以编排子 Agent
 data_gatherer = ParallelAgent(
-   name="data_gatherer",
-   sub_agents=[
-       weather_fetcher,
-       news_fetcher
-   ]
+    name="data_gatherer",
+    sub_agents=[
+        weather_fetcher,
+        news_fetcher
+    ]
 )
 ```
 
@@ -323,55 +324,55 @@ from google.genai import types
 # 1. 核心能力的简单函数工具。
 # 这遵循将操作与推理分离的最佳实践。
 def generate_image(prompt: str) -> dict:
-   """
-   基于文本提示词生成图像。
-   参数：
-       prompt：要生成的图像的详细描述。
-   返回：
-       包含状态和生成的图像字节的字典。
-   """
-   print(f"工具：为提示词生成图像：'{prompt}'")
-   # 在真实实现中，这将调用图像生成 API。
-   # 对于此示例，我们返回模拟图像数据。
-   mock_image_bytes = b"mock_image_data_for_a_cat_wearing_a_hat"
-   return {
-       "status": "success",
-       # 工具返回原始字节，Agent 将处理 Part 创建。
-       "image_bytes": mock_image_bytes,
-       "mime_type": "image/png"
-   }
+    """
+    基于文本提示词生成图像。
+    参数：
+        prompt：要生成的图像的详细描述。
+    返回：
+        包含状态和生成的图像字节的字典。
+    """
+    print(f"工具：为提示词生成图像：'{prompt}'")
+    # 在真实实现中，这将调用图像生成 API。
+    # 对于此示例，我们返回模拟图像数据。
+    mock_image_bytes = b"mock_image_data_for_a_cat_wearing_a_hat"
+    return {
+        "status": "success",
+        # 工具返回原始字节，Agent 将处理 Part 创建。
+        "image_bytes": mock_image_bytes,
+        "mime_type": "image/png"
+    }
 
 # 2. 将 ImageGeneratorAgent 重构为 LlmAgent。
 # 它现在正确使用传递给它的输入。
 image_generator_agent = LlmAgent(
-   name="ImageGen",
-   model="gemini-2.0-flash",
-   description="基于详细的文本提示词生成图像。",
-   instruction=(
-       "你是图像生成专家。你的任务是接受用户的请求 "
-       "并使用 `generate_image` 工具创建图像。"
-       "用户的整个请求应用作工具的 'prompt' 参数。"
-       "工具返回图像字节后，你必须输出图像。"
-   ),
-   tools=[generate_image]
+    name="ImageGen",
+    model="gemini-2.0-flash",
+    description="基于详细的文本提示词生成图像。",
+    instruction=(
+        "你是图像生成专家。你的任务是接受用户的请求 "
+        "并使用 `generate_image` 工具创建图像。"
+        "用户的整个请求应用作工具的 'prompt' 参数。"
+        "工具返回图像字节后，你必须输出图像。"
+    ),
+    tools=[generate_image]
 )
 
 # 3. 将更正的 Agent 包装在 AgentTool 中。
 # 这里的描述是父 Agent 看到的。
 image_tool = agent_tool.AgentTool(
-   agent=image_generator_agent,
-   description="使用此工具生成图像。输入应该是所需图像的描述性提示词。"
+    agent=image_generator_agent,
+    description="使用此工具生成图像。输入应该是所需图像的描述性提示词。"
 )
 
 # 4. 父 Agent 保持不变。其逻辑是正确的。
 artist_agent = LlmAgent(
-   name="Artist",
-   model="gemini-2.0-flash",
-   instruction=(
-       "你是一位富有创造力的艺术家。首先，为图像发明一个创意且描述性的提示词。"
-       "然后，使用 `ImageGen` 工具使用你的提示词生成图像。"
-   ),
-   tools=[image_tool]
+    name="Artist",
+    model="gemini-2.0-flash",
+    instruction=(
+        "你是一位富有创造力的艺术家。首先，为图像发明一个创意且描述性的提示词。"
+        "然后，使用 `ImageGen` 工具使用你的提示词生成图像。"
+    ),
+    tools=[image_tool]
 )
 ```
 

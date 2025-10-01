@@ -112,9 +112,9 @@ from openevolve import OpenEvolve
 
 # 初始化系统
 evolve = OpenEvolve(
-   initial_program_path="path/to/initial_program.py",
-   evaluation_file="path/to/evaluator.py",
-   config_path="path/to/config.yaml"
+    initial_program_path="path/to/initial_program.py",
+    evaluation_file="path/to/evaluator.py",
+    config_path="path/to/config.yaml"
 )
 
 # 运行进化
@@ -122,7 +122,7 @@ best_program = await evolve.run(iterations=1000)
 
 print(f"最佳程序指标：")
 for name, value in best_program.metrics.items():
-   print(f"  {name}: {value:.4f}")
+    print(f"  {name}: {value:.4f}")
 ```
 
 # 概览

@@ -88,30 +88,30 @@ def personalization_callback(
 ) -> Optional[LlmRequest]:
    """将个性化信息添加到 LLM 请求中。"""
    # 从状态获取客户信息
-   customer_info = callback_context.state.get("customer_info")
+customer_info = callback_context.state.get("customer_info")
    
    if customer_info:
-       customer_name = customer_info.get("name", "valued customer")
-       customer_tier = customer_info.get("tier", "standard")
-       recent_purchases = customer_info.get("recent_purchases", [])
+    customer_name = customer_info.get("name", "valued customer")
+    customer_tier = customer_info.get("tier", "standard")
+    recent_purchases = customer_info.get("recent_purchases", [])
        
-       personalization_note = (
-           f"\n重要的个性化信息：\n"
-           f"客户姓名：{customer_name}\n"
-           f"客户等级：{customer_tier}\n"
-       )
+        personalization_note = (
+            f"\n重要的个性化信息：\n"
+            f"客户姓名：{customer_name}\n"
+            f"客户等级：{customer_tier}\n"
+        )
        
-       if recent_purchases:
-           personalization_note += f"最近购买：{', '.join(recent_purchases)}\n"
+        if recent_purchases:
+            personalization_note += f"最近购买：{', '.join(recent_purchases)}\n"
        
-       if llm_request.contents:
-           # 在第一个内容之前添加为系统消息
-           system_content = types.Content(
-               role="system", parts=[types.Part(text=personalization_note)]
-           )
-           llm_request.contents.insert(0, system_content)
+        if llm_request.contents:
+            # 在第一个内容之前添加为系统消息
+            system_content = types.Content(
+                role="system", parts=[types.Part(text=personalization_note)]
+            )
+            llm_request.contents.insert(0, system_content)
    
-   return None  # 返回 None 以继续修改后的请求
+    return None  # 返回 None 以继续修改后的请求
 ```
 
 此代码提供了使用 Google 的 ADK 创建技术支持 Agent 的蓝图，围绕 HITL 框架设计。Agent 充当智能的第一线支持，配置了特定的指令，并配备了 troubleshoot_issue、create_ticket 和 escalate_to_human 等工具来管理完整的支持工作流。升级工具是 HITL 设计的核心部分，确保复杂或敏感的案例被传递给人类专家。
