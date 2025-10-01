@@ -213,7 +213,7 @@ Agent 通过一组定义的工具与任务管理器交互。这些工具促进�
 
 代码包含一个异步性质的模拟函数（[`run_simulation`](chapters/Chapter 20_ Prioritization.md:112)）来演示 Agent 的操作能力。模拟执行两个不同的场景：管理具有指定人员的紧急任务，以及管理具有最少输入的不太紧急的任务。由于在 [`AgentExecutor`](chapters/Chapter 20_ Prioritization.md:104) 中激活了 `verbose=True`，Agent 的行动和逻辑过程会输出到控制台。
 
-# 一览
+# 概览
 
 **定义（What）：** 在复杂环境中运行的 AI Agent 面临大量潜在行动、相互冲突的目标和有限的资源。如果没有明确的方法来确定下一步行动，这些 Agent 将面临效率低下和效果不佳的风险。这可能导致严重的操作延迟或完全无法完成主要目标。核心挑战是管理这一压倒性数量的选择，以确保 Agent 有目的性和逻辑性地行动。
 

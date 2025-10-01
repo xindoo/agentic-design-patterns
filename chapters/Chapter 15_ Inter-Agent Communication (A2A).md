@@ -299,7 +299,7 @@ if __name__ == '__main__':
 
 建议通过 [https://www.trickle.so/blog/how-to-build-google-a2a-project](https://www.trickle.so/blog/how-to-build-google-a2a-project) 上的代码演示进一步探索 A2A。此链接提供的资源包括 Python 和 JavaScript 中的示例 A2A 客户端和服务器、多 Agent Web 应用程序、命令行界面以及各种 Agent 框架的示例实现。
 
-# 一览
+# 概览
 
 **什么**：单个 AI Agent，特别是那些基于不同框架构建的 Agent，在处理复杂、多方面的问题时通常会遇到困难。主要挑战是缺乏允许它们有效通信和协作的通用语言或协议。这种隔离阻止了创建复杂系统，其中多个专门的 Agent 可以结合其独特的技能来解决更大的任务。如果没有标准化的方法，集成这些不同的 Agent 既昂贵又耗时，并阻碍了更强大、更具凝聚力的 AI 解决方案的开发。
 

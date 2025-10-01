@@ -237,7 +237,7 @@ if __name__ == "__main__":
 
 这段 Python 代码说明了使用 LangChain 和 LangGraph 实现的检索增强生成（RAG）管道。该过程从基于文本文档创建知识库开始，该文档被分割成块并转换为嵌入。然后将这些嵌入存储在 Weaviate 向量存储中，便于高效的信息检索。LangGraph 中的 StateGraph 用于管理两个关键函数之间的工作流：`retrieve_documents_node` 和 `generate_response_node`。`retrieve_documents_node` 函数查询向量存储，基于用户的输入识别相关文档块。随后，`generate_response_node` 函数利用检索的信息和预定义的提示模板，使用 OpenAI 大语言模型（LLM）生成响应。`app.stream` 方法允许通过 RAG 管道执行查询，展示系统生成上下文相关输出的能力。
 
-# 一览
+# 概览
 
 **什么**：LLM 在文本生成方面具有令人印象深刻的能力，但从根本上受到其训练数据的限制。这些知识是静态的，这意味着它不包括实时信息或私有的、特定领域的数据。因此，它们的响应可能过时、不准确或缺乏专业任务所需的特定上下文。这一差距限制了它们对需要当前和事实答案的应用的可靠性。
 
