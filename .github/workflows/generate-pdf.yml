@@ -52,7 +52,6 @@ jobs:
         }
         
         # 按照Agentic Design Patterns.md中定义的顺序拼接章节
-        process_and_append "README.md" "intro"
         process_and_append "Chapter 1_ Prompt Chaining.md" "ch1"
         process_and_append "Chapter 2_ Routing.md" "ch2"
         process_and_append "Chapter 3_ Parallelization.md" "ch3"
