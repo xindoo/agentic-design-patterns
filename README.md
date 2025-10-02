@@ -1,3 +1,5 @@
+![封面图](images/cover.png)
+
 # Agentic Design Patterns（中文翻译项目）
 
 ## 📚 项目简介
