@@ -1,6 +1,6 @@
 # Appendix D \- Building an Agent with AgentSpace
 
-# Overview
+## Overview
 
 AgentSpace is a platform designed to facilitate an "agent-driven enterprise" by integrating artificial intelligence into daily workflows. At its core, it provides a unified search capability across an organization's entire digital footprint, including documents, emails, and databases. This system utilizes advanced AI models, like Google's Gemini, to comprehend and synthesize information from these varied sources.
 
@@ -10,7 +10,7 @@ To achieve this, AgentSpace constructs an enterprise knowledge graph, mapping th
 
 Furthermore, AgentSpace supports a multi-agent system where different AI agents can communicate and collaborate through an open protocol known as the Agent2Agent (A2A) Protocol. This interoperability allows for more complex and orchestrated workflows. Security is a foundational component, with features like role-based access controls and data encryption to protect sensitive enterprise information. Ultimately, AgentSpace aims to enhance productivity and decision-making by embedding intelligent, autonomous systems directly into an organization's operational fabric.
 
-# How to build an Agent with AgentSpace UI
+## How to build an Agent with AgentSpace UI
 
 Figure 1 illustrates how to access AgentSpace by selecting AI Applications from the Google Cloud Console.
 
@@ -40,13 +40,13 @@ Upon completion, the AgentSpace chat interface (Fig. 6\) will be accessible.
 ![][image6]  
 Fig. 6: The AgentSpace User Interface for initiating a chat with your Agent.
 
-# Conclusion
+## Conclusion
 
 In conclusion, AgentSpace provides a functional framework for developing and deploying AI agents within an organization's existing digital infrastructure. The system's architecture links complex backend processes, such as autonomous reasoning and enterprise knowledge graph mapping, to a graphical user interface for agent construction. Through this interface, users can configure agents by integrating various data services and defining their operational parameters via prompts, resulting in customized, context-aware automated systems.
 
 This approach abstracts the underlying technical complexity, enabling the construction of specialized multi-agent systems without requiring deep programming expertise. The primary objective is to embed automated analytical and operational capabilities directly into workflows, thereby increasing process efficiency and enhancing data-driven analysis. For practical instruction, hands-on learning modules are available, such as the "Build a Gen AI Agent with Agentspace" lab on Google Cloud Skills Boost, which provides a structured environment for skill acquisition.
 
-# References
+## References
 
 1. Create a no-code agent with Agent Designer, [https://cloud.google.com/agentspace/agentspace-enterprise/docs/agent-designer](https://cloud.google.com/agentspace/agentspace-enterprise/docs/agent-designer)   
 2. Google Cloud Skills Boost, [https://www.cloudskillsboost.google/](https://www.cloudskillsboost.google/) 

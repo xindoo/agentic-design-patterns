@@ -4,7 +4,7 @@
 
 Google 的 A2A 协议是一个旨在促进这种通用通信的开放标准。本章将探讨 A2A、其实际应用以及在 Google ADK 中的实现。
 
-# Agent 间通信模式概述
+## Agent 间通信模式概述
 
 Agent2Agent（A2A）协议是一个旨在实现不同 AI Agent 框架之间通信和协作的开放标准。它确保互操作性，允许使用 LangGraph、CrewAI 或 Google ADK 等技术开发的 AI Agent 能够协同工作，无论其来源或框架差异如何。
 
@@ -113,7 +113,7 @@ A2A 协议为 Agent 交互提供了结构化的方法，建立在几个核心概
 Agent 卡片指定 Agent 是否支持流式传输或推送通知功能。此外，A2A 是模态无关的，这意味着它不仅可以为文本促进这些交互模式，还可以为音频和视频等其他数据类型促进，从而实现丰富的多模态 AI 应用。流式传输和推送通知功能都在 Agent 卡片中指定。
 
 ```json
-# 同步请求示例
+## 同步请求示例
 {
   "jsonrpc": "2.0",
   "id": "1",
@@ -139,7 +139,7 @@ Agent 卡片指定 Agent 是否支持流式传输或推送通知功能。此外�
 同步请求使用 sendTask 方法，其中客户端请求并期望对其查询的单个完整答案。相比之下，流式请求使用 sendTaskSubscribe 方法建立持久连接，允许 Agent 随时间发送多个增量更新或部分结果。
 
 ```json
-# 流式请求示例
+## 流式请求示例
 {
   "jsonrpc": "2.0",
   "id": "2",
@@ -182,7 +182,7 @@ A2A 是一个补充 Anthropic 的模型上下文协议（MCP）的协议（见�
 
 A2A 的目标是提高效率，降低集成成本，并促进复杂多 Agent AI 系统开发中的创新和互操作性。因此，彻底理解 A2A 的核心组件和操作方法对于有效设计、实施和应用于构建协作和互操作的 AI Agent 系统至关重要。
 
-# 实际应用和用例
+## 实际应用和用例
 
 Agent 间通信对于跨不同领域构建复杂的 AI 解决方案不可或缺，实现模块化、可扩展性和增强的智能。
 
@@ -190,7 +190,7 @@ Agent 间通信对于跨不同领域构建复杂的 AI 解决方案不可或缺�
 * **自动化工作流编排**：在企业环境中，A2A 可以通过使 Agent 能够委派和协调任务来促进复杂的工作流。例如，一个 Agent 可能处理初始数据收集，然后委派给另一个 Agent 进行分析，最后委派给第三个 Agent 进行报告生成，所有这些都通过 A2A 协议进行通信。
 * **动态信息检索**：Agent 可以通信以检索和交换实时信息。主 Agent 可能从专门的"数据获取 Agent"请求实时市场数据，后者然后使用外部 API 收集信息并将其发送回来。
 
-# 实践代码示例
+## 实践代码示例
 
 让我们检查 A2A 协议的实际应用。位于 [https://github.com/google-a2a/a2a-samples/tree/main/samples](https://github.com/google-a2a/a2a-samples/tree/main/samples) 的存储库提供了 Java、Go 和 Python 中的示例，说明了各种 Agent 框架（如 LangGraph、CrewAI、Azure AI Foundry 和 AG2）如何使用 A2A 进行通信。此存储库中的所有代码都在 Apache 2.0 许可证下发布。为了进一步说明 A2A 的核心概念，我们将审查代码摘录，重点是使用基于 ADK 的 Agent 和 Google 身份验证工具设置 A2A 服务器。查看 [https://github.com/google-a2a/a2a-samples/blob/main/samples/python/agents/birthday\_planner\_adk/calendar\_agent/adk\_agent.py](https://github.com/google-a2a/a2a-samples/blob/main/samples/python/agents/birthday_planner_adk/calendar_agent/adk_agent.py)
 
@@ -299,7 +299,7 @@ if __name__ == '__main__':
 
 建议通过 [https://www.trickle.so/blog/how-to-build-google-a2a-project](https://www.trickle.so/blog/how-to-build-google-a2a-project) 上的代码演示进一步探索 A2A。此链接提供的资源包括 Python 和 JavaScript 中的示例 A2A 客户端和服务器、多 Agent Web 应用程序、命令行界面以及各种 Agent 框架的示例实现。
 
-# 概览
+## 概览
 
 **什么**：单个 AI Agent，特别是那些基于不同框架构建的 Agent，在处理复杂、多方面的问题时通常会遇到困难。主要挑战是缺乏允许它们有效通信和协作的通用语言或协议。这种隔离阻止了创建复杂系统，其中多个专门的 Agent 可以结合其独特的技能来解决更大的任务。如果没有标准化的方法，集成这些不同的 Agent 既昂贵又耗时，并阻碍了更强大、更具凝聚力的 AI 解决方案的开发。
 
@@ -313,7 +313,7 @@ if __name__ == '__main__':
 
 图 2：A2A Agent 间通信模式
 
-# 关键要点
+## 关键要点
 
 关键要点：
 
@@ -325,13 +325,13 @@ if __name__ == '__main__':
 * Trickle AI 等工具有助于可视化和跟踪 A2A 通信，帮助开发人员监控、调试和优化多 Agent 系统。
 * 虽然 A2A 是用于管理不同 Agent 之间的任务和工作流的高级协议，但模型上下文协议（MCP）为 LLM 提供了与外部资源交互的标准化接口。
 
-# 结论
+## 结论
 
 Agent 间通信（A2A）协议建立了一个重要的开放标准，以克服单个 AI Agent 的固有隔离。通过提供一个通用的基于 HTTP 的框架，它确保了在不同平台上构建的 Agent 之间的无缝协作和互操作性，例如 Google ADK、LangGraph 或 CrewAI。核心组件是 Agent 卡片，它作为数字身份，清楚地定义 Agent 的能力并使其他 Agent 能够动态发现。该协议的灵活性支持各种交互模式，包括同步请求、异步轮询和实时流式传输，满足广泛的应用需求。
 
 这使得能够创建模块化和可扩展的架构，其中专门的 Agent 可以组合以编排复杂的自动化工作流。安全性是一个基本方面，具有内置机制（如 mTLS 和明确的身份验证要求）来保护通信。虽然补充 MCP 等其他标准，但 A2A 的独特焦点是 Agent 之间的高级协调和任务委派。主要技术公司的强大支持以及实际实现的可用性突显了其日益增长的重要性。该协议为开发人员构建更复杂、分布式和智能的多 Agent 系统铺平了道路。最终，A2A 是促进创新和互操作的协作 AI 生态系统的基础支柱。
 
-# 参考文献
+## 参考文献
 
 1. Chen, B. (2025, April 22). *How to Build Your First Google A2A Project: A Step-by-Step Tutorial*. Trickle.so Blog. [https://www.trickle.so/blog/how-to-build-google-a2a-project](https://www.trickle.so/blog/how-to-build-google-a2a-project)
 2. Google A2A GitHub Repository. [https://github.com/google-a2a/A2A](https://github.com/google-a2a/A2A)

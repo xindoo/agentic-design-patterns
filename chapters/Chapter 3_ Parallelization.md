@@ -1,6 +1,6 @@
 # 第 3 章：并行化
 
-# 并行化模式概述
+## 并行化模式概述
 
 在前面的章节中，我们探讨了用于顺序工作流的提示词链和用于动态决策和不同路径之间转换的路由。虽然这些模式是必不可少的，但许多复杂的 Agent 任务涉及可以*同时*执行而不是一个接一个执行的多个子任务。这就是**并行化**模式变得至关重要的地方。
 
@@ -32,7 +32,7 @@
 
 并行化模式对于提高 Agent 系统的效率和响应性至关重要，特别是在处理涉及多个独立查找、计算或与外部服务交互的任务时。这是优化复杂 Agent 工作流性能的关键技术。
 
-# 实际应用与用例
+## 实际应用与用例
 
 并行化是在各种应用程序中优化 Agent 性能的强大模式：
 
@@ -87,7 +87,7 @@
 
 并行化是 Agent 设计中的基本优化技术，允许开发人员通过利用独立任务的并发执行来构建更高性能和响应更快的应用程序。
 
-# 实操代码示例（LangChain）
+## 实操代码示例（LangChain）
 
 LangChain 框架内的并行执行由 LangChain 表达式语言（LCEL）促进。主要方法涉及在字典或列表构造中构建多个可运行组件。当此集合作为输入传递给链中的后续组件时，LCEL 运行时并发执行包含的可运行对象。
 
@@ -106,16 +106,16 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import Runnable, RunnableParallel, RunnablePassthrough
 
-# --- 配置 ---
-# 确保设置了您的 API 密钥环境变量（例如，OPENAI_API_KEY）
+## --- 配置 ---
+## 确保设置了您的 API 密钥环境变量（例如，OPENAI_API_KEY）
 try:
     llm: Optional[ChatOpenAI] = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
 except Exception as e:
     print(f"初始化语言模型时出错: {e}")
     llm = None
 
-# --- 定义独立链 ---
-# 这三个链代表可以并行执行的不同任务。
+## --- 定义独立链 ---
+## 这三个链代表可以并行执行的不同任务。
 summarize_chain: Runnable = (
     ChatPromptTemplate.from_messages([
         ("system", "简洁地总结以下主题："),
@@ -143,9 +143,9 @@ terms_chain: Runnable = (
     | StrOutputParser()
 )
 
-# --- 构建并行 + 综合链 ---
-# 1. 定义要并行运行的任务块。这些的结果，
-#    以及原始主题，将被馈送到下一步。
+## --- 构建并行 + 综合链 ---
+## 1. 定义要并行运行的任务块。这些的结果，
+##    以及原始主题，将被馈送到下一步。
 map_chain = RunnableParallel(
     {
         "summary": summarize_chain,
@@ -155,7 +155,7 @@ map_chain = RunnableParallel(
     }
 )
 
-# 2. 定义将组合并行结果的最终综合提示词。
+## 2. 定义将组合并行结果的最终综合提示词。
 synthesis_prompt = ChatPromptTemplate.from_messages([
     ("system", """基于以下信息：
     摘要：{summary}
@@ -165,11 +165,11 @@ synthesis_prompt = ChatPromptTemplate.from_messages([
     ("user", "原始主题：{topic}")
 ])
 
-# 3. 通过将并行结果直接管道化
-#    到综合提示词，然后是 LLM 和输出解析器，构建完整链。
+## 3. 通过将并行结果直接管道化
+##    到综合提示词，然后是 LLM 和输出解析器，构建完整链。
 full_parallel_chain = map_chain | synthesis_prompt | llm | StrOutputParser()
 
-# --- 运行链 ---
+## --- 运行链 ---
 async def run_parallel_example(topic: str) -> None:
     """
     异步调用具有特定主题的并行处理链
@@ -205,7 +205,7 @@ if __name__ == "__main__":
 
 本质上，此代码设置了一个工作流，其中对给定主题同时进行多个 LLM 调用（用于总结、问题和术语），然后最终 LLM 调用组合它们的结果。这展示了使用 LangChain 在 Agent 工作流中并行化的核心思想。
 
-# 实操代码示例（Google ADK）
+## 实操代码示例（Google ADK）
 
 现在让我们将注意力转向在 Google ADK 框架内说明这些概念的具体示例。我们将研究如何应用 ADK 原语（如 ParallelAgent 和 SequentialAgent）来构建利用并发执行以提高效率的 Agent 流。
 
@@ -215,8 +215,8 @@ from google.adk.tools import google_search
 
 GEMINI_MODEL = "gemini-2.0-flash"
 
-# --- 1. 定义研究员子 Agent（并行运行）---
-# 研究员 1：可再生能源
+## --- 1. 定义研究员子 Agent（并行运行）---
+## 研究员 1：可再生能源
 researcher_agent_1 = LlmAgent(
     name="RenewableEnergyResearcher",
     model=GEMINI_MODEL,
@@ -227,7 +227,7 @@ researcher_agent_1 = LlmAgent(
     output_key="renewable_energy_result"
 )
 
-# 研究员 2：电动汽车
+## 研究员 2：电动汽车
 researcher_agent_2 = LlmAgent(
     name="EVResearcher",
     model=GEMINI_MODEL,
@@ -238,7 +238,7 @@ researcher_agent_2 = LlmAgent(
     output_key="ev_technology_result"
 )
 
-# 研究员 3：碳捕获
+## 研究员 3：碳捕获
 researcher_agent_3 = LlmAgent(
     name="CarbonCaptureResearcher",
     model=GEMINI_MODEL,
@@ -249,18 +249,18 @@ researcher_agent_3 = LlmAgent(
     output_key="carbon_capture_result"
 )
 
-# --- 2. 创建 ParallelAgent（并发运行研究员）---
-# 此 Agent 协调研究员的并发执行。
-# 一旦所有研究员完成并将结果存储在状态中，它就完成。
+## --- 2. 创建 ParallelAgent（并发运行研究员）---
+## 此 Agent 协调研究员的并发执行。
+## 一旦所有研究员完成并将结果存储在状态中，它就完成。
 parallel_research_agent = ParallelAgent(
     name="ParallelWebResearchAgent",
     sub_agents=[researcher_agent_1, researcher_agent_2, researcher_agent_3],
     description="并行运行多个研究 Agent 以收集信息。"
 )
 
-# --- 3. 定义合并 Agent（在并行 Agent *之后*运行）---
-# 此 Agent 获取并行 Agent 存储在会话状态中的结果
-# 并将它们综合成一个带有归属的单一结构化响应。
+## --- 3. 定义合并 Agent（在并行 Agent *之后*运行）---
+## 此 Agent 获取并行 Agent 存储在会话状态中的结果
+## 并将它们综合成一个带有归属的单一结构化响应。
 merger_agent = LlmAgent(
     name="SynthesisAgent",
     model=GEMINI_MODEL,  # 或者如果需要，可以使用更强大的模型进行综合
@@ -299,9 +299,9 @@ merger_agent = LlmAgent(
     # 这里不需要 output_key，因为其直接响应是序列的最终输出
 )
 
-# --- 4. 创建 SequentialAgent（协调整体流程）---
-# 这是将运行的主 Agent。它首先执行 ParallelAgent
-# 以填充状态，然后执行 MergerAgent 以产生最终输出。
+## --- 4. 创建 SequentialAgent（协调整体流程）---
+## 这是将运行的主 Agent。它首先执行 ParallelAgent
+## 以填充状态，然后执行 MergerAgent 以产生最终输出。
 sequential_pipeline_agent = SequentialAgent(
     name="ResearchAndSynthesisPipeline",
     # 首先运行并行研究，然后合并
@@ -320,7 +320,7 @@ root_agent = sequential_pipeline_agent
 
 最后，创建一个名为 ResearchAndSynthesisPipeline 的 SequentialAgent 来协调整个工作流。作为主控制器，此主 Agent 首先执行 ParallelAgent 来执行研究。一旦 ParallelAgent 完成，SequentialAgent 然后执行 MergerAgent 来综合收集的信息。sequential_pipeline_agent 被设置为 root_agent，代表运行此多 Agent 系统的入口点。整个过程旨在有效地从多个来源并行收集信息，然后将其组合成单一的结构化报告。
 
-# 概览
+## 概览
 
 **什么：** 许多 Agent 工作流涉及必须完成才能实现最终目标的多个子任务。纯顺序执行，其中每个任务等待前一个任务完成，通常是低效和缓慢的。当任务依赖于外部 I/O 操作（如调用不同的 API 或查询多个数据库）时，这种延迟成为重大瓶颈。如果没有并发执行机制，总处理时间是所有单个任务持续时间的总和，阻碍了系统的整体性能和响应性。
 
@@ -334,7 +334,7 @@ root_agent = sequential_pipeline_agent
 
 图 2：并行化设计模式
 
-# 关键要点
+## 关键要点
 
 以下是关键要点：
 
@@ -346,7 +346,7 @@ root_agent = sequential_pipeline_agent
 * Google ADK 可以通过 LLM 驱动的委托促进并行执行，其中协调器 Agent 的 LLM 识别独立的子任务并触发专门子 Agent 的并发处理。
 * 并行化有助于减少整体延迟，使 Agent 系统对复杂任务更具响应性。
 
-# 结论
+## 结论
 
 并行化模式是通过并发执行独立子任务来优化计算工作流的方法。这种方法减少了整体延迟，特别是在涉及多个模型推理或对外部服务的调用的复杂操作中。
 
@@ -354,7 +354,7 @@ root_agent = sequential_pipeline_agent
 
 通过将并行处理与顺序（链接）和条件（路由）控制流集成，可以构建能够有效管理各种复杂任务的复杂、高性能计算系统。
 
-# 参考文献
+## 参考文献
 
 以下是有关并行化模式和相关概念的一些进一步阅读资源：
 

@@ -2,7 +2,7 @@
 
 本章深入探讨智能 Agent 的高级推理方法，重点关注多步骤逻辑推理和问题解决。这些技术超越了简单的顺序操作，使 Agent 的内部推理过程变得明确。这使 Agent 能够分解问题、考虑中间步骤并得出更可靠和准确的结论。这些高级方法的核心原则是在推理期间分配增加的计算资源。这意味着赋予 Agent 或底层 LLM 更多的处理时间或步骤来处理查询并生成响应。Agent 不是快速的单次处理，而是可以进行迭代改进、探索多个解决路径或利用外部工具。这种在推理期间延长的处理时间通常会显著增强准确性、连贯性和鲁棒性，特别是对于需要更深入分析和审议的复杂问题。
 
-# 实际应用和用例
+## 实际应用和用例
 
 实际应用包括：
 
@@ -13,7 +13,7 @@
 * **医疗诊断**：帮助 Agent 系统地评估症状、测试结果和患者病史以达成诊断，在每个阶段阐明其推理，并可能利用外部工具进行数据检索（ReAct）。增加的推理时间允许更全面的鉴别诊断。
 * **法律分析**：支持分析法律文件和先例以制定论点或提供指导，详细说明所采取的逻辑步骤，并通过自我纠正确保逻辑一致性。增加的推理时间允许更深入的法律研究和论证构建。
 
-# 推理技术
+## 推理技术
 
 首先，让我们深入了解用于增强 AI 模型问题解决能力的核心推理技术。
 
@@ -219,7 +219,7 @@ MASS 采用多阶段优化策略，通过交错提示词和拓扑优化来系统
 
 通过理解和应用推理扩展定律，开发人员和组织可以做出战略选择，从而为特定的 agentic 应用实现最佳性能，确保计算资源分配到它们对 LLM 输出的质量和效用产生最显著影响的地方。这允许更细致和经济可行的 AI 部署方法，超越简单的"更大就是更好"的范式。
 
-# 实践代码示例
+## 实践代码示例
 
 Google 开源的 DeepSearch 代码可通过 gemini-fullstack-langgraph-quickstart 存储库获得（图 6）。该存储库为开发人员提供了使用 Gemini 2.5 和 LangGraph 编排框架构建全栈 AI Agent 的模板。这个开源堆栈促进了基于 Agent 的架构实验，并可以与本地 LLM（如 Gemma）集成。它利用 Docker 和模块化项目脚手架进行快速原型设计。应该注意的是，此版本作为一个结构良好的演示，并不打算作为生产就绪的后端。
 
@@ -230,33 +230,33 @@ Google 开源的 DeepSearch 代码可通过 gemini-fullstack-langgraph-quickstar
 该项目提供了一个具有 React 前端和 LangGraph 后端的全栈应用程序，专为高级研究和对话式 AI 而设计。LangGraph Agent 使用 Google Gemini 模型动态生成搜索查询，并通过 Google Search API 集成网络研究。系统采用反思推理来识别知识差距、迭代改进搜索并综合带引用的答案。前端和后端支持热重载。项目结构包括单独的 frontend/ 和 backend/ 目录。设置要求包括 Node.js、npm、Python 3.8+ 和 Google Gemini API 密钥。在后端的 .env 文件中配置 API 密钥后，可以为后端（使用 pip install .）和前端（npm install）安装依赖项。开发服务器可以使用 make dev 同时运行或单独运行。在 backend/src/agent/graph.py 中定义的后端 Agent 生成初始搜索查询、进行网络研究、执行知识差距分析、迭代改进查询并使用 Gemini 模型综合带引用的答案。生产部署涉及后端服务器提供静态前端构建，并需要 Redis 用于流式实时输出和 Postgres 数据库用于管理数据。可以使用 docker-compose up 构建和运行 Docker 镜像，这也需要 docker-compose.yml 示例的 LangSmith API 密钥。该应用程序使用带 Vite 的 React、Tailwind CSS、Shadcn UI、LangGraph 和 Google Gemini。该项目在 Apache License 2.0 下授权。
 
 ```python
-# 创建我们的 Agent 图
+## 创建我们的 Agent 图
 builder = StateGraph(OverallState, config_schema=Configuration)
 
-# 定义我们将循环的节点
+## 定义我们将循环的节点
 builder.add_node("generate_query", generate_query)
 builder.add_node("web_research", web_research)
 builder.add_node("reflection", reflection)
 builder.add_node("finalize_answer", finalize_answer)
 
-# 将入口点设置为 `generate_query`
-# 这意味着此节点是第一个被调用的
+## 将入口点设置为 `generate_query`
+## 这意味着此节点是第一个被调用的
 builder.add_edge(START, "generate_query")
 
-# 添加条件边以在并行分支中继续搜索查询
+## 添加条件边以在并行分支中继续搜索查询
 builder.add_conditional_edges(
     "generate_query", continue_to_web_research, ["web_research"]
 )
 
-# 反思网络研究
+## 反思网络研究
 builder.add_edge("web_research", "reflection")
 
-# 评估研究
+## 评估研究
 builder.add_conditional_edges(
     "reflection", evaluate_research, ["web_research", "finalize_answer"]
 )
 
-# 完成答案
+## 完成答案
 builder.add_edge("finalize_answer", END)
 
 graph = builder.compile(name="pro-search-agent")
@@ -264,7 +264,7 @@ graph = builder.compile(name="pro-search-agent")
 
 图 4：使用 LangGraph 的 DeepSearch 示例（来自 backend/src/agent/graph.py 的代码）
 
-# 那么，Agent 是如何思考的？
+## 那么，Agent 是如何思考的？
 
 总之，Agent 的思考过程是一种结合推理和行动来解决问题的结构化方法。这种方法允许 Agent 明确规划其步骤、监控其进展并与外部工具交互以收集信息。
 
@@ -280,7 +280,7 @@ graph = builder.compile(name="pro-search-agent")
 
 Agent 思考的频率可以根据任务进行调整。对于知识密集型推理任务（如事实核查），思考通常与每个行动交错，以确保信息收集和推理的逻辑流动。相比之下，对于需要许多行动的决策任务（例如在模拟环境中导航），思考可能更谨慎地使用，允许 Agent 决定何时需要思考。
 
-# 概览
+## 概览
 
 **什么**：复杂的问题解决通常需要的不仅仅是单一的、直接的答案，这对 AI 构成了重大挑战。核心问题是使 AI Agent 能够处理需要逻辑推理、分解和战略规划的多步骤任务。如果没有结构化的方法，Agent 可能无法处理复杂性，导致不准确或不完整的结论。这些高级推理方法旨在使 Agent 的内部"思考"过程明确，使其能够系统地处理挑战。
 
@@ -294,7 +294,7 @@ Agent 思考的频率可以根据任务进行调整。对于知识密集型推�
 
 图 7：推理设计模式
 
-# 关键要点
+## 关键要点
 
 * 通过使推理明确，Agent 可以制定透明的、多步骤的计划，这是自主行动和用户信任的基础能力。
 * ReAct 框架为 Agent 提供了其核心操作循环，使它们能够超越单纯的推理并与外部工具交互，以在环境中动态行动和适应。
@@ -306,13 +306,13 @@ Agent 思考的频率可以根据任务进行调整。对于知识密集型推�
 * 为了构建有效的 Agent 团队，像 MASS 这样的框架自动化优化各个 Agent 的指令方式以及它们如何交互，确保整个多 Agent 系统以最佳方式执行。
 * 通过集成这些推理技术，我们构建的 Agent 不仅是自动化的，而且是真正自主的，能够被信任去规划、行动和解决复杂问题而无需直接监督。
 
-# 结论
+## 结论
 
 现代 AI 正在从被动工具演变为自主 Agent，能够通过结构化推理解决复杂目标。这种 agentic 行为始于由思维链（CoT）等技术驱动的内部独白，允许 Agent 在行动前制定连贯的计划。真正的自主需要审议，Agent 通过自我纠正和思维树（ToT）实现这一点，使它们能够评估多个策略并独立改进自己的工作。向完全 agentic 系统的关键飞跃来自 ReAct 框架，它使 Agent 能够超越思考并开始通过使用外部工具来行动。这建立了思考、行动和观察的核心 agentic 循环，允许 Agent 根据环境反馈动态调整其策略。
 
 Agent 的深度审议能力由推理扩展定律推动，其中更多的计算"思考时间"直接转化为更稳健的自主行动。下一个前沿是多 Agent 系统，其中像辩论链（CoD）这样的框架创建协作 Agent 社会，它们一起推理以实现共同目标。这不是理论性的；像 Deep Research 这样的 agentic 应用程序已经展示了自主 Agent 如何代表用户执行复杂的、多步骤的调查。总体目标是设计可靠和透明的自主 Agent，可以被信任独立管理和解决复杂问题。最终，通过将明确推理与行动能力相结合，这些方法正在完成 AI 向真正 agentic 问题解决者的转变。
 
-# 参考文献
+## 参考文献
 
 相关研究包括：
 

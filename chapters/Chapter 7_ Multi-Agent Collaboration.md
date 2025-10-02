@@ -6,7 +6,7 @@
 
 这种分布式架构提供了几个优势，包括增强的模块化、可扩展性和稳健性，因为单个 Agent 的故障不一定会导致整个系统故障。协作允许产生协同结果，其中多 Agent 系统的集体性能超过集合内任何单个 Agent 的潜在能力。
 
-# 多 Agent 协作模式概述
+## 多 Agent 协作模式概述
 
 多 Agent 协作模式涉及设计系统，其中多个独立或半独立的 Agent 协同工作以实现共同目标。每个 Agent 通常具有定义的角色、与总体目标一致的特定目标，并且可能访问不同的工具或知识库。此模式的力量在于这些 Agent 之间的交互和协同作用。
 
@@ -28,7 +28,7 @@
 
 像 Crew AI 和 Google ADK 这样的框架旨在通过提供 Agent、任务及其交互程序的规范结构来促进这种范式。这种方法对于需要各种专业知识、包含多个离散阶段或利用并发处理和跨 Agent 信息确认优势的挑战特别有效。
 
-# 实际应用与用例
+## 实际应用与用例
 
 多 Agent 协作是一种适用于众多领域的强大模式：
 
@@ -42,7 +42,7 @@
 
 界定专门 Agent 并细致编排其相互关系的能力使开发人员能够构建展现增强模块化、可扩展性以及处理单个集成 Agent 无法解决的复杂性的系统。
 
-# 多 Agent 协作：探索相互关系和通信结构
+## 多 Agent 协作：探索相互关系和通信结构
 
 理解 Agent 交互和通信的复杂方式对于设计有效的多 Agent 系统至关重要。如图 2 所示，存在一系列相互关系和通信模型，从最简单的单 Agent 场景到复杂的、定制设计的协作框架。每个模型都呈现独特的优势和挑战，影响多 Agent 系统的整体效率、稳健性和适应性。
 
@@ -64,7 +64,7 @@
 
 总之，为多 Agent 系统选择相互关系和通信模型是关键的设计决策。每个模型提供不同的优势和劣势，最佳选择取决于诸如任务复杂性、Agent 数量、期望的自主程度、对稳健性的需求以及可接受的通信开销等因素。多 Agent 系统的未来进展可能会继续探索和完善这些模型，以及开发协作智能的新范式。
 
-# 实操代码（Crew AI）
+## 实操代码（Crew AI）
 
 此 Python 代码使用 CrewAI 框架定义了一个 AI 驱动的团队来生成关于 AI 趋势的博客文章。它首先设置环境，从 .env 文件加载 API 密钥。应用程序的核心涉及定义两个 Agent：一个研究员用于查找和总结 AI 趋势，一个作家用于基于研究创建博客文章。
 
@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
 我们现在将深入研究 Google ADK 框架中的更多示例，特别强调层次化、并行和顺序协调范式，以及将 Agent 实现为操作工具。
 
-# 实操代码（Google ADK）
+## 实操代码（Google ADK）
 
 以下代码示例演示了通过创建父子关系在 Google ADK 中建立层次化 Agent 结构。代码定义了两种类型的 Agent：LlmAgent 和从 BaseAgent 派生的自定义 TaskExecutor Agent。TaskExecutor 专为特定的非 LLM 任务而设计，在此示例中，它只是生成"任务成功完成"事件。使用指定的模型和指令初始化名为 greeter 的 LlmAgent，以充当友好的欢迎者。自定义 TaskExecutor 实例化为 task_doer。创建名为 coordinator 的父 LlmAgent，也带有模型和指令。coordinator 的指令引导它将欢迎委托给 greeter，将任务执行委托给 task_doer。greeter 和 task_doer 作为子 Agent 添加到 coordinator，建立父子关系。然后代码断言此关系设置正确。最后，它打印一条消息，指示已成功创建 Agent 层次结构。
 
@@ -159,7 +159,7 @@ from google.adk.agents.invocation_context import InvocationContext
 from google.adk.events import Event
 from typing import AsyncGenerator
 
-# 通过扩展 BaseAgent 正确实现自定义 Agent
+## 通过扩展 BaseAgent 正确实现自定义 Agent
 class TaskExecutor(BaseAgent):
     """具有自定义非 LLM 行为的专门 Agent。"""
     name: str = "TaskExecutor"
@@ -171,8 +171,8 @@ class TaskExecutor(BaseAgent):
         # 对于此示例，我们只会生成一个简单的事件。
         yield Event(author=self.name, content="任务成功完成。")
 
-# 使用适当的初始化定义单个 Agent
-# LlmAgent 需要指定模型。
+## 使用适当的初始化定义单个 Agent
+## LlmAgent 需要指定模型。
 greeter = LlmAgent(
     name="Greeter",
     model="gemini-2.0-flash-exp",
@@ -181,8 +181,8 @@ greeter = LlmAgent(
 
 task_doer = TaskExecutor() # 实例化我们的具体自定义 Agent
 
-# 创建父 Agent 并分配其子 Agent
-# 父 Agent 的描述和指令应该引导其委托逻辑。
+## 创建父 Agent 并分配其子 Agent
+## 父 Agent 的描述和指令应该引导其委托逻辑。
 coordinator = LlmAgent(
     name="Coordinator",
     model="gemini-2.0-flash-exp",
@@ -194,8 +194,8 @@ coordinator = LlmAgent(
     ]
 )
 
-# ADK 框架自动建立父子关系。
-# 如果在初始化后检查，这些断言将通过。
+## ADK 框架自动建立父子关系。
+## 如果在初始化后检查，这些断言将通过。
 assert greeter.parent_agent == coordinator
 assert task_doer.parent_agent == coordinator
 
@@ -211,7 +211,7 @@ from google.adk.agents import LoopAgent, LlmAgent, BaseAgent
 from google.adk.events import Event, EventActions
 from google.adk.agents.invocation_context import InvocationContext
 
-# 最佳实践：将自定义 Agent 定义为完整的、自描述的类。
+## 最佳实践：将自定义 Agent 定义为完整的、自描述的类。
 class ConditionChecker(BaseAgent):
     """检查会话状态中"completed"状态的自定义 Agent。"""
     name: str = "ConditionChecker"
@@ -231,14 +231,14 @@ class ConditionChecker(BaseAgent):
             # 生成简单事件以继续循环。
             yield Event(author=self.name, content="条件未满足，继续循环。")
 
-# 更正：LlmAgent 必须有模型和清晰的指令。
+## 更正：LlmAgent 必须有模型和清晰的指令。
 process_step = LlmAgent(
     name="ProcessingStep",
     model="gemini-2.0-flash-exp",
     instruction="你是较长流程中的一步。执行你的任务。如果你是最后一步，通过将 'status' 设置为 'completed' 来更新会话状态。"
 )
 
-# LoopAgent 编排工作流。
+## LoopAgent 编排工作流。
 poller = LoopAgent(
     name="StatusPoller",
     max_iterations=10,
@@ -248,10 +248,10 @@ poller = LoopAgent(
     ]
 )
 
-# 此轮询器现在将执行 'process_step'
-# 然后执行 'ConditionChecker'
-# 重复直到状态为 'completed' 或已经过
-# 10 次迭代。
+## 此轮询器现在将执行 'process_step'
+## 然后执行 'ConditionChecker'
+## 重复直到状态为 'completed' 或已经过
+## 10 次迭代。
 ```
 
 此代码摘录阐明了 Google ADK 中的 SequentialAgent 模式，专为构建线性工作流而设计。此代码使用 google.adk.agents 库定义顺序 Agent 管道。管道由两个 Agent 组成，step1 和 step2。step1 命名为"Step1_Fetch"，其输出将存储在会话状态中的键"data"下。step2 命名为"Step2_Process"，并被指示分析存储在 session.state["data"] 中的信息并提供摘要。名为"MyPipeline"的 SequentialAgent 编排这些子 Agent 的执行。当使用初始输入运行管道时，step1 将首先执行。来自 step1 的响应将保存到键"data"下的会话状态中。随后，step2 将执行，根据其指令利用 step1 放入状态的信息。此结构允许构建工作流，其中一个 Agent 的输出成为下一个 Agent 的输入。这是创建多步 AI 或数据处理管道的常见模式。
@@ -259,11 +259,11 @@ poller = LoopAgent(
 ```python
 from google.adk.agents import SequentialAgent, LlmAgent # Changed Agent to LlmAgent
 
-# 此 Agent 的输出将保存到 session.state["data"]
+## 此 Agent 的输出将保存到 session.state["data"]
 step1 = LlmAgent(name="Step1_Fetch", output_key="data", model="gemini-2.0-flash-exp") # Added model for LlmAgent
 
-# 此 Agent 将使用前一步的数据。
-# 我们指示它如何查找和使用此数据。
+## 此 Agent 将使用前一步的数据。
+## 我们指示它如何查找和使用此数据。
 step2 = LlmAgent( # Changed Agent to LlmAgent
     name="Step2_Process",
     instruction="分析在 state['data'] 中找到的信息并提供摘要。",
@@ -275,9 +275,9 @@ pipeline = SequentialAgent(
     sub_agents=[step1, step2]
 )
 
-# 当使用初始输入运行管道时，Step1 将执行，
-# 其响应将存储在 session.state["data"] 中，然后
-# Step2 将执行，按指示使用来自状态的信息。
+## 当使用初始输入运行管道时，Step1 将执行，
+## 其响应将存储在 session.state["data"] 中，然后
+## Step2 将执行，按指示使用来自状态的信息。
 ```
 
 以下代码示例说明了 Google ADK 中的 ParallelAgent 模式，它促进多个 Agent 任务的并发执行。data_gatherer 设计为并发运行两个子 Agent：weather_fetcher 和 news_fetcher。weather_fetcher Agent 被指示获取给定位置的天气并将结果存储在 session.state["weather_data"] 中。同样，news_fetcher Agent 被指示检索给定主题的头条新闻故事并将其存储在 session.state["news_data"] 中。每个子 Agent 都配置为使用"gemini-2.0-flash-exp"模型。ParallelAgent 编排这些子 Agent 的执行，允许它们并行工作。来自 weather_fetcher 和 news_fetcher 的结果将被收集并存储在会话状态中。最后，示例展示了如何在 Agent 执行完成后从 final_state 访问收集的天气和新闻数据。
@@ -285,11 +285,11 @@ pipeline = SequentialAgent(
 ```python
 from google.adk.agents import LlmAgent, ParallelAgent # Changed Agent to LlmAgent
 
-# 最好将获取逻辑定义为 Agent 的工具
-# 为了简化此示例，我们将逻辑嵌入 Agent 的指令中。
-# 在实际场景中，您将使用工具。
+## 最好将获取逻辑定义为 Agent 的工具
+## 为了简化此示例，我们将逻辑嵌入 Agent 的指令中。
+## 在实际场景中，您将使用工具。
 
-# 定义将并行运行的各个 Agent
+## 定义将并行运行的各个 Agent
 weather_fetcher = LlmAgent( # Changed Agent to LlmAgent
     name="weather_fetcher",
     model="gemini-2.0-flash-exp",
@@ -304,7 +304,7 @@ news_fetcher = LlmAgent( # Changed Agent to LlmAgent
     output_key="news_data"      # 结果将存储在 session.state["news_data"] 中
 )
 
-# 创建 ParallelAgent 以编排子 Agent
+## 创建 ParallelAgent 以编排子 Agent
 data_gatherer = ParallelAgent(
     name="data_gatherer",
     sub_agents=[
@@ -321,8 +321,8 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import agent_tool
 from google.genai import types
 
-# 1. 核心能力的简单函数工具。
-# 这遵循将操作与推理分离的最佳实践。
+## 1. 核心能力的简单函数工具。
+## 这遵循将操作与推理分离的最佳实践。
 def generate_image(prompt: str) -> dict:
     """
     基于文本提示词生成图像。
@@ -342,8 +342,8 @@ def generate_image(prompt: str) -> dict:
         "mime_type": "image/png"
     }
 
-# 2. 将 ImageGeneratorAgent 重构为 LlmAgent。
-# 它现在正确使用传递给它的输入。
+## 2. 将 ImageGeneratorAgent 重构为 LlmAgent。
+## 它现在正确使用传递给它的输入。
 image_generator_agent = LlmAgent(
     name="ImageGen",
     model="gemini-2.0-flash",
@@ -357,14 +357,14 @@ image_generator_agent = LlmAgent(
     tools=[generate_image]
 )
 
-# 3. 将更正的 Agent 包装在 AgentTool 中。
-# 这里的描述是父 Agent 看到的。
+## 3. 将更正的 Agent 包装在 AgentTool 中。
+## 这里的描述是父 Agent 看到的。
 image_tool = agent_tool.AgentTool(
     agent=image_generator_agent,
     description="使用此工具生成图像。输入应该是所需图像的描述性提示词。"
 )
 
-# 4. 父 Agent 保持不变。其逻辑是正确的。
+## 4. 父 Agent 保持不变。其逻辑是正确的。
 artist_agent = LlmAgent(
     name="Artist",
     model="gemini-2.0-flash",
@@ -376,7 +376,7 @@ artist_agent = LlmAgent(
 )
 ```
 
-# 概览
+## 概览
 
 **什么：** 复杂问题通常超出单个单体基于 LLM 的 Agent 的能力。单个 Agent 可能缺乏解决多方面任务所有部分所需的多样化、专业技能或对特定工具的访问。此限制造成瓶颈，降低系统的整体效率和可扩展性。因此，处理复杂的多领域目标变得低效，并可能导致不完整或次优的结果。
 
@@ -390,18 +390,18 @@ artist_agent = LlmAgent(
 
 图 3：多 Agent 设计模式
 
-# 关键要点
+## 关键要点
 
 * 多 Agent 协作涉及多个 Agent 协同工作以实现共同目标。
 * 此模式利用专业角色、分布式任务和 Agent 间通信。
 * 协作可以采取顺序交接、并行处理、辩论或层次结构等形式。
 * 此模式非常适合需要多样化专业知识或多个不同阶段的复杂问题。
 
-# 结论
+## 结论
 
 本章探讨了多 Agent 协作模式，展示了在系统内编排多个专门 Agent 的好处。我们研究了各种协作模型，强调该模式在跨不同领域解决复杂、多方面问题中的关键作用。理解 Agent 协作自然会引出对其与外部环境交互的探究。
 
-# 参考文献
+## 参考文献
 
 1. Multi-Agent Collaboration Mechanisms: A Survey of LLMs, [https://arxiv.org/abs/2501.06322](https://arxiv.org/abs/2501.06322)
 2. Multi-Agent System — The Power of Collaboration, [https://aravindakumar.medium.com/introducing-multi-agent-frameworks-the-power-of-collaboration-e9db31bba1b6](https://aravindakumar.medium.com/introducing-multi-agent-frameworks-the-power-of-collaboration-e9db31bba1b6)

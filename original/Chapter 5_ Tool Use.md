@@ -1,6 +1,6 @@
 # Chapter 5: Tool Use (Function Calling)
 
-# Tool Use Pattern Overview
+## Tool Use Pattern Overview
 
 So far, we've discussed agentic patterns that primarily involve orchestrating interactions between language models and managing the flow of information within the agent's internal workflow (Chaining, Routing, Parallelization, Reflection). However, for agents to be truly useful and interact with the real world or external systems, they need the ability to use Tools.
 
@@ -23,7 +23,7 @@ Frameworks like LangChain, LangGraph, and Google Agent Developer Kit (ADK) provi
 
 Tool Use is a cornerstone pattern for building powerful, interactive, and externally aware agents.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 The Tool Use pattern is applicable in virtually any scenario where an agent needs to go beyond generating text to perform an action or retrieve specific, dynamic information:
 
@@ -75,7 +75,7 @@ Tool Use is what transforms a language model from a text generator into an agent
 
 Fig.1: Some examples of an Agent using Tools
 
-# Hands-On Code Example (LangChain)
+## Hands-On Code Example (LangChain)
 
 The implementation of tool use within the LangChain framework is a two-stage process. Initially, one or more tools are defined, typically by encapsulating existing Python functions or other runnable components. Subsequently, these tools are bound to a language model, thereby granting the model the capability to generate a structured tool-use request when it determines that an external function call is required to fulfill a user's query.
 
@@ -93,8 +93,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool as langchain_tool
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 
-# UNCOMMENT
-# Prompt the user securely and set API keys as an environment variables
+## UNCOMMENT
+## Prompt the user securely and set API keys as an environment variables
 os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google API key: ")
 os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter your OpenAI API key: ")
 
@@ -106,7 +106,7 @@ except Exception as e:
   print(f"🛑 Error initializing language model: {e}")
   llm = None
 
-# --- Define a Tool ---
+## --- Define a Tool ---
 @langchain_tool
 def search_information(query: str) -> str:
   """
@@ -128,7 +128,7 @@ def search_information(query: str) -> str:
 
 tools = [search_information]
 
-# --- Create a Tool-Calling Agent ---
+## --- Create a Tool-Calling Agent ---
 if llm:
   # This prompt template requires an `agent_scratchpad` placeholder for the agent's internal steps.
   agent_prompt = ChatPromptTemplate.from_messages([
@@ -167,32 +167,32 @@ asyncio.run(main())
 
 The code sets up a tool-calling agent using the LangChain library and the Google Gemini model. It defines a search\_information tool that simulates providing factual answers to specific queries. The tool has predefined responses for "weather in london," "capital of france," and "population of earth," and a default response for other queries. A ChatGoogleGenerativeAI model is initialized, ensuring it has tool-calling capabilities. A ChatPromptTemplate is created to guide the agent's interaction. The create\_tool\_calling\_agent function is used to combine the language model, tools, and prompt into an agent. An AgentExecutor is then set up to manage the agent's execution and tool invocation. The run\_agent\_with\_tool asynchronous function is defined to invoke the agent with a given query and print the result. The main asynchronous function prepares multiple queries to be run concurrently. These queries are designed to test both the specific and default responses of the search\_information tool. Finally, the asyncio.run(main()) call executes all the agent tasks. The code includes checks for successful LLM initialization before proceeding with agent setup and execution.
 
-# Hands-On Code Example (CrewAI)
+## Hands-On Code Example (CrewAI)
 
 This code provides a practical example of how to implement function calling (Tools) within the CrewAI framework. It sets up a simple scenario where an agent is equipped with a tool to look up information. The example specifically demonstrates fetching a simulated stock price using this agent and tool.
 
 ```python
-# pip install crewai langchain-openai
+## pip install crewai langchain-openai
 import os
 from crewai import Agent, Task, Crew
 from crewai.tools import tool
 import logging
 
-# --- Best Practice: Configure Logging ---
-# A basic logging setup helps in debugging and tracking the crew's execution.
+## --- Best Practice: Configure Logging ---
+## A basic logging setup helps in debugging and tracking the crew's execution.
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# --- Set up your API Key ---
-# For production, it's recommended to use a more secure method for key management
-# like environment variables loaded at runtime or a secret manager.
+## --- Set up your API Key ---
+## For production, it's recommended to use a more secure method for key management
+## like environment variables loaded at runtime or a secret manager.
 #
-# Set the environment variable for your chosen LLM provider (e.g., OPENAI_API_KEY)
-# os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY"
-# os.environ["OPENAI_MODEL_NAME"] = "gpt-4o"
+## Set the environment variable for your chosen LLM provider (e.g., OPENAI_API_KEY)
+## os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY"
+## os.environ["OPENAI_MODEL_NAME"] = "gpt-4o"
 
-# --- 1. Refactored Tool: Returns Clean Data ---
-# The tool now returns raw data (a float) or raises a standard Python error.
-# This makes it more reusable and forces the agent to handle outcomes properly.
+## --- 1. Refactored Tool: Returns Clean Data ---
+## The tool now returns raw data (a float) or raises a standard Python error.
+## This makes it more reusable and forces the agent to handle outcomes properly.
 @tool("Stock Price Lookup Tool")
 def get_stock_price(ticker: str) -> float:
    """
@@ -213,8 +213,8 @@ def get_stock_price(ticker: str) -> float:
        # The agent is equipped to handle exceptions and can decide on the next action.
        raise ValueError(f"Simulated price for ticker '{ticker.upper()}' not found.")
 
-# --- 2. Define the Agent ---
-# The agent definition remains the same, but it will now leverage the improved tool.
+## --- 2. Define the Agent ---
+## The agent definition remains the same, but it will now leverage the improved tool.
 financial_analyst_agent = Agent(
  role='Senior Financial Analyst',
  goal='Analyze stock data using provided tools and report key prices.',
@@ -225,9 +225,9 @@ financial_analyst_agent = Agent(
  allow_delegation=False,
 )
 
-# --- 3. Refined Task: Clearer Instructions and Error Handling ---
-# The task description is more specific and guides the agent on how to react
-# to both successful data retrieval and potential errors.
+## --- 3. Refined Task: Clearer Instructions and Error Handling ---
+## The task description is more specific and guides the agent on how to react
+## to both successful data retrieval and potential errors.
 analyze_aapl_task = Task(
  description=(
      "What is the current simulated stock price for Apple (ticker: AAPL)? "
@@ -242,16 +242,16 @@ analyze_aapl_task = Task(
  agent=financial_analyst_agent,
 )
 
-# --- 4. Formulate the Crew ---
-# The crew orchestrates how the agent and task work together.
+## --- 4. Formulate the Crew ---
+## The crew orchestrates how the agent and task work together.
 financial_crew = Crew(
  agents=[financial_analyst_agent],
  tasks=[analyze_aapl_task],
  verbose=True # Set to False for less detailed logs in production
 )
 
-# --- 5. Run the Crew within a Main Execution Block ---
-# Using a __name__ == "__main__": block is a standard Python best practice.
+## --- 5. Run the Crew within a Main Execution Block ---
+## Using a __name__ == "__main__": block is a standard Python best practice.
 def main():
    """Main function to run the crew."""
    # Check for API key before starting to avoid runtime errors.
@@ -274,11 +274,11 @@ if __name__ == "__main__":
 
 This code demonstrates a simple application using the Crew.ai library to simulate a financial analysis task. It defines a custom tool, get\_stock\_price, that simulates looking up stock prices for predefined tickers. The tool is designed to return a floating-point number for valid tickers or raise a ValueError for invalid ones. A Crew.ai Agent named financial\_analyst\_agent is created with the role of a Senior Financial Analyst. This agent is given the get\_stock\_price tool to interact with. A Task is defined, analyze\_aapl\_task, specifically instructing the agent to find the simulated stock price for AAPL using the tool. The task description includes clear instructions on how to handle both success and failure cases when using the tool. A Crew is assembled, comprising the financial\_analyst\_agent and the analyze\_aapl\_task. The verbose setting is enabled for both the agent and the crew to provide detailed logging during execution. The main part of the script runs the crew's task using the kickoff() method within a standard if \_\_name\_\_ \== "\_\_main\_\_": block. Before starting the crew, it checks if the OPENAI\_API\_KEY environment variable is set, which is required for the agent to function. The result of the crew's execution, which is the output of the task, is then printed to the console. The code also includes basic logging configuration for better tracking of the crew's actions and tool calls. It uses environment variables for API key management, though it notes that more secure methods are recommended for production environments. In short, the core logic showcases how to define tools, agents, and tasks to create a collaborative workflow in Crew.ai.
 
-# Hands-on code (Google ADK)
+## Hands-on code (Google ADK)
 
-# The Google Agent Developer Kit (ADK) includes a library of natively integrated tools that can be directly incorporated into an agent's capabilities. 
+## The Google Agent Developer Kit (ADK) includes a library of natively integrated tools that can be directly incorporated into an agent's capabilities. 
 
-# **Google search:** A primary example of such a component is the Google Search tool. This tool serves as a direct interface to the Google Search engine, equipping the agent with the functionality to perform web searches and retrieve external information.
+## **Google search:** A primary example of such a component is the Google Search tool. This tool serves as a direct interface to the Google Search engine, equipping the agent with the functionality to perform web searches and retrieve external information.
 
 ```python
 from google.adk.agents import Agent
@@ -289,12 +289,12 @@ from google.genai import types
 import nest_asyncio
 import asyncio
 
-# Define variables required for Session setup and Agent execution
+## Define variables required for Session setup and Agent execution
 APP_NAME="Google Search_agent"
 USER_ID="user1234"
 SESSION_ID="1234"
 
-# Define Agent with access to search tool
+## Define Agent with access to search tool
 root_agent = ADKAgent(
   name="basic_search_agent",
   model="gemini-2.0-flash-exp",
@@ -303,7 +303,7 @@ root_agent = ADKAgent(
   tools=[google_search] # Google Search is a pre-built tool to perform Google searches.
 )
 
-# Agent Interaction
+## Agent Interaction
 async def call_agent(query):
   """
   Helper function to call the agent with a query.
@@ -341,12 +341,12 @@ from google.adk.tools import google_search
 from google.adk.code_executors import BuiltInCodeExecutor
 from google.genai import types
 
-# Define variables required for Session setup and Agent execution
+## Define variables required for Session setup and Agent execution
 APP_NAME="calculator"
 USER_ID="user1234"
 SESSION_ID="session_code_exec_async"
 
-# Agent Definition
+## Agent Definition
 code_agent = LlmAgent(
   name="calculator_agent",
   model="gemini-2.0-flash",
@@ -358,7 +358,7 @@ code_agent = LlmAgent(
   description="Executes Python code to perform calculations.",
 )
 
-# Agent Interaction (Async)
+## Agent Interaction (Async)
 async def call_agent_async(query):
   # Session and Runner
   session_service = InMemorySessionService()
@@ -395,12 +395,12 @@ async def call_agent_async(query):
       print(f"ERROR during agent run: {e}")
   print("-" * 30)
 
-# Main async function to run the examples
+## Main async function to run the examples
 async def main():
   await call_agent_async("Calculate the value of (5 + 7) * 3")
   await call_agent_async("What is 10 factorial?")
 
-# Execute the main async function
+## Execute the main async function
 try:
   nest_asyncio.apply()
   asyncio.run(main())
@@ -427,19 +427,19 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 import os
 
-# --- Configuration ---
-# Ensure you have set your GOOGLE_API_KEY and DATASTORE_ID environment variables
-# For example:
-# os.environ["GOOGLE_API_KEY"] = "YOUR_API_KEY"
-# os.environ["DATASTORE_ID"] = "YOUR_DATASTORE_ID"
+## --- Configuration ---
+## Ensure you have set your GOOGLE_API_KEY and DATASTORE_ID environment variables
+## For example:
+## os.environ["GOOGLE_API_KEY"] = "YOUR_API_KEY"
+## os.environ["DATASTORE_ID"] = "YOUR_DATASTORE_ID"
 DATASTORE_ID = os.environ.get("DATASTORE_ID")
 
-# --- Application Constants ---
+## --- Application Constants ---
 APP_NAME = "vsearch_app"
 USER_ID = "user_123"  # Example User ID
 SESSION_ID = "session_456" # Example Session ID
 
-# --- Agent Definition (Updated with the newer model from the guide) ---
+## --- Agent Definition (Updated with the newer model from the guide) ---
 vsearch_agent = agents.VSearchAgent(
    name="q2_strategy_vsearch_agent",
    description="Answers questions about Q2 strategy documents using Vertex AI Search.",
@@ -448,14 +448,14 @@ vsearch_agent = agents.VSearchAgent(
    model_parameters={"temperature": 0.0}
 )
 
-# --- Runner and Session Initialization ---
+## --- Runner and Session Initialization ---
 runner = Runner(
    agent=vsearch_agent,
    app_name=APP_NAME,
    session_service=InMemorySessionService(),
 )
 
-# --- Agent Invocation Logic ---
+## --- Agent Invocation Logic ---
 async def call_vsearch_agent_async(query: str):
    """Initializes a session and streams the agent's response."""
    print(f"User: {query}")
@@ -485,13 +485,13 @@ async def call_vsearch_agent_async(query: str):
        print("Please ensure your datastore ID is correct and that the service account has the necessary permissions.")
        print("-" * 30)
 
-# --- Run Example ---
+## --- Run Example ---
 async def run_vsearch_example():
    # Replace with a question relevant to YOUR datastore content
    await call_vsearch_agent_async("Summarize the main points about the Q2 strategy document.")
    await call_vsearch_agent_async("What safety procedures are mentioned for lab X?")
 
-# --- Execution ---
+## --- Execution ---
 if __name__ == "__main__":
    if not DATASTORE_ID:
        print("Error: DATASTORE_ID environment variable is not set.")
@@ -511,7 +511,7 @@ Overall, this code provides a basic framework for building a conversational AI a
 
 **Vertex Extensions:** A Vertex AI extension is a structured API wrapper that enables a model to connect with external APIs for real-time data processing and action execution. Extensions offer enterprise-grade security, data privacy, and performance guarantees. They can be used for tasks like generating and running code, querying websites, and analyzing information from private datastores. Google provides prebuilt extensions for common use cases like Code Interpreter and Vertex AI Search, with the option to create custom ones. The primary benefit of extensions includes strong enterprise controls and seamless integration with other Google products. The key difference between extensions and function calling lies in their execution: Vertex AI automatically executes extensions, whereas function calls require manual execution by the user or client.
 
-# At a Glance
+## At a Glance
 
 **What:** LLMs are powerful text generators, but they are fundamentally disconnected from the outside world. Their knowledge is static, limited to the data they were trained on, and they lack the ability to perform actions or retrieve real-time information. This inherent limitation prevents them from completing tasks that require interaction with external APIs, databases, or services. Without a bridge to these external systems, their utility for solving real-world problems is severely constrained.
 
@@ -525,7 +525,7 @@ Overall, this code provides a basic framework for building a conversational AI a
 
 Fig.2: Tool use design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Tool Use (Function Calling) allows agents to interact with external systems and access dynamic information.  
 * It involves defining tools with clear descriptions and parameters that the LLM can understand.  
@@ -535,11 +535,11 @@ Fig.2: Tool use design pattern
 * LangChain simplifies tool definition using the @tool decorator and provides create\_tool\_calling\_agent and AgentExecutor for building tool-using agents.  
 * Google ADK has a number of very useful pre-built tools such as Google Search, Code Execution and Vertex AI Search Tool.
 
-# Conclusion
+## Conclusion
 
 The Tool Use pattern is a critical architectural principle for extending the functional scope of large language models beyond their intrinsic text generation capabilities. By equipping a model with the ability to interface with external software and data sources, this paradigm allows an agent to perform actions, execute computations, and retrieve information from other systems. This process involves the model generating a structured request to call an external tool when it determines that doing so is necessary to fulfill a user's query. Frameworks such as LangChain, Google ADK, and Crew AI offer structured abstractions and components that facilitate the integration of these external tools. These frameworks manage the process of exposing tool specifications to the model and parsing its subsequent tool-use requests. This simplifies the development of sophisticated agentic systems that can interact with and take action within external digital environments.
 
-# References
+## References
 
 1. LangChain Documentation (Tools): [https://python.langchain.com/docs/integrations/tools/](https://python.langchain.com/docs/integrations/tools/)   
 2. Google Agent Developer Kit (ADK) Documentation (Tools): [https://google.github.io/adk-docs/tools/](https://google.github.io/adk-docs/tools/)   

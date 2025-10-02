@@ -1,6 +1,6 @@
 # 第 1 章：提示词链
 
-# 提示词链模式概述
+## 提示词链模式概述
 
 提示词链（Prompt Chaining），有时也称为管道模式（Pipeline pattern），代表了在利用大型语言模型（LLM）处理复杂任务时的一种强大范式。提示词链不是期望 LLM 在单一的、整体化的步骤中解决复杂问题，而是倡导一种分而治之的策略。其核心思想是将原始的、艰巨的问题分解为一系列更小的、更易于管理的子问题。每个子问题通过一个专门设计的提示词单独处理，并且一个提示词生成的输出被战略性地作为输入馈送到链中的下一个提示词。
 
@@ -43,7 +43,7 @@
 
 这种结构化格式确保数据是机器可读的，可以精确解析并插入到下一个提示词中，而不会产生歧义。这种做法最大限度地减少了解释自然语言可能产生的错误，是构建稳健的、多步骤的基于 LLM 的系统的关键组成部分。
 
-# 实际应用与用例
+## 实际应用与用例
 
 提示词链是一种多用途模式，在构建 Agent 系统时适用于广泛的场景。其核心效用在于将复杂问题分解为顺序的、可管理的步骤。以下是几个实际应用和用例：
 
@@ -118,7 +118,7 @@
 * 提示词 2：将提取的图像文本与其相应的标签链接起来。
 * 提示词 3：使用表格解释收集的信息以确定所需的输出。
 
-# 实操代码示例
+## 实操代码示例
 
 实现提示词链的范围从脚本中的直接顺序函数调用到利用专门设计用于管理控制流、状态和组件集成的框架。诸如 LangChain、LangGraph、Crew AI 和 Google Agent Development Kit (ADK) 等框架提供了用于构建和执行这些多步过程的结构化环境，这对于复杂架构特别有利。
 
@@ -140,29 +140,29 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# 为了更好的安全性，从 .env 文件加载环境变量
-# from dotenv import load_dotenv
-# load_dotenv()
-# 确保你的 OPENAI_API_KEY 在 .env 文件中设置
+## 为了更好的安全性，从 .env 文件加载环境变量
+## from dotenv import load_dotenv
+## load_dotenv()
+## 确保你的 OPENAI_API_KEY 在 .env 文件中设置
 
-# 初始化语言模型（推荐使用 ChatOpenAI）
+## 初始化语言模型（推荐使用 ChatOpenAI）
 llm = ChatOpenAI(temperature=0)
 
-# --- 提示词 1：提取信息 ---
+## --- 提示词 1：提取信息 ---
 prompt_extract = ChatPromptTemplate.from_template(
     "从以下文本中提取技术规格：\n\n{text_input}"
 )
 
-# --- 提示词 2：转换为 JSON ---
+## --- 提示词 2：转换为 JSON ---
 prompt_transform = ChatPromptTemplate.from_template(
     "将以下规格转换为 JSON 对象，使用 'cpu'、'memory' 和 'storage' 作为键：\n\n{specifications}"
 )
 
-# --- 使用 LCEL 构建链 ---
-# StrOutputParser() 将 LLM 的消息输出转换为简单字符串。
+## --- 使用 LCEL 构建链 ---
+## StrOutputParser() 将 LLM 的消息输出转换为简单字符串。
 extraction_chain = prompt_extract | llm | StrOutputParser()
 
-# 完整的链将提取链的输出传递到转换提示词的 'specifications' 变量中。
+## 完整的链将提取链的输出传递到转换提示词的 'specifications' 变量中。
 full_chain = (
     {"specifications": extraction_chain}
     | prompt_transform
@@ -170,10 +170,10 @@ full_chain = (
     | StrOutputParser()
 )
 
-# --- 运行链 ---
+## --- 运行链 ---
 input_text = "新款笔记本电脑型号配备 3.5 GHz 八核处理器、16GB 内存和 1TB NVMe 固态硬盘。"
 
-# 使用输入文本字典执行链。
+## 使用输入文本字典执行链。
 final_result = full_chain.invoke({"text_input": input_text})
 
 print("\n--- 最终 JSON 输出 ---")
@@ -182,7 +182,7 @@ print(final_result)
 
 这段 Python 代码演示了如何使用 LangChain 库处理文本。它利用两个独立的提示词：一个从输入字符串中提取技术规格，另一个将这些规格格式化为 JSON 对象。ChatOpenAI 模型用于语言模型交互，StrOutputParser 确保输出为可用的字符串格式。LangChain 表达式语言（LCEL）用于优雅地将这些提示词和语言模型链接在一起。第一个链 extraction_chain 提取规格。然后 full_chain 获取提取的输出并将其用作转换提示词的输入。提供了描述笔记本电脑的示例输入文本。full_chain 通过这两个步骤调用此文本进行处理。最后打印最终结果，这是一个包含提取和格式化规格的 JSON 字符串。
 
-# 上下文工程和提示工程
+## 上下文工程和提示工程
 
 上下文工程（见图 1）是在 token 生成之前系统地设计、构建和向 AI 模型提供完整信息环境的学科。这种方法论断言，模型输出的质量较少依赖于模型架构本身，而更多依赖于所提供上下文的丰富性。
 
@@ -198,7 +198,7 @@ print(final_result)
 
 这种结构化方法是区分基本 AI 工具与更复杂、上下文感知系统的关键。它将上下文本身视为主要组件，对 Agent 知道什么、何时知道以及如何使用该信息给予关键重要性。这种实践确保模型对用户的意图、历史和当前环境有全面的理解。最终，上下文工程是将无状态聊天机器人提升为高度能干、情境感知系统的关键方法论。
 
-# 概览
+## 概览
 
 **什么：** 复杂任务在单个提示词内处理时通常会使 LLM 不堪重负，导致严重的性能问题。模型的认知负荷增加了错误的可能性，如忽略指令、失去上下文和生成错误信息。单体提示词难以有效管理多个约束和顺序推理步骤。这导致不可靠和不准确的输出，因为 LLM 未能解决多方面请求的所有方面。
 
@@ -212,7 +212,7 @@ print(final_result)
 
 图 2：提示词链模式：Agent 从用户接收一系列提示词，每个 Agent 的输出作为链中下一个 Agent 的输入。
 
-# 关键要点
+## 关键要点
 
 以下是一些关键要点：
 
@@ -221,11 +221,11 @@ print(final_result)
 * 这种模式提高了与语言模型的复杂交互的可靠性和可管理性。
 * 像 LangChain/LangGraph 和 Google ADK 这样的框架提供了强大的工具来定义、管理和执行这些多步序列。
 
-# 结论
+## 结论
 
 通过将复杂问题分解为一系列更简单、更易于管理的子任务，提示词链为指导大型语言模型提供了一个稳健的框架。这种"分而治之"策略通过一次专注于一个特定操作，显著提高了输出的可靠性和控制力。作为基础模式，它支持开发能够进行多步推理、工具集成和状态管理的复杂 AI Agent。最终，掌握提示词链对于构建能够执行远超单个提示词能力的复杂工作流的稳健、上下文感知系统至关重要。
 
-# 参考文献
+## 参考文献
 
 1. LangChain Documentation on LCEL: [https://python.langchain.com/v0.2/docs/core_modules/expression_language/](https://python.langchain.com/v0.2/docs/core_modules/expression_language/)
 2. LangGraph Documentation: [https://langchain-ai.github.io/langgraph/](https://langchain-ai.github.io/langgraph/)

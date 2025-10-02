@@ -1,6 +1,6 @@
 # 第 2 章：路由
 
-# 路由模式概述
+## 路由模式概述
 
 虽然通过提示词链进行顺序处理是执行确定性、线性工作流的基础技术，但其适用性在需要自适应响应的场景中受到限制。现实世界的 Agent 系统必须经常根据偶然因素在多个潜在行动之间进行仲裁，例如环境状态、用户输入或前一操作的结果。这种动态决策能力，控制流向不同的专门函数、工具或子流程，是通过一种称为路由的机制实现的。
 
@@ -28,7 +28,7 @@
 
 路由的实现使系统能够超越确定性顺序处理。它促进了更自适应的执行流的开发，可以动态且适当地响应更广泛的输入和状态变化。
 
-# 实际应用与用例
+## 实际应用与用例
 
 路由模式是自适应 Agent 系统设计中的关键控制机制，使它们能够动态改变其执行路径以响应可变输入和内部状态。其效用通过提供必要的条件逻辑层跨越多个领域。
 
@@ -40,7 +40,7 @@
 
 最终，路由提供了创建功能多样化和上下文感知系统所必需的逻辑仲裁能力。它将 Agent 从预定义序列的静态执行器转变为可以在变化条件下就完成任务的最有效方法做出决策的动态系统。
 
-# 实操代码示例（LangChain）
+## 实操代码示例（LangChain）
 
 在代码中实现路由涉及定义可能的路径和决定采取哪条路径的逻辑。像 LangChain 和 LangGraph 这样的框架为此提供了特定的组件和结构。LangGraph 基于状态的图结构对于可视化和实现路由逻辑特别直观。
 
@@ -55,18 +55,18 @@ pip install langchain langgraph google-cloud-aiplatform langchain-google-genai g
 您还需要使用您选择的语言模型的 API 密钥设置环境（例如，OpenAI、Google Gemini、Anthropic）。
 
 ```python
-# Copyright (c) 2025 Marco Fago
-# https://www.linkedin.com/in/marco-fago/
+## Copyright (c) 2025 Marco Fago
+## https://www.linkedin.com/in/marco-fago/
 #
-# 此代码根据 MIT 许可证授权。
-# 请参阅仓库中的 LICENSE 文件以获取完整许可文本。
+## 此代码根据 MIT 许可证授权。
+## 请参阅仓库中的 LICENSE 文件以获取完整许可文本。
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableBranch
 
-# --- 配置 ---
-# 确保设置了您的 API 密钥环境变量（例如，GOOGLE_API_KEY）
+## --- 配置 ---
+## 确保设置了您的 API 密钥环境变量（例如，GOOGLE_API_KEY）
 try:
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
     print(f"语言模型已初始化: {llm.model}")
@@ -74,7 +74,7 @@ except Exception as e:
     print(f"初始化语言模型时出错: {e}")
     llm = None
 
-# --- 定义模拟子 Agent 处理程序（相当于 ADK 的 sub_agents）---
+## --- 定义模拟子 Agent 处理程序（相当于 ADK 的 sub_agents）---
 def booking_handler(request: str) -> str:
     """模拟预订 Agent 处理请求。"""
     print("\n--- 委托给预订处理程序 ---")
@@ -90,8 +90,8 @@ def unclear_handler(request: str) -> str:
     print("\n--- 处理不清楚的请求 ---")
     return f"协调器无法委托请求：'{request}'。请澄清。"
 
-# --- 定义协调器路由链（相当于 ADK 协调器的指令）---
-# 此链决定应委托给哪个处理程序。
+## --- 定义协调器路由链（相当于 ADK 协调器的指令）---
+## 此链决定应委托给哪个处理程序。
 coordinator_router_prompt = ChatPromptTemplate.from_messages([
     ("system", """分析用户的请求并确定哪个专家处理程序应处理它。
      - 如果请求与预订航班或酒店相关，
@@ -106,32 +106,32 @@ coordinator_router_prompt = ChatPromptTemplate.from_messages([
 if llm:
     coordinator_router_chain = coordinator_router_prompt | llm | StrOutputParser()
 
-# --- 定义委托逻辑（相当于 ADK 的基于 sub_agents 的自动流）---
-# 使用 RunnableBranch 根据路由链的输出进行路由。
-# 为 RunnableBranch 定义分支
+## --- 定义委托逻辑（相当于 ADK 的基于 sub_agents 的自动流）---
+## 使用 RunnableBranch 根据路由链的输出进行路由。
+## 为 RunnableBranch 定义分支
 branches = {
     "booker": RunnablePassthrough.assign(output=lambda x: booking_handler(x['request']['request'])),
     "info": RunnablePassthrough.assign(output=lambda x: info_handler(x['request']['request'])),
     "unclear": RunnablePassthrough.assign(output=lambda x: unclear_handler(x['request']['request'])),
 }
 
-# 创建 RunnableBranch。它接受路由链的输出
-# 并将原始输入（'request'）路由到相应的处理程序。
+## 创建 RunnableBranch。它接受路由链的输出
+## 并将原始输入（'request'）路由到相应的处理程序。
 delegation_branch = RunnableBranch(
     (lambda x: x['decision'].strip() == 'booker', branches["booker"]), # 添加了 .strip()
     (lambda x: x['decision'].strip() == 'info', branches["info"]),     # 添加了 .strip()
     branches["unclear"] # 'unclear' 或任何其他输出的默认分支
 )
 
-# 将路由链和委托分支组合成单个可运行对象
-# 路由链的输出（'decision'）与原始输入（'request'）一起传递
-# 到 delegation_branch。
+## 将路由链和委托分支组合成单个可运行对象
+## 路由链的输出（'decision'）与原始输入（'request'）一起传递
+## 到 delegation_branch。
 coordinator_agent = {
     "decision": coordinator_router_chain,
     "request": RunnablePassthrough()
 } | delegation_branch | (lambda x: x['output']) # 提取最终输出
 
-# --- 示例用法 ---
+## --- 示例用法 ---
 def main():
     if not llm:
         print("\n由于 LLM 初始化失败，跳过执行。")
@@ -162,17 +162,17 @@ if __name__ == "__main__":
 
 main 函数通过三个示例请求演示了系统的用法，展示了不同的输入如何被路由并由模拟 Agent 处理。包含了语言模型初始化的错误处理以确保稳健性。代码结构模仿了基本的多 Agent 框架，其中中央协调器根据意图将任务委托给专门的 Agent。
 
-# 实操代码示例（Google ADK）
+## 实操代码示例（Google ADK）
 
 Agent Development Kit (ADK) 是一个用于工程化 Agent 系统的框架，为定义 Agent 的能力和行为提供了结构化环境。与基于显式计算图的架构相比，ADK 范式中的路由通常通过定义一组离散的"工具"来实现，这些工具代表 Agent 的功能。响应用户查询选择适当工具由框架的内部逻辑管理，该逻辑利用底层模型将用户意图与正确的功能处理程序匹配。
 
 此 Python 代码演示了使用 Google ADK 库的 Agent Development Kit (ADK) 应用程序示例。它设置了一个"协调器" Agent，根据定义的指令将用户请求路由到专门的子 Agent（"Booker"用于预订，"Info"用于一般信息）。然后子 Agent 使用特定工具模拟处理请求，展示了 Agent 系统中的基本委托模式。
 
 ```python
-# Copyright (c) 2025 Marco Fago
+## Copyright (c) 2025 Marco Fago
 #
-# 此代码根据 MIT 许可证授权。
-# 请参阅仓库中的 LICENSE 文件以获取完整许可文本。
+## 此代码根据 MIT 许可证授权。
+## 请参阅仓库中的 LICENSE 文件以获取完整许可文本。
 import uuid
 from typing import Dict, Any, Optional
 from google.adk.agents import Agent
@@ -181,8 +181,8 @@ from google.adk.tools import FunctionTool
 from google.genai import types
 from google.adk.events import Event
 
-# --- 定义工具函数 ---
-# 这些函数模拟专家 Agent 的操作。
+## --- 定义工具函数 ---
+## 这些函数模拟专家 Agent 的操作。
 def booking_handler(request: str) -> str:
     """
     处理航班和酒店的预订请求。
@@ -209,11 +209,11 @@ def unclear_handler(request: str) -> str:
     """处理无法委托的请求。"""
     return f"协调器无法委托请求：'{request}'。请澄清。"
 
-# --- 从函数创建工具 ---
+## --- 从函数创建工具 ---
 booking_tool = FunctionTool(booking_handler)
 info_tool = FunctionTool(info_handler)
 
-# 定义配备各自工具的专门子 Agent
+## 定义配备各自工具的专门子 Agent
 booking_agent = Agent(
     name="Booker",
     model="gemini-2.0-flash",
@@ -228,7 +228,7 @@ info_agent = Agent(
     tools=[info_tool]
 )
 
-# 定义具有明确委托指令的父 Agent
+## 定义具有明确委托指令的父 Agent
 coordinator = Agent(
     name="Coordinator",
     model="gemini-2.0-flash",
@@ -243,7 +243,7 @@ coordinator = Agent(
     sub_agents=[booking_agent, info_agent]
 )
 
-# --- 执行逻辑 ---
+## --- 执行逻辑 ---
 async def run_coordinator(runner: InMemoryRunner, request: str):
     """使用给定请求运行协调器 Agent 并委托。"""
     print(f"\n--- 使用请求运行协调器: '{request}' ---")
@@ -313,7 +313,7 @@ if __name__ == "__main__":
 
 main 函数通过使用不同请求运行协调器来演示系统的用法，展示了它如何将预订请求委托给 Booker，将信息请求委托给 Info Agent。
 
-# 概览
+## 概览
 
 **什么**：Agent 系统必须经常响应各种各样的输入和情况，这些无法由单一的线性流程处理。简单的顺序工作流缺乏基于上下文做出决策的能力。没有为特定任务选择正确工具或子流程的机制，系统仍然是僵化和非自适应的。这种限制使得难以构建能够管理现实世界用户请求的复杂性和可变性的复杂应用程序。
 
@@ -326,14 +326,14 @@ main 函数通过使用不同请求运行协调器来演示系统的用法，展
 ![][image1]  
 图 1：路由模式，使用 LLM 作为路由器
 
-# 关键要点
+## 关键要点
 
 * 路由使 Agent 能够根据条件动态决定工作流中的下一步。
 * 它允许 Agent 处理各种输入并调整其行为，超越线性执行。
 * 路由逻辑可以使用 LLM、基于规则的系统或嵌入相似性实现。
 * 像 LangGraph 和 Google ADK 这样的框架提供了在 Agent 工作流中定义和管理路由的结构化方式，尽管采用不同的架构方法。
 
-# 结论
+## 结论
 
 路由模式是构建真正动态和响应式 Agent 系统的关键步骤。通过实现路由，我们超越了简单的线性执行流，使我们的 Agent 能够就如何处理信息、响应用户输入以及利用可用工具或子 Agent 做出智能决策。
 
@@ -343,7 +343,7 @@ main 函数通过使用不同请求运行协调器来演示系统的用法，展
 
 掌握路由模式对于构建能够智能地导航不同场景并根据上下文提供定制响应或操作的 Agent 至关重要。它是创建多功能和稳健 Agent 应用程序的关键组件。
 
-# 参考文献
+## 参考文献
 
 1. LangGraph Documentation: [https://www.langchain.com/](https://www.langchain.com/)
 2. Google Agent Developer Kit Documentation: [https://google.github.io/adk-docs/](https://google.github.io/adk-docs/)

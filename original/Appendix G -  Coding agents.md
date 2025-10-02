@@ -1,10 +1,10 @@
 # Appendix G \- Coding Agents
 
-# Vibe Coding: A Starting Point
+## Vibe Coding: A Starting Point
 
 "Vibe coding" has become a powerful technique for rapid innovation and creative exploration. This practice involves using LLMs to generate initial drafts, outline complex logic, or build quick prototypes, significantly reducing initial friction. It is invaluable for overcoming the "blank page" problem, enabling developers to quickly transition from a vague concept to tangible, runnable code. Vibe coding is particularly effective when exploring unfamiliar APIs or testing novel architectural patterns, as it bypasses the immediate need for perfect implementation. The generated code often acts as a creative catalyst, providing a foundation for developers to critique, refactor, and expand upon. Its primary strength lies in its ability to accelerate the initial discovery and ideation phases of the software lifecycle. However, while vibe coding excels at brainstorming, developing robust, scalable, and maintainable software demands a more structured approach, shifting from pure generation to a collaborative partnership with specialized coding agents.
 
-# Agents as Team Members
+## Agents as Team Members
 
 While the initial wave focused on raw code generation—the "vibe code" perfect for ideation—the industry is now shifting towards a more integrated and powerful paradigm for production work. The most effective development teams are not merely delegating tasks to Agent; they are augmenting themselves with a suite of sophisticated coding agents. These agents act as tireless, specialized team members, amplifying human creativity and dramatically increasing a team's scalability and velocity.
 
@@ -56,7 +56,7 @@ To effectively leverage a frontier Large Language Model, this framework assigns 
 
 Ultimately, this human-led model creates a powerful synergy between the developer's strategic direction and the agents' tactical execution. As a result, developers can transcend routine tasks, focusing their expertise on the creative and architectural challenges that deliver the most value.
 
-# Practical Implementation
+## Practical Implementation
 
 ## Setup Checklist
 
@@ -80,13 +80,13 @@ Successfully leading this framework requires evolving from a sole contributor in
 * **Act as the Ultimate Quality Gate** An agent's output is always a proposal, never a command. Treat the Reviewer Agent's feedback as a powerful signal, but you are the ultimate quality gate. Apply your domain expertise and project-specific knowledge to validate, challenge, and approve all changes, acting as the final guardian of the codebase's integrity.  
 * **Engage in Iterative Dialogue** The best results emerge from conversation, not monologue. If an agent's initial output is imperfect, don't discard it—refine it. Provide corrective feedback, add clarifying context, and prompt for another attempt. This iterative dialogue is crucial, especially with the Reviewer Agent, whose "Reflection" output is designed to be the start of a collaborative discussion, not just a final report.
 
-# Conclusion
+## Conclusion
 
 The future of code development has arrived, and it is augmented. The era of the lone coder has given way to a new paradigm where developers lead teams of specialized AI agents. This model doesn't diminish the human role; it elevates it by automating routine tasks, scaling individual impact, and achieving a development velocity previously unimaginable.
 
 By offloading tactical execution to Agents, developers can now dedicate their cognitive energy to what truly matters: strategic innovation, resilient architectural design, and the creative problem-solving required to build products that delight users. The fundamental relationship has been redefined; it is no longer a contest of human versus machine, but a partnership between human ingenuity and AI, working as a single, seamlessly integrated team.
 
-# References
+## References
 
 1. AI is responsible for generating more than 30% of the code at Google [https://www.reddit.com/r/singularity/comments/1k7rxo0/ai\_is\_now\_writing\_well\_over\_30\_of\_the\_code\_at/](https://www.reddit.com/r/singularity/comments/1k7rxo0/ai_is_now_writing_well_over_30_of_the_code_at/)   
 2. AI is responsible for generating more than 30% of the code at Microsoft [https://www.businesstoday.in/tech-today/news/story/30-of-microsofts-code-is-now-ai-generated-says-ceo-satya-nadella-474167-2025-04-30](https://www.businesstoday.in/tech-today/news/story/30-of-microsofts-code-is-now-ai-generated-says-ceo-satya-nadella-474167-2025-04-30) 

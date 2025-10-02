@@ -1,6 +1,6 @@
 # Chapter 3: Parallelization
 
-# Parallelization Pattern Overview
+## Parallelization Pattern Overview
 
 In the previous chapters, we've explored Prompt Chaining for sequential workflows and Routing for dynamic decision-making and transitions between different paths. While these patterns are essential, many complex agentic tasks involve multiple sub-tasks that can be executed *simultaneously* rather than one after another. This is where the **Parallelization** pattern becomes crucial.
 
@@ -32,7 +32,7 @@ Frameworks like LangChain, LangGraph, and Google ADK provide mechanisms for para
 
 The Parallelization pattern is vital for improving the efficiency and responsiveness of agentic systems, especially when dealing with tasks that involve multiple independent lookups, computations, or interactions with external services. It's a key technique for optimizing the performance of complex agent workflows.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Parallelization is a powerful pattern for optimizing agent performance across various applications:
 
@@ -87,7 +87,7 @@ Generating multiple variations of a response or output in parallel to select the
 
 Parallelization is a fundamental optimization technique in agentic design, allowing developers to build more performant and responsive applications by leveraging concurrent execution for independent tasks.
 
-# Hands-On Code Example (LangChain)
+## Hands-On Code Example (LangChain)
 
 Parallel execution within the LangChain framework is facilitated by the LangChain Expression Language (LCEL). The primary method involves structuring multiple runnable components within a dictionary or list construct. When this collection is passed as input to a subsequent component in the chain, the LCEL runtime executes the contained runnables concurrently.
 
@@ -106,16 +106,16 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import Runnable, RunnableParallel, RunnablePassthrough
 
-# --- Configuration ---
-# Ensure your API key environment variable is set (e.g., OPENAI_API_KEY)
+## --- Configuration ---
+## Ensure your API key environment variable is set (e.g., OPENAI_API_KEY)
 try:
    llm: Optional[ChatOpenAI] = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
 except Exception as e:
    print(f"Error initializing language model: {e}")
    llm = None
 
-# --- Define Independent Chains ---
-# These three chains represent distinct tasks that can be executed in parallel.
+## --- Define Independent Chains ---
+## These three chains represent distinct tasks that can be executed in parallel.
 summarize_chain: Runnable = (
    ChatPromptTemplate.from_messages([
        ("system", "Summarize the following topic concisely:"),
@@ -143,9 +143,9 @@ terms_chain: Runnable = (
    | StrOutputParser()
 )
 
-# --- Build the Parallel + Synthesis Chain ---
-# 1. Define the block of tasks to run in parallel. The results of these,
-#    along with the original topic, will be fed into the next step.
+## --- Build the Parallel + Synthesis Chain ---
+## 1. Define the block of tasks to run in parallel. The results of these,
+##    along with the original topic, will be fed into the next step.
 map_chain = RunnableParallel(
    {
        "summary": summarize_chain,
@@ -155,7 +155,7 @@ map_chain = RunnableParallel(
    }
 )
 
-# 2. Define the final synthesis prompt which will combine the parallel results.
+## 2. Define the final synthesis prompt which will combine the parallel results.
 synthesis_prompt = ChatPromptTemplate.from_messages([
    ("system", """Based on the following information:
    Summary: {summary}
@@ -165,11 +165,11 @@ synthesis_prompt = ChatPromptTemplate.from_messages([
    ("user", "Original topic: {topic}")
 ])
 
-# 3. Construct the full chain by piping the parallel results directly
-#    into the synthesis prompt, followed by the LLM and output parser.
+## 3. Construct the full chain by piping the parallel results directly
+##    into the synthesis prompt, followed by the LLM and output parser.
 full_parallel_chain = map_chain | synthesis_prompt | llm | StrOutputParser()
 
-# --- Run the Chain ---
+## --- Run the Chain ---
 async def run_parallel_example(topic: str) -> None:
    """
    Asynchronously invokes the parallel processing chain with a specific topic
@@ -205,7 +205,7 @@ A RunnableParallel block is then constructed to bundle these three chains, allow
 
 In essence, this code sets up a workflow where multiple LLM calls (for summarizing, questions, and terms) happen at the same time for a given topic, and their results are then combined by a final LLM call. This showcases the core idea of parallelization in an agentic workflow using LangChain.
 
-# Hands-On Code Example (Google ADK)
+## Hands-On Code Example (Google ADK)
 
 Okay, let's now turn our attention to a concrete example illustrating these concepts within the Google ADK framework. We'll examine how the ADK primitives, such as ParallelAgent and SequentialAgent, can be applied to build an agent flow that leverages concurrent execution for improved efficiency.
 
@@ -215,8 +215,8 @@ from google.adk.tools import google_search
 
 GEMINI_MODEL="gemini-2.0-flash"
 
-# --- 1. Define Researcher Sub-Agents (to run in parallel) ---
-# Researcher 1: Renewable Energy
+## --- 1. Define Researcher Sub-Agents (to run in parallel) ---
+## Researcher 1: Renewable Energy
 researcher_agent_1 = LlmAgent(
     name="RenewableEnergyResearcher",
     model=GEMINI_MODEL,
@@ -227,7 +227,7 @@ researcher_agent_1 = LlmAgent(
     output_key="renewable_energy_result"
 )
 
-# Researcher 2: Electric Vehicles
+## Researcher 2: Electric Vehicles
 researcher_agent_2 = LlmAgent(
     name="EVResearcher",
     model=GEMINI_MODEL,
@@ -238,7 +238,7 @@ researcher_agent_2 = LlmAgent(
     output_key="ev_technology_result"
 )
 
-# Researcher 3: Carbon Capture
+## Researcher 3: Carbon Capture
 researcher_agent_3 = LlmAgent(
     name="CarbonCaptureResearcher",
     model=GEMINI_MODEL,
@@ -249,18 +249,18 @@ researcher_agent_3 = LlmAgent(
     output_key="carbon_capture_result"
 )
 
-# --- 2. Create the ParallelAgent (Runs researchers concurrently) ---
-# This agent orchestrates the concurrent execution of the researchers.
-# It finishes once all researchers have completed and stored their results in state.
+## --- 2. Create the ParallelAgent (Runs researchers concurrently) ---
+## This agent orchestrates the concurrent execution of the researchers.
+## It finishes once all researchers have completed and stored their results in state.
 parallel_research_agent = ParallelAgent(
     name="ParallelWebResearchAgent",
     sub_agents=[researcher_agent_1, researcher_agent_2, researcher_agent_3],
     description="Runs multiple research agents in parallel to gather information."
 )
 
-# --- 3. Define the Merger Agent (Runs *after* the parallel agents) ---
-# This agent takes the results stored in the session state by the parallel agents
-# and synthesizes them into a single, structured response with attributions.
+## --- 3. Define the Merger Agent (Runs *after* the parallel agents) ---
+## This agent takes the results stored in the session state by the parallel agents
+## and synthesizes them into a single, structured response with attributions.
 merger_agent = LlmAgent(
     name="SynthesisAgent",
     model=GEMINI_MODEL,  # Or potentially a more powerful model if needed for synthesis
@@ -270,9 +270,9 @@ merger_agent = LlmAgent(
     # No output_key needed here, as its direct response is the final output of the sequence
 )
 
-# --- 4. Create the SequentialAgent (Orchestrates the overall flow) ---
-# This is the main agent that will be run. It first executes the ParallelAgent
-# to populate the state, and then executes the MergerAgent to produce the final output.
+## --- 4. Create the SequentialAgent (Orchestrates the overall flow) ---
+## This is the main agent that will be run. It first executes the ParallelAgent
+## to populate the state, and then executes the MergerAgent to produce the final output.
 sequential_pipeline_agent = SequentialAgent(
     name="ResearchAndSynthesisPipeline",
     # Run parallel research first, then merge
@@ -291,7 +291,7 @@ Next, a MergerAgent (also an LlmAgent) is defined to synthesize the research res
 
 Finally, a SequentialAgent named ResearchAndSynthesisPipeline is created to orchestrate the entire workflow. As the primary controller, this main agent first executes the ParallelAgent to perform the research. Once the ParallelAgent is complete, the SequentialAgent then executes the MergerAgent to synthesize the collected information. The sequential\_pipeline\_agent is set as the root\_agent, representing the entry point for running this multi-agent system. The overall process is designed to efficiently gather information from multiple sources in parallel and then combine it into a single, structured report.
 
-# At a Glance
+## At a Glance
 
 **What:** Many agentic workflows involve multiple sub-tasks that must be completed to achieve a final goal. A purely sequential execution, where each task waits for the previous one to finish, is often inefficient and slow. This latency becomes a significant bottleneck when tasks depend on external I/O operations, such as calling different APIs or querying multiple databases. Without a mechanism for concurrent execution, the total processing time is the sum of all individual task durations, hindering the system's overall performance and responsiveness.
 
@@ -305,7 +305,7 @@ Finally, a SequentialAgent named ResearchAndSynthesisPipeline is created to orch
 
 Fig.2: Parallelization design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 Here are the key takeaways:
 
@@ -317,7 +317,7 @@ Here are the key takeaways:
 * Google ADK can facilitate parallel execution through LLM-Driven Delegation, where a Coordinator agent's LLM identifies independent sub-tasks and triggers their concurrent handling by specialized sub-agents.  
 * Parallelization helps reduce overall latency and makes agentic systems more responsive for complex tasks.
 
-# Conclusion
+## Conclusion
 
 The parallelization pattern is a method for optimizing computational workflows by concurrently executing independent sub-tasks. This approach reduces overall latency, particularly in complex operations that involve multiple model inferences or calls to external services.
 
@@ -325,7 +325,7 @@ Frameworks provide distinct mechanisms for implementing this pattern. In LangCha
 
 By integrating parallel processing with sequential (chaining) and conditional (routing) control flows, it becomes possible to construct sophisticated, high-performance computational systems capable of efficiently managing diverse and complex tasks.
 
-# References
+## References
 
 Here are some resources for further reading on the Parallelization pattern and related concepts:
 

@@ -4,7 +4,7 @@ LLMs exhibit substantial capabilities in generating human-like text. However, th
 
 For AI agents, this is crucial as it allows them to ground their actions and responses in real-time, verifiable data beyond their static training. This capability enables them to perform complex tasks accurately, such as accessing the latest company policies to answer a specific question or checking current inventory before placing an order. By integrating external knowledge, RAG transforms agents from simple conversationalists into effective, data-driven tools capable of executing meaningful work.
 
-# Knowledge Retrieval (RAG) Pattern Overview
+## Knowledge Retrieval (RAG) Pattern Overview
 
 The Knowledge Retrieval (RAG) pattern significantly enhances the capabilities of LLMs by granting them access to external knowledge bases before generating a response. Instead of relying solely on their internal, pre-trained knowledge, RAG allows LLMs to "look up" information, much like a human might consult a book or search the internet. This process empowers LLMs to provide more accurate, up-to-date, and verifiable answers.
 
@@ -54,7 +54,7 @@ Fourth, an agent can identify knowledge gaps and use external tools. Suppose a u
 
 ### **In summary:** Agentic RAG represents a sophisticated evolution of the standard retrieval pattern, transforming it from a passive data pipeline into an active, problem-solving framework. By embedding a reasoning layer that can evaluate sources, reconcile conflicts, decompose complex questions, and use external tools, agents dramatically improve the reliability and depth of the generated answers. This advancement makes the AI more trustworthy and capable, though it comes with important trade-offs in system complexity, latency, and cost that must be carefully managed.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Knowledge Retrieval (RAG) is changing how Large Language Models (LLMs) are utilized across various industries, enhancing their ability to provide more accurate and contextually relevant responses.
 
@@ -67,7 +67,7 @@ Applications include:
 
 By incorporating external knowledge, RAG extends the capabilities of LLMs beyond simple communication to function as knowledge processing systems.
 
-# Hands-On Code Example (ADK)
+## Hands-On Code Example (ADK)
 
 To illustrate the Knowledge Retrieval (RAG) pattern,  let's see three examples. 
 
@@ -88,25 +88,25 @@ search_agent = Agent(
 Second, this section explains how to utilize Vertex AI RAG capabilities within the Google ADK. The code provided demonstrates the initialization of VertexAiRagMemoryService from the ADK. This allows for establishing a connection to a Google Cloud Vertex AI RAG Corpus. The service is configured by specifying the corpus resource name and optional parameters such as SIMILARITY\_TOP\_K and VECTOR\_DISTANCE\_THRESHOLD. These parameters influence the retrieval process. SIMILARITY\_TOP\_K defines the number of top similar results to be retrieved. VECTOR\_DISTANCE\_THRESHOLD sets a limit on the semantic distance for the retrieved results. This setup enables agents to perform scalable and persistent semantic knowledge retrieval from the designated RAG Corpus. The process effectively integrates Google Cloud's RAG functionalities into an ADK agent, thereby supporting the development of responses grounded in factual data.
 
 ```python
-# Import the necessary VertexAiRagMemoryService class from the google.adk.memory module.
+## Import the necessary VertexAiRagMemoryService class from the google.adk.memory module.
 from google.adk.memory import VertexAiRagMemoryService
 
 RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id"
 
-# Define an optional parameter for the number of top similar results to retrieve.
-# This controls how many relevant document chunks the RAG service will return.
+## Define an optional parameter for the number of top similar results to retrieve.
+## This controls how many relevant document chunks the RAG service will return.
 SIMILARITY_TOP_K = 5
 
-# Define an optional parameter for the vector distance threshold.
-# This threshold determines the maximum semantic distance allowed for retrieved results;
-# results with a distance greater than this value might be filtered out.
+## Define an optional parameter for the vector distance threshold.
+## This threshold determines the maximum semantic distance allowed for retrieved results;
+## results with a distance greater than this value might be filtered out.
 VECTOR_DISTANCE_THRESHOLD = 0.7
 
-# Initialize an instance of VertexAiRagMemoryService.
-# This sets up the connection to your Vertex AI RAG Corpus.
-# - rag_corpus: Specifies the unique identifier for your RAG Corpus.
-# - similarity_top_k: Sets the maximum number of similar results to fetch.
-# - vector_distance_threshold: Defines the similarity threshold for filtering results.
+## Initialize an instance of VertexAiRagMemoryService.
+## This sets up the connection to your Vertex AI RAG Corpus.
+## - rag_corpus: Specifies the unique identifier for your RAG Corpus.
+## - similarity_top_k: Sets the maximum number of similar results to fetch.
+## - vector_distance_threshold: Defines the similarity threshold for filtering results.
 memory_service = VertexAiRagMemoryService(
     rag_corpus=RAG_CORPUS_RESOURCE_NAME,
     similarity_top_k=SIMILARITY_TOP_K,
@@ -114,7 +114,7 @@ memory_service = VertexAiRagMemoryService(
 )
 ```
 
-# Hands-On Code Example (LangChain)
+## Hands-On Code Example (LangChain)
 
 Third, let's walk through a complete example using LangChain.
 
@@ -138,14 +138,14 @@ import weaviate
 from weaviate.embedded import EmbeddedOptions
 import dotenv
 
-# Load environment variables (e.g., OPENAI_API_KEY)
+## Load environment variables (e.g., OPENAI_API_KEY)
 dotenv.load_dotenv()
 
-# Set your OpenAI API key (ensure it's loaded from .env or set here)
-# os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
+## Set your OpenAI API key (ensure it's loaded from .env or set here)
+## os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
 
-# --- 1. Data Preparation (Preprocessing) ---
-# Load data
+## --- 1. Data Preparation (Preprocessing) ---
+## Load data
 url = "https://github.com/langchain-ai/langchain/blob/master/docs/docs/how_to/state_of_the_union.txt"
 res = requests.get(url)
 with open("state_of_the_union.txt", "w") as f:
@@ -154,11 +154,11 @@ with open("state_of_the_union.txt", "w") as f:
 loader = TextLoader('./state_of_the_union.txt')
 documents = loader.load()
 
-# Chunk documents
+## Chunk documents
 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 chunks = text_splitter.split_documents(documents)
 
-# Embed and store chunks in Weaviate
+## Embed and store chunks in Weaviate
 client = weaviate.Client(embedded_options=EmbeddedOptions())
 vectorstore = Weaviate.from_documents(
     client=client,
@@ -167,19 +167,19 @@ vectorstore = Weaviate.from_documents(
     by_text=False
 )
 
-# Define the retriever
+## Define the retriever
 retriever = vectorstore.as_retriever()
 
-# Initialize LLM
+## Initialize LLM
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-# --- 2. Define the State for LangGraph ---
+## --- 2. Define the State for LangGraph ---
 class RAGGraphState(TypedDict):
     question: str
     documents: List[Document]
     generation: str
 
-# --- 3. Define the Nodes (Functions) ---
+## --- 3. Define the Nodes (Functions) ---
 def retrieve_documents_node(state: RAGGraphState) -> RAGGraphState:
     """Retrieves documents based on the user's question."""
     question = state["question"]
@@ -204,20 +204,20 @@ Answer: """
     generation = rag_chain.invoke({"context": context, "question": question})
     return {"question": question, "documents": documents, "generation": generation}
 
-# --- 4. Build the LangGraph Graph ---
+## --- 4. Build the LangGraph Graph ---
 workflow = StateGraph(RAGGraphState)
-# Add nodes
+## Add nodes
 workflow.add_node("retrieve", retrieve_documents_node)
 workflow.add_node("generate", generate_response_node)
-# Set the entry point
+## Set the entry point
 workflow.set_entry_point("retrieve")
-# Add edges (transitions)
+## Add edges (transitions)
 workflow.add_edge("retrieve", "generate")
 workflow.add_edge("generate", END)
-# Compile the graph
+## Compile the graph
 app = workflow.compile()
 
-# --- 5. Run the RAG Application ---
+## --- 5. Run the RAG Application ---
 if __name__ == "__main__":
     print("\n--- Running RAG Query ---")
     query = "What did the president say about Justice Breyer"
@@ -234,7 +234,7 @@ if __name__ == "__main__":
 
 This Python code illustrates a Retrieval-Augmented Generation (RAG) pipeline implemented with LangChain and LangGraph. The process begins with the creation of a knowledge base derived from a text document, which is segmented into chunks and transformed into embeddings. These embeddings are then stored in a Weaviate vector store, facilitating efficient information retrieval. A StateGraph in LangGraph is utilized to manage the workflow between two key functions: \`retrieve\_documents\_node\` and \`generate\_response\_node\`. The \`retrieve\_documents\_node\` function queries the vector store to identify relevant document chunks based on the user's input. Subsequently, the \`generate\_response\_node\` function utilizes the retrieved information and a predefined prompt template to produce a response using an OpenAI Large Language Model (LLM). The \`app.stream\` method allows the execution of queries through the RAG pipeline, demonstrating the system's capacity to generate contextually relevant outputs.
 
-# At Glance
+## At Glance
 
 **What:** LLMs possess impressive text generation abilities but are fundamentally limited by their training data. This knowledge is static, meaning it doesn't include real-time information or private, domain-specific data. Consequently, their responses can be outdated, inaccurate, or lack the specific context required for specialized tasks. This gap restricts their reliability for applications demanding current and factual answers.
 
@@ -252,7 +252,7 @@ Knowledge Retrieval pattern: an AI agent to query and retrieve information from 
 
 Fig. 3: Knowledge Retrieval pattern: an AI agent to find and synthesize information from the public internet in response to user queries.
 
-# Key Takeaways
+## Key Takeaways
 
 * Knowledge Retrieval (RAG) enhances LLMs by allowing them to access external, up-to-date, and specific information.  
 * The process involves Retrieval (searching a knowledge base for relevant snippets) and Augmentation (adding these snippets to the LLM's prompt).  
@@ -262,13 +262,13 @@ Fig. 3: Knowledge Retrieval pattern: an AI agent to find and synthesize informat
 * Agentic RAG moves beyond simple information retrieval by using an intelligent agent to actively reason about, validate, and refine external knowledge, ensuring a more accurate and reliable answer.  
 * Practical applications span enterprise search, customer support, legal research, and personalized recommendations.
 
-# Conclusion
+## Conclusion
 
 In conclusion, Retrieval-Augmented Generation (RAG) addresses the core limitation of a Large Language Model's static knowledge by connecting it to external, up-to-date data sources. The process works by first retrieving relevant information snippets and then augmenting the user's prompt, enabling the LLM to generate more accurate and contextually aware responses. This is made possible by foundational technologies like embeddings, semantic search, and vector databases, which find information based on meaning rather than just keywords. By grounding outputs in verifiable data, RAG significantly reduces factual errors and allows for the use of proprietary information, enhancing trust through citations.
 
 An advanced evolution, Agentic RAG, introduces a reasoning layer that actively validates, reconciles, and synthesizes retrieved knowledge for even greater reliability. Similarly, specialized approaches like GraphRAG leverage knowledge graphs to navigate explicit data relationships, allowing the system to synthesize answers to highly complex, interconnected queries. This agent can resolve conflicting information, perform multi-step queries, and use external tools to find missing data. While these advanced methods add complexity and latency, they drastically improve the depth and trustworthiness of the final response. Practical applications for these patterns are already transforming industries, from enterprise search and customer support to personalized content delivery. Despite the challenges, RAG is a crucial pattern for making AI more knowledgeable, reliable, and useful. Ultimately, it transforms LLMs from closed-book conversationalists into powerful, open-book reasoning tools.
 
-# References
+## References
 
 1. Lewis, P., et al. (2020). *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*. [https://arxiv.org/abs/2005.11401](https://arxiv.org/abs/2005.11401)   
 2. Google AI for Developers Documentation.  *Retrieval Augmented Generation \- [https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview](https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview)*   

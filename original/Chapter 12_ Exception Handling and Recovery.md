@@ -8,7 +8,7 @@ The capacity to handle unexpected events ensures these AI systems are not only i
 
 This pattern may sometimes be used with reflection. For example, if an initial attempt fails and raises an exception, a reflective process can analyze the failure and reattempt the task with a refined approach, such as an improved prompt, to resolve the error.
 
-# Exception Handling and Recovery Pattern Overview
+## Exception Handling and Recovery Pattern Overview
 
 The Exception Handling and Recovery pattern addresses the need for AI agents to manage operational failures. This pattern involves anticipating potential issues, such as tool errors or service unavailability, and developing strategies to mitigate them. These strategies may include error logging, retries, fallbacks, graceful degradation, and notifications. Additionally, the pattern emphasizes recovery mechanisms like state rollback, diagnosis, self-correction, and escalation, to restore agents to stable operation. Implementing this pattern enhances the reliability and robustness of AI agents, allowing them to function in unpredictable environments. Examples of practical applications include chatbots managing database errors, trading bots handling financial errors, and smart home agents addressing device malfunctions. The pattern ensures that agents can continue to operate effectively despite encountering complexities and failures.
 
@@ -24,7 +24,7 @@ Fig.1: Key components of exception handling and recovery for AI agents
 
 Implementation of this robust exception handling and recovery pattern can transform AI agents from fragile and unreliable systems into robust, dependable components capable of operating effectively and resiliently in challenging and highly unpredictable environments. This ensures that the agents maintain functionality, minimize downtime, and provide a seamless and reliable experience even when faced with unexpected issues.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Exception Handling and Recovery is critical for any agent deployed in a real-world scenario where perfect conditions cannot be guaranteed.
 
@@ -37,14 +37,14 @@ Exception Handling and Recovery is critical for any agent deployed in a real-wor
 
 In short, this pattern is fundamental for building agents that are not only intelligent but also reliable, resilient, and user-friendly in the face of real-world complexities.
 
-# Hands-On Code Example (ADK)
+## Hands-On Code Example (ADK)
 
 Exception handling and recovery are vital for system robustness and reliability. Consider, for instance, an agent's response to a failed tool call. Such failures can stem from incorrect tool input or issues with an external service that the tool depends on.
 
 ```python
 from google.adk.agents import Agent, SequentialAgent
 
-# Agent 1: Tries the primary tool. Its focus is narrow and clear.
+## Agent 1: Tries the primary tool. Its focus is narrow and clear.
 primary_handler = Agent(
     name="primary_handler",
     model="gemini-2.0-flash-exp",
@@ -54,7 +54,7 @@ Your job is to get precise location information. Use the get_precise_location_in
     tools=[get_precise_location_info]
 )
 
-# Agent 2: Acts as the fallback handler, checking state to decide its action.
+## Agent 2: Acts as the fallback handler, checking state to decide its action.
 fallback_handler = Agent(
     name="fallback_handler",
     model="gemini-2.0-flash-exp",
@@ -66,7 +66,7 @@ Check if the primary location lookup failed by looking at state["primary_locatio
     tools=[get_general_area_info]
 )
 
-# Agent 3: Presents the final result from the state.
+## Agent 3: Presents the final result from the state.
 response_agent = Agent(
     name="response_agent",
     model="gemini-2.0-flash-exp",
@@ -77,7 +77,7 @@ If state["location_result"] does not exist or is empty, apologize that you could
     tools=[]  # This agent only reasons over the final state.
 )
 
-# The SequentialAgent ensures the handlers run in a guaranteed order.
+## The SequentialAgent ensures the handlers run in a guaranteed order.
 robust_location_agent = SequentialAgent(
     name="robust_location_agent",
     sub_agents=[primary_handler, fallback_handler, response_agent]
@@ -86,7 +86,7 @@ robust_location_agent = SequentialAgent(
 
 This code defines a robust location retrieval system using a ADK's SequentialAgent with three sub-agents. The primary\_handler is the first agent, attempting to get precise location information using the get\_precise\_location\_info tool. The fallback\_handler acts as a backup, checking if the primary lookup failed by inspecting a state variable. If the primary lookup failed, the fallback agent extracts the city from the user's query and uses the get\_general\_area\_info tool. The response\_agent is the final agent in the sequence. It reviews the location information stored in the state. This agent is designed to present the final result to the user. If no location information was found, it apologizes. The SequentialAgent ensures that these three agents execute in a predefined order. This structure allows for a layered approach to location information retrieval.
 
-# At a Glance
+## At a Glance
 
 **What:** AI agents operating in real-world environments inevitably encounter unforeseen situations, errors, and system malfunctions. These disruptions can range from tool failures and network issues to invalid data, threatening the agent's ability to complete its tasks. Without a structured way to manage these problems, agents can be fragile, unreliable, and prone to complete failure when faced with unexpected hurdles. This unreliability makes it difficult to deploy them in critical or complex applications where consistent performance is essential.
 
@@ -100,7 +100,7 @@ This code defines a robust location retrieval system using a ADK's SequentialAge
 
 Fig.2: Exception handling pattern
 
-# Key Takeaways
+## Key Takeaways
 
 Essential points to remember:
 
@@ -111,11 +111,11 @@ Essential points to remember:
 * Recovery focuses on restoring stable operation through diagnosis, self-correction, or escalation.  
 * This pattern ensures agents can operate effectively even in unpredictable real-world environments.
 
-# Conclusion
+## Conclusion
 
 This chapter explores the Exception Handling and Recovery pattern, which is essential for developing robust and dependable AI agents. This pattern addresses how AI agents can identify and manage unexpected issues, implement appropriate responses, and recover to a stable operational state. The chapter discusses various aspects of this pattern, including the detection of errors, the handling of these errors through mechanisms such as logging, retries, and fallbacks, and the strategies used to restore the agent or system to proper function. Practical applications of the Exception Handling and Recovery pattern are illustrated across several domains to demonstrate its relevance in handling real-world complexities and potential failures. These applications show how equipping AI agents with exception handling capabilities contributes to their reliability and adaptability in dynamic environments.
 
-# References
+## References
 
 1. McConnell, S. (2004). *Code Complete (2nd ed.)*. Microsoft Press.   
 2. Shi, Y., Pei, H., Feng, L., Zhang, Y., & Yao, D. (2024). *Towards Fault Tolerance in Multi-Agent Reinforcement Learning*. arXiv preprint arXiv:2412.00534.   

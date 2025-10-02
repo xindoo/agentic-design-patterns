@@ -6,7 +6,7 @@ For example, a complex research query might be decomposed and assigned to a Rese
 
 This distributed architecture offers several advantages, including enhanced modularity, scalability, and robustness, as the failure of a single agent does not necessarily cause a total system failure. The collaboration allows for a synergistic outcome where the collective performance of the multi-agent system surpasses the potential capabilities of any single agent within the ensemble.
 
-# Multi-Agent Collaboration Pattern Overview
+## Multi-Agent Collaboration Pattern Overview
 
 The Multi-Agent Collaboration pattern involves designing systems where multiple independent or semi-independent agents work together to achieve a common goal. Each agent typically has a defined role, specific goals aligned with the overall objective, and potentially access to different tools or knowledge bases. The power of this pattern lies in the interaction and synergy between these agents.
 
@@ -28,7 +28,7 @@ Fig.1: Example of multi-agent system
 
 Frameworks such as Crew AI and Google ADK are engineered to facilitate this paradigm by providing structures for the specification of agents, tasks, and their interactive procedures. This approach is particularly effective for challenges necessitating a variety of specialized knowledge, encompassing multiple discrete phases, or leveraging the advantages of concurrent processing and the corroboration of information across agents.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Multi-Agent Collaboration is a powerful pattern applicable across numerous domains:
 
@@ -42,7 +42,7 @@ Multi-Agent Collaboration is a powerful pattern applicable across numerous domai
 
 The capacity to delineate specialized agents and meticulously orchestrate their interrelationships empowers developers to construct systems exhibiting enhanced modularity, scalability, and the ability to address complexities that would prove insurmountable for a singular, integrated agent. 
 
-# Multi-Agent Collaboration: Exploring Interrelationships and Communication Structures
+## Multi-Agent Collaboration: Exploring Interrelationships and Communication Structures
 
 Understanding the intricate ways in which agents interact and communicate is fundamental to designing effective multi-agent systems. As depicted in Fig. 2, a spectrum of interrelationship and communication models exists, ranging from the simplest single-agent scenario to complex, custom-designed collaborative frameworks. Each model presents unique advantages and challenges, influencing the overall efficiency, robustness, and adaptability of the multi-agent system.
 
@@ -64,7 +64,7 @@ Fig. 2: Agents communicate and interact in various ways.
 
 In summary, the choice of interrelationship and communication model for a multi-agent system is a critical design decision. Each model offers distinct advantages and disadvantages, and the optimal choice depends on factors such as the complexity of the task, the number of agents, the desired level of autonomy, the need for robustness, and the acceptable communication overhead. Future advancements in multi-agent systems will likely continue to explore and refine these models, as well as develop new paradigms for collaborative intelligence.
 
-# Hands-On code (Crew AI)
+## Hands-On code (Crew AI)
 
 This Python code defines an AI-powered crew using the CrewAI framework to generate a blog post about AI trends. It starts by setting up the environment, loading API keys from a .env file. The core of the application involves defining two agents: a researcher to find and summarize AI trends, and a writer to create a blog post based on the research. 
 
@@ -148,7 +148,7 @@ if __name__ == "__main__":
 
 We will now delve into further examples within the Google ADK framework, with particular emphasis on hierarchical, parallel, and sequential coordination paradigms, alongside the implementation of an agent as an operational instrument.
 
-# Hands-on Code (Google ADK)
+## Hands-on Code (Google ADK)
 
 The following code example demonstrates the establishment of a hierarchical agent structure within the Google ADK through the creation of a parent-child relationship. The code defines two types of agents: LlmAgent and a custom TaskExecutor agent derived from BaseAgent. The TaskExecutor is designed for specific, non-LLM tasks and in this example, it simply yields a "Task finished successfully" event. An LlmAgent named greeter is initialized with a specified model and instruction to act as a friendly greeter. The custom TaskExecutor is instantiated as task\_doer. A parent LlmAgent called coordinator is created, also with a model and instructions. The coordinator's instructions guide it to delegate greetings to the greeter and task execution to the task\_doer. The greeter and task\_doer are added as sub-agents to the coordinator, establishing a parent-child relationship. The code then asserts that this relationship is correctly set up. Finally, it prints a message indicating that the agent hierarchy has been successfully created.
 
@@ -158,7 +158,7 @@ from google.adk.agents.invocation_context import InvocationContext
 from google.adk.events import Event
 from typing import AsyncGenerator
 
-# Correctly implement a custom agent by extending BaseAgent
+## Correctly implement a custom agent by extending BaseAgent
 class TaskExecutor(BaseAgent):
    """A specialized agent with custom, non-LLM behavior."""
    name: str = "TaskExecutor"
@@ -170,8 +170,8 @@ class TaskExecutor(BaseAgent):
        # For this example, we'll just yield a simple event.
        yield Event(author=self.name, content="Task finished successfully.")
 
-# Define individual agents with proper initialization
-# LlmAgent requires a model to be specified.
+## Define individual agents with proper initialization
+## LlmAgent requires a model to be specified.
 greeter = LlmAgent(
    name="Greeter",
    model="gemini-2.0-flash-exp",
@@ -180,8 +180,8 @@ greeter = LlmAgent(
 
 task_doer = TaskExecutor() # Instantiate our concrete custom agent
 
-# Create a parent agent and assign its sub-agents
-# The parent agent's description and instructions should guide its delegation logic.
+## Create a parent agent and assign its sub-agents
+## The parent agent's description and instructions should guide its delegation logic.
 coordinator = LlmAgent(
    name="Coordinator",
    model="gemini-2.0-flash-exp",
@@ -193,8 +193,8 @@ coordinator = LlmAgent(
    ]
 )
 
-# The ADK framework automatically establishes the parent-child relationships.
-# These assertions will pass if checked after initialization.
+## The ADK framework automatically establishes the parent-child relationships.
+## These assertions will pass if checked after initialization.
 assert greeter.parent_agent == coordinator
 assert task_doer.parent_agent == coordinator
 print("Agent hierarchy created successfully.")
@@ -209,7 +209,7 @@ from google.adk.agents import LoopAgent, LlmAgent, BaseAgent
 from google.adk.events import Event, EventActions
 from google.adk.agents.invocation_context import InvocationContext
 
-# Best Practice: Define custom agents as complete, self-describing classes.
+## Best Practice: Define custom agents as complete, self-describing classes.
 class ConditionChecker(BaseAgent):
    """A custom agent that checks for a 'completed' status in the session state."""
    name: str = "ConditionChecker"
@@ -228,14 +228,14 @@ class ConditionChecker(BaseAgent):
            # Yield a simple event to continue the loop.
            yield Event(author=self.name, content="Condition not met, continuing loop.")
 
-# Correction: The LlmAgent must have a model and clear instructions.
+## Correction: The LlmAgent must have a model and clear instructions.
 process_step = LlmAgent(
    name="ProcessingStep",
    model="gemini-2.0-flash-exp",
    instruction="You are a step in a longer process. Perform your task. If you are the final step, update session state by setting 'status' to 'completed'."
 )
 
-# The LoopAgent orchestrates the workflow.
+## The LoopAgent orchestrates the workflow.
 poller = LoopAgent(
    name="StatusPoller",
    max_iterations=10,
@@ -245,10 +245,10 @@ poller = LoopAgent(
    ]
 )
 
-# This poller will now execute 'process_step'
-# and then 'ConditionChecker'
-# repeatedly until the status is 'completed' or 10 iterations
-# have passed.
+## This poller will now execute 'process_step'
+## and then 'ConditionChecker'
+## repeatedly until the status is 'completed' or 10 iterations
+## have passed.
 ```
 
 This code excerpt elucidates the SequentialAgent pattern within the Google ADK, engineered for the construction of linear workflows. This code defines a sequential agent pipeline using the google.adk.agents library. The pipeline consists of two agents, step1 and step2. step1 is named "Step1\_Fetch" and its output will be stored in the session state under the key "data". step2 is named "Step2\_Process" and is instructed to analyze the information stored in session.state\["data"\] and provide a summary. The SequentialAgent named "MyPipeline" orchestrates the execution of these sub-agents. When the pipeline is run with an initial input, step1 will execute first. The response from step1 will be saved into the session state under the key "data". Subsequently, step2 will execute, utilizing the information that step1 placed into the state as per its instruction. This structure allows for building workflows where the output of one agent becomes the input for the next. This is a common pattern in creating multi-step AI or data processing pipelines. 
@@ -256,11 +256,11 @@ This code excerpt elucidates the SequentialAgent pattern within the Google ADK, 
 ```python
 from google.adk.agents import SequentialAgent, Agent
 
-# This agent's output will be saved to session.state["data"]
+## This agent's output will be saved to session.state["data"]
 step1 = Agent(name="Step1_Fetch", output_key="data")
 
-# This agent will use the data from the previous step.
-# We instruct it on how to find and use this data.
+## This agent will use the data from the previous step.
+## We instruct it on how to find and use this data.
 step2 = Agent(
    name="Step2_Process",
    instruction="Analyze the information found in state['data'] and provide a summary."
@@ -271,9 +271,9 @@ pipeline = SequentialAgent(
    sub_agents=[step1, step2]
 )
 
-# When the pipeline is run with an initial input, Step1 will execute,
-# its response will be stored in session.state["data"], and then
-# Step2 will execute, using the information from the state as instructed.
+## When the pipeline is run with an initial input, Step1 will execute,
+## its response will be stored in session.state["data"], and then
+## Step2 will execute, using the information from the state as instructed.
 ```
 
 The following code example illustrates the ParallelAgent pattern within the Google ADK, which facilitates the concurrent execution of multiple agent tasks. The data\_gatherer is designed to run two sub-agents concurrently: weather\_fetcher and news\_fetcher. The weather\_fetcher agent is instructed to get the weather for a given location and store the result in session.state\["weather\_data"\]. Similarly, the news\_fetcher agent is instructed to retrieve the top news story for a given topic and store it in session.state\["news\_data"\]. Each sub-agent is configured to use the "gemini-2.0-flash-exp" model. The ParallelAgent orchestrates the execution of these sub-agents, allowing them to work in parallel. The results from both weather\_fetcher and news\_fetcher would be gathered and stored in the session state. Finally, the example shows how to access the collected weather and news data from the final\_state after the agent's execution is complete.
@@ -281,11 +281,11 @@ The following code example illustrates the ParallelAgent pattern within the Goog
 ```python
 from google.adk.agents import Agent, ParallelAgent
 
-# It's better to define the fetching logic as tools for the agents
-# For simplicity in this example, we'll embed the logic in the agent's instruction.
-# In a real-world scenario, you would use tools.
+## It's better to define the fetching logic as tools for the agents
+## For simplicity in this example, we'll embed the logic in the agent's instruction.
+## In a real-world scenario, you would use tools.
 
-# Define the individual agents that will run in parallel
+## Define the individual agents that will run in parallel
 weather_fetcher = Agent(
    name="weather_fetcher",
    model="gemini-2.0-flash-exp",
@@ -300,7 +300,7 @@ news_fetcher = Agent(
    output_key="news_data"      # The result will be stored in session.state["news_data"]
 )
 
-# Create the ParallelAgent to orchestrate the sub-agents
+## Create the ParallelAgent to orchestrate the sub-agents
 data_gatherer = ParallelAgent(
    name="data_gatherer",
    sub_agents=[
@@ -317,8 +317,8 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import agent_tool
 from google.genai import types
 
-# 1. A simple function tool for the core capability.
-# This follows the best practice of separating actions from reasoning.
+## 1. A simple function tool for the core capability.
+## This follows the best practice of separating actions from reasoning.
 def generate_image(prompt: str) -> dict:
    """
    Generates an image based on a textual prompt.
@@ -338,8 +338,8 @@ def generate_image(prompt: str) -> dict:
        "mime_type": "image/png"
    }
 
-# 2. Refactor the ImageGeneratorAgent into an LlmAgent.
-# It now correctly uses the input passed to it.
+## 2. Refactor the ImageGeneratorAgent into an LlmAgent.
+## It now correctly uses the input passed to it.
 image_generator_agent = LlmAgent(
    name="ImageGen",
    model="gemini-2.0-flash",
@@ -353,14 +353,14 @@ image_generator_agent = LlmAgent(
    tools=[generate_image]
 )
 
-# 3. Wrap the corrected agent in an AgentTool.
-# The description here is what the parent agent sees.
+## 3. Wrap the corrected agent in an AgentTool.
+## The description here is what the parent agent sees.
 image_tool = agent_tool.AgentTool(
    agent=image_generator_agent,
    description="Use this tool to generate an image. The input should be a descriptive prompt of the desired image."
 )
 
-# 4. The parent agent remains unchanged. Its logic was correct.
+## 4. The parent agent remains unchanged. Its logic was correct.
 artist_agent = LlmAgent(
    name="Artist",
    model="gemini-2.0-flash",
@@ -372,7 +372,7 @@ artist_agent = LlmAgent(
 )
 ```
 
-# At a Glance
+## At a Glance
 
 **What:** Complex problems often exceed the capabilities of a single, monolithic LLM-based agent. A solitary agent may lack the diverse, specialized skills or access to the specific tools needed to address all parts of a multifaceted task. This limitation creates a bottleneck, reducing the system's overall effectiveness and scalability. As a result, tackling sophisticated, multi-domain objectives becomes inefficient and can lead to incomplete or suboptimal outcomes.
 
@@ -386,18 +386,18 @@ artist_agent = LlmAgent(
 
 Fig.3: Multi-Agent design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Multi-agent collaboration involves multiple agents working together to achieve a common goal.  
 * This pattern leverages specialized roles, distributed tasks, and inter-agent communication.  
 * Collaboration can take forms like sequential handoffs, parallel processing, debate, or hierarchical structures.  
 * This pattern is ideal for complex problems requiring diverse expertise or multiple distinct stages.
 
-# Conclusion 
+## Conclusion 
 
 This chapter explored the Multi-Agent Collaboration pattern, demonstrating the benefits of orchestrating multiple specialized agents within systems. We examined various collaboration models, emphasizing the pattern's essential role in addressing complex, multifaceted problems across diverse domains. Understanding agent collaboration naturally leads to an inquiry into their interactions with the external environment.
 
-# References
+## References
 
 1. Multi-Agent Collaboration Mechanisms: A Survey of LLMs, [https://arxiv.org/abs/2501.06322](https://arxiv.org/abs/2501.06322)   
 2. Multi-Agent System — The Power of Collaboration, [https://aravindakumar.medium.com/introducing-multi-agent-frameworks-the-power-of-collaboration-e9db31bba1b6](https://aravindakumar.medium.com/introducing-multi-agent-frameworks-the-power-of-collaboration-e9db31bba1b6) 

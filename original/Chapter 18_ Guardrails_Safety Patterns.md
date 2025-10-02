@@ -4,7 +4,7 @@ Guardrails, also referred to as safety patterns, are crucial mechanisms that ens
 
 The primary aim of guardrails is not to restrict an agent's capabilities but to ensure its operation is robust, trustworthy, and beneficial. They function as a safety measure and a guiding influence, vital for constructing responsible AI systems, mitigating risks, and maintaining user trust by ensuring predictable, safe, and compliant behavior, thus preventing manipulation and upholding ethical and legal standards. Without them, an AI system may be unconstrained, unpredictable, and potentially hazardous. To further mitigate these risks, a less computationally intensive model can be employed as a rapid, additional safeguard to pre-screen inputs or double-check the outputs of the primary model for policy violations.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Guardrails are applied across a range of agentic applications:
 
@@ -18,7 +18,7 @@ Guardrails are applied across a range of agentic applications:
 
 In these scenarios, guardrails function as a defense mechanism, protecting users, organizations, and the AI system's reputation.
 
-# Hands-On Code CrewAI Example
+## Hands-On Code CrewAI Example
 
 Let's have a look at examples with CrewAI. Implementing guardrails with CrewAI is a multi-faceted approach, requiring a layered defense rather than a single solution. The process begins with input sanitization and validation to screen and clean incoming data before agent processing. This includes utilizing content moderation APIs to detect inappropriate prompts and schema validation tools like Pydantic to ensure structured inputs adhere to predefined rules, potentially restricting agent engagement with sensitive topics.
 
@@ -31,11 +31,11 @@ Agent configuration acts as another guardrail layer. Defining roles, goals, and 
 Let's see an example. This code demonstrates how to use CrewAI to add a safety layer to an AI system by using a dedicated agent and task, guided by a specific prompt and validated by a Pydantic-based guardrail, to screen potentially problematic user inputs before they reach a primary AI.
 
 ```python
-# Copyright (c) 2025 Marco Fago
-# https://www.linkedin.com/in/marco-fago/
+## Copyright (c) 2025 Marco Fago
+## https://www.linkedin.com/in/marco-fago/
 #
-# This code is licensed under the MIT License.
-# See the LICENSE file in the repository for the full license text.
+## This code is licensed under the MIT License.
+## See the LICENSE file in the repository for the full license text.
 
 import os
 import json
@@ -46,23 +46,23 @@ from pydantic import BaseModel, Field, ValidationError
 from crewai.tasks.task_output import TaskOutput
 from crewai.crews.crew_output import CrewOutput
 
-# --- 0. Setup ---
-# Set up logging for observability. Set to logging.INFO to see detailed guardrail logs.
+## --- 0. Setup ---
+## Set up logging for observability. Set to logging.INFO to see detailed guardrail logs.
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# For demonstration, we'll assume GOOGLE_API_KEY is set in your environment
+## For demonstration, we'll assume GOOGLE_API_KEY is set in your environment
 if not os.environ.get("GOOGLE_API_KEY"):
     logging.error("GOOGLE_API_KEY environment variable not set. Please set it to run the CrewAI example.")
     exit(1)
 logging.info("GOOGLE_API_KEY environment variable is set.")
 
-# Define the LLM to be used as a content policy enforcer
-# Using a fast, cost-effective model like Gemini Flash is ideal for guardrails.
+## Define the LLM to be used as a content policy enforcer
+## Using a fast, cost-effective model like Gemini Flash is ideal for guardrails.
 CONTENT_POLICY_MODEL = "gemini/gemini-2.0-flash"
 
-# --- AI Content Policy Prompt ---
-# This prompt instructs an LLM to act as a content policy enforcer.
-# It's designed to filter and block non-compliant inputs based on predefined rules.
+## --- AI Content Policy Prompt ---
+## This prompt instructs an LLM to act as a content policy enforcer.
+## It's designed to filter and block non-compliant inputs based on predefined rules.
 SAFETY_GUARDRAIL_PROMPT = """
 You are an AI Content Policy Enforcer, tasked with rigorously screening inputs intended for a primary AI system.
 Your core duty is to ensure that only content adhering to strict safety and relevance policies is processed.
@@ -112,14 +112,14 @@ The `triggered_policies` field should be a list of strings, where each string pr
 ```
 """
 
-# --- Structured Output Definition for Guardrail ---
+## --- Structured Output Definition for Guardrail ---
 class PolicyEvaluation(BaseModel):
     """Pydantic model for the policy enforcer's structured output."""
     compliance_status: str = Field(description="The compliance status: 'compliant' or 'non-compliant'.")
     evaluation_summary: str = Field(description="A brief explanation for the compliance status.")
     triggered_policies: List[str] = Field(description="A list of triggered policy directives, if any.")
 
-# --- Output Validation Guardrail Function ---
+## --- Output Validation Guardrail Function ---
 def validate_policy_evaluation(output: Any) -> Tuple[bool, Any]:
     """
     Validates the raw string output from the LLM against the PolicyEvaluation Pydantic model.
@@ -165,8 +165,8 @@ def validate_policy_evaluation(output: Any) -> Tuple[bool, Any]:
         logging.error(f"Guardrail FAILED: An unexpected error occurred: {e}")
         return False, f"An unexpected error occurred during validation: {e}"
 
-# --- Agent and Task Setup ---
-# Agent 1: Policy Enforcer Agent
+## --- Agent and Task Setup ---
+## Agent 1: Policy Enforcer Agent
 policy_enforcer_agent = Agent(
     role='AI Content Policy Enforcer',
     goal='Rigorously screen user inputs against predefined safety and relevance policies.',
@@ -176,7 +176,7 @@ policy_enforcer_agent = Agent(
     llm=LLM(model=CONTENT_POLICY_MODEL, temperature=0.0, api_key=os.environ.get("GOOGLE_API_KEY"), provider="google")
 )
 
-# Task: Evaluate User Input
+## Task: Evaluate User Input
 evaluate_input_task = Task(
     description=(
         f"{SAFETY_GUARDRAIL_PROMPT}\n\n"
@@ -190,7 +190,7 @@ evaluate_input_task = Task(
     output_pydantic=PolicyEvaluation,
 )
 
-# --- Crew Setup ---
+## --- Crew Setup ---
 crew = Crew(
     agents=[policy_enforcer_agent],
     tasks=[evaluate_input_task],
@@ -198,7 +198,7 @@ crew = Crew(
     verbose=False,
 )
 
-# --- Execution ---
+## --- Execution ---
 def run_guardrail_crew(user_input: str) -> Tuple[bool, str, List[str]]:
     """
     Runs the CrewAI guardrail to evaluate a user input.
@@ -288,7 +288,7 @@ A helper function, run\_guardrail\_crew, encapsulates the execution logic. It ta
 
 Finally, the script includes a main execution block (if \_\_name\_\_ \== "\_\_main\_\_":) that provides a demonstration. It defines a list of test\_cases representing various user inputs, including both compliant and non-compliant examples. It then iterates through these test cases, calling run\_guardrail\_crew for each input and using the print\_test\_case\_result function to format and display the outcome of each test, clearly indicating the input, the compliance status, the summary, and any policies that were violated, along with the suggested action (proceed or block). This main block serves to showcase the functionality of the implemented guardrail system with concrete examples.
 
-# Hands-On Code Vertex AI Example
+## Hands-On Code Vertex AI Example
 
 Google Cloud's Vertex AI provides a multi-faceted approach to mitigating risks and developing reliable intelligent agents. This includes establishing agent and user identity and authorization, implementing mechanisms to filter inputs and outputs, designing tools with embedded safety controls and predefined context, utilizing built-in Gemini safety features such as content filters and system instructions, and validating model and tool invocations through callbacks.
 
@@ -325,7 +325,7 @@ def validate_tool_params(
     print(f"Callback validation passed for tool '{tool.name}'.")
     return None
 
-# Agent setup using the documented class
+## Agent setup using the documented class
 root_agent = Agent(  # Use the documented Agent class
     model='gemini-2.0-flash-exp',  # Using a model name from the guide
     name='root_agent',
@@ -390,7 +390,7 @@ You **must** output your decision in JSON format with two keys: `decision` and `
 }
 ```
 
-# Engineering Reliable Agents
+## Engineering Reliable Agents
 
 Building reliable AI agents requires us to apply the same rigor and best practices that govern traditional software engineering. We must remember that even deterministic code is prone to bugs and unpredictable emergent behavior, which is why principles like fault tolerance, state management, and robust testing have always been paramount. Instead of viewing agents as something entirely new, we should see them as complex systems that demand these proven engineering disciplines more than ever.
 
@@ -404,7 +404,7 @@ However, a robust agent architecture extends beyond just one pattern. Several ot
 
 By integrating these core principles—fault tolerance, modular design, deep observability, and strict security—we move from simply creating a functional agent to engineering a resilient, production-grade system. This ensures that the agent's operations are not only effective but also robust, auditable, and trustworthy, meeting the high standards required of any well-engineered software.
 
-# At a Glance
+## At a Glance
 
 **What:** As intelligent agents and LLMs become more autonomous, they might pose risks if left unconstrained, as their behavior can be unpredictable. They can generate harmful, biased, unethical, or factually incorrect outputs, potentially causing real-world damage. These systems are vulnerable to adversarial attacks, such as jailbreaking, which aim to bypass their safety protocols. Without proper controls, agentic systems can act in unintended ways, leading to a loss of user trust and exposing organizations to legal and reputational harm.
 
@@ -418,7 +418,7 @@ By integrating these core principles—fault tolerance, modular design, deep obs
 
 Fig. 1: Guardrail design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Guardrails are essential for building responsible, ethical, and safe Agents by preventing harmful, biased, or off-topic responses.  
 * They can be implemented at various stages, including input validation, output filtering, behavioral prompting, tool use restrictions, and external moderation.  
@@ -427,7 +427,7 @@ Fig. 1: Guardrail design pattern
 * Effective guardrails are crucial for maintaining user trust and protecting the reputation of the Agents and its developers.  
 * The most effective way to build reliable, production-grade Agents is to treat them as complex software, applying the same proven engineering best practices—like fault tolerance, state management, and robust testing—that have governed traditional systems for decades.
 
-# Conclusion
+## Conclusion
 
 Implementing effective guardrails represents a core commitment to responsible AI development, extending beyond mere technical execution. Strategic application of these safety patterns enables developers to construct intelligent agents that are robust and efficient, while prioritizing trustworthiness and beneficial outcomes. Employing a layered defense mechanism, which integrates diverse techniques ranging from input validation to human oversight, yields a resilient system against unintended or harmful outputs. Ongoing evaluation and refinement of these guardrails are essential for adaptation to evolving challenges and ensuring the enduring integrity of agentic systems. Ultimately, carefully designed guardrails empower AI to serve human needs in a safe and effective manner.
 

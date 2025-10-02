@@ -8,7 +8,7 @@
 
 此模式有时可能与反思一起使用。例如，如果初始尝试失败并引发异常，反思过程可以分析失败并使用改进的方法重新尝试任务，例如改进的提示词，以解决错误。
 
-# 异常处理和恢复模式概述
+## 异常处理和恢复模式概述
 
 异常处理和恢复模式解决了 AI Agent 管理操作失败的需求。此模式涉及预测潜在问题，例如工具错误或服务不可用，并制定缓解策略。这些策略可能包括错误日志记录、重试、回退、优雅降级和通知。此外，该模式强调恢复机制，如状态回滚、诊断、自我纠正和升级，以将 Agent 恢复到稳定运行。实施此模式增强了 AI Agent 的可靠性和鲁棒性，使它们能够在不可预测的环境中运作。实际应用的示例包括管理数据库错误的聊天机器人、处理金融错误的交易机器人以及解决设备故障的智能家居 Agent。该模式确保 Agent 能够在遇到复杂性和失败时继续有效运行。
 
@@ -24,7 +24,7 @@
 
 实施这种强大的异常处理和恢复模式可以将 AI Agent 从脆弱和不可靠的系统转变为能够在具有挑战性和高度不可预测的环境中有效和有弹性地运行的强大、可靠的组件。这确保了 Agent 保持功能、最小化停机时间，并在面临意外问题时提供无缝和可靠的体验。
 
-# 实际应用和用例
+## 实际应用和用例
 
 异常处理和恢复对于在无法保证完美条件的现实场景中部署的任何 Agent 都至关重要。
 
@@ -37,14 +37,14 @@
 
 简而言之，此模式对于构建不仅智能而且在面对现实世界复杂性时可靠、有弹性且用户友好的 Agent 至关重要。
 
-# 实践代码示例（ADK）
+## 实践代码示例（ADK）
 
 异常处理和恢复对于系统的鲁棒性和可靠性至关重要。例如，考虑 Agent 对失败的工具调用的响应。这种失败可能源于不正确的工具输入或工具所依赖的外部服务的问题。
 
 ```python
 from google.adk.agents import Agent, SequentialAgent
 
-# Agent 1：尝试主要工具。它的重点狭窄而明确。
+## Agent 1：尝试主要工具。它的重点狭窄而明确。
 primary_handler = Agent(
    name="primary_handler",
    model="gemini-2.0-flash-exp",
@@ -55,7 +55,7 @@ primary_handler = Agent(
    tools=[get_precise_location_info]
 )
 
-# Agent 2：充当回退处理器，检查状态以决定其操作。
+## Agent 2：充当回退处理器，检查状态以决定其操作。
 fallback_handler = Agent(
    name="fallback_handler",
    model="gemini-2.0-flash-exp",
@@ -67,7 +67,7 @@ fallback_handler = Agent(
    tools=[get_general_area_info]
 )
 
-# Agent 3：从状态中呈现最终结果。
+## Agent 3：从状态中呈现最终结果。
 response_agent = Agent(
    name="response_agent",
    model="gemini-2.0-flash-exp",
@@ -79,7 +79,7 @@ response_agent = Agent(
    tools=[]  # 此 Agent 仅对最终状态进行推理。
 )
 
-# SequentialAgent 确保处理器按保证的顺序运行。
+## SequentialAgent 确保处理器按保证的顺序运行。
 robust_location_agent = SequentialAgent(
    name="robust_location_agent",
    sub_agents=[primary_handler, fallback_handler, response_agent]
@@ -88,7 +88,7 @@ robust_location_agent = SequentialAgent(
 
 此代码使用 ADK 的 SequentialAgent 和三个子 Agent 定义了一个强大的位置检索系统。primary_handler 是第一个 Agent，尝试使用 get_precise_location_info 工具获取精确的位置信息。fallback_handler 充当备份，通过检查状态变量来检查主要查找是否失败。如果主要查找失败，回退 Agent 从用户的查询中提取城市并使用 get_general_area_info 工具。response_agent 是序列中的最终 Agent。它查看存储在状态中的位置信息。此 Agent 旨在向用户呈现最终结果。如果没有找到位置信息，它会道歉。SequentialAgent 确保这三个 Agent 按预定义的顺序执行。这种结构允许采用分层方法进行位置信息检索。
 
-# 概览
+## 概览
 
 **是什么**：在现实世界环境中运行的 AI Agent 不可避免地会遇到不可预见的情况、错误和系统故障。这些中断可能从工具故障和网络问题到无效数据不等，威胁 Agent 完成任务的能力。如果没有结构化的方法来管理这些问题，Agent 可能会很脆弱、不可靠，并且在面对意外障碍时容易完全失败。这种不可靠性使得难以在一致性能至关重要的关键或复杂应用程序中部署它们。
 
@@ -102,7 +102,7 @@ robust_location_agent = SequentialAgent(
 
 图 2：异常处理模式
 
-# 关键要点
+## 关键要点
 
 需要记住的要点：
 
@@ -113,11 +113,11 @@ robust_location_agent = SequentialAgent(
 * 恢复侧重于通过诊断、自我纠正或升级恢复稳定运行。
 * 此模式确保 Agent 即使在不可预测的现实世界环境中也能有效运行。
 
-# 结论
+## 结论
 
 本章探讨了异常处理和恢复模式，这对于开发强大和可靠的 AI Agent 至关重要。此模式解决了 AI Agent 如何识别和管理意外问题、实施适当的响应以及恢复到稳定的操作状态。本章讨论了此模式的各个方面，包括错误的检测、通过日志记录、重试和回退等机制处理这些错误，以及用于将 Agent 或系统恢复到正常功能的策略。异常处理和恢复模式的实际应用在多个领域中得到说明，以展示其在处理现实世界复杂性和潜在失败方面的相关性。这些应用展示了为 AI Agent 配备异常处理能力如何有助于它们在动态环境中的可靠性和适应性。
 
-# 参考文献
+## 参考文献
 
 1. McConnell, S. (2004). *Code Complete (2nd ed.)*. Microsoft Press.
 2. Shi, Y., Pei, H., Feng, L., Zhang, Y., & Yao, D. (2024). *Towards Fault Tolerance in Multi-Agent Reinforcement Learning*. arXiv preprint arXiv:2412.00534.

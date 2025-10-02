@@ -2,7 +2,7 @@
 
 智能行为通常不仅仅涉及对即时输入做出反应。它需要远见、将复杂任务分解为更小的、可管理的步骤，以及制定如何实现期望结果的策略。这就是规划模式发挥作用的地方。规划的核心是 Agent 或 Agent 系统制定一系列行动以从初始状态向目标状态移动的能力。
 
-# 规划模式概述
+## 规划模式概述
 
 在 AI 的背景下，将规划 Agent 视为您委托复杂目标的专家是有帮助的。当您要求它"组织团队外出活动"时，您定义的是"什么"——目标及其约束——而不是"如何"。Agent 的核心任务是自主地规划实现该目标的路线。它必须首先理解初始状态（例如，预算、参与者人数、期望日期）和目标状态（成功预订的外出活动），然后发现连接它们的最佳行动序列。计划并不是预先知道的；它是响应请求而创建的。
 
@@ -10,7 +10,7 @@
 
 然而，认识到灵活性和可预测性之间的权衡至关重要。动态规划是一个特定的工具，而不是通用解决方案。当问题的解决方案已经被充分理解且可重复时，将 Agent 限制为预定的固定工作流更有效。这种方法限制 Agent 的自主性以减少不确定性和不可预测行为的风险，保证可靠和一致的结果。因此，使用规划 Agent 与简单任务执行 Agent 的决定取决于一个问题：是否需要发现"如何"，还是已经知道？
 
-# 实际应用与用例
+## 实际应用与用例
 
 规划模式是自主系统中的核心计算过程，使 Agent 能够综合一系列行动以实现指定目标，特别是在动态或复杂环境中。这个过程将高级目标转换为由离散的可执行步骤组成的结构化计划。
 
@@ -22,7 +22,7 @@
 
 从本质上讲，规划模式允许 Agent 从简单的反应性行动转向目标导向的行为。它提供了解决需要一系列相互依赖操作的问题所必需的逻辑框架。
 
-# 实操代码（Crew AI）
+## 实操代码（Crew AI）
 
 以下部分将演示使用 Crew AI 框架实现规划模式。此模式涉及一个 Agent，它首先制定多步计划以解决复杂查询，然后顺序执行该计划。
 
@@ -32,13 +32,13 @@ from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# 从 .env 文件加载环境变量以确保安全
+## 从 .env 文件加载环境变量以确保安全
 load_dotenv()
 
-# 1. 为清晰起见，明确定义语言模型
+## 1. 为清晰起见，明确定义语言模型
 llm = ChatOpenAI(model="gpt-4-turbo")
 
-# 2. 定义一个清晰且专注的 Agent
+## 2. 定义一个清晰且专注的 Agent
 planner_writer_agent = Agent(
     role='文章规划者和撰写者',
     goal='规划然后撰写关于指定主题的简洁、引人入胜的摘要。',
@@ -52,7 +52,7 @@ planner_writer_agent = Agent(
     llm=llm # 将特定 LLM 分配给 Agent
 )
 
-# 3. 定义具有更结构化和具体的预期输出的任务
+## 3. 定义具有更结构化和具体的预期输出的任务
 topic = "强化学习在 AI 中的重要性"
 high_level_task = Task(
     description=(
@@ -69,14 +69,14 @@ high_level_task = Task(
     agent=planner_writer_agent,
 )
 
-# 使用清晰的流程创建团队
+## 使用清晰的流程创建团队
 crew = Crew(
     agents=[planner_writer_agent],
     tasks=[high_level_task],
     process=Process.sequential,
 )
 
-# 执行任务
+## 执行任务
 print("## 运行规划和写作任务 ##")
 result = crew.kickoff()
 print("\n\n---\n## 任务结果 ##\n---")
@@ -85,7 +85,7 @@ print(result)
 
 此代码使用 CrewAI 库创建一个 AI Agent，该 Agent 规划并撰写关于给定主题的摘要。它首先导入必要的库，包括 Crew.ai 和 langchain_openai，并从 .env 文件加载环境变量。明确定义了一个 ChatOpenAI 语言模型供 Agent 使用。创建了一个名为 planner_writer_agent 的 Agent，具有特定的角色和目标：规划然后撰写简洁的摘要。Agent 的背景故事强调其在规划和技术写作方面的专业知识。定义了一个任务，明确描述首先创建计划，然后撰写关于"强化学习在 AI 中的重要性"主题的摘要，并为预期输出指定了特定格式。组建了一个包含 Agent 和任务的团队，设置为顺序处理它们。最后，调用 crew.kickoff() 方法执行定义的任务并打印结果。
 
-# Google DeepResearch
+## Google DeepResearch
 
 Google Gemini DeepResearch（见图 1）是一个基于 Agent 的系统，设计用于自主信息检索和综合。它通过多步 Agent 管道运行，动态和迭代地查询 Google 搜索以系统地探索复杂主题。该系统设计用于处理大量基于网络的资源，评估收集的数据的相关性和知识差距，并执行后续搜索以解决它们。最终输出将经过审核的信息整合成一个结构化的、多页的摘要，并附有原始来源的引用。
 
@@ -110,7 +110,7 @@ Google Gemini DeepResearch（见图 1）是一个基于 Agent 的系统，设计
 
 这种方法的效率源于迭代搜索和过滤周期的自动化，这是手动研究的核心瓶颈。通过系统处理比人类研究人员在可比时间框架内通常可行的更大量和更多样化的信息来源来实现全面性。这种更广泛的分析范围有助于减少选择偏差的潜力，并增加发现不太明显但可能至关重要的信息的可能性，从而导致对主题更稳健和充分支持的理解。
 
-# OpenAI Deep Research API
+## OpenAI Deep Research API
 
 OpenAI Deep Research API 是一个专门设计用于自动化复杂研究任务的工具。它利用一个先进的 Agent 模型，可以独立推理、规划和从现实世界来源综合信息。与简单的问答模型不同，它接受高级查询并自主将其分解为子问题，使用其内置工具执行网络搜索，并提供结构化的、富含引用的最终报告。该 API 提供对整个过程的直接程序化访问，在撰写本文时使用 o3-deep-research-2025-06-26 等模型进行高质量综合，以及更快的 o4-mini-deep-research-2025-06-26 用于延迟敏感的应用程序。
 
@@ -125,15 +125,15 @@ Deep Research API 很有用，因为它自动化了原本需要数小时的手�
 ```python
 from openai import OpenAI
 
-# 使用您的 API 密钥初始化客户端
+## 使用您的 API 密钥初始化客户端
 client = OpenAI(api_key="YOUR_OPENAI_API_KEY")
 
-# 定义 Agent 的角色和用户的研究问题
+## 定义 Agent 的角色和用户的研究问题
 system_message = """你是一名准备结构化、数据驱动报告的专业研究员。专注于数据丰富的见解，使用可靠的来源，并包括内联引用。"""
 
 user_query = "研究司美格鲁肽对全球医疗保健系统的经济影响。"
 
-# 创建 Deep Research API 调用
+## 创建 Deep Research API 调用
 response = client.responses.create(
     model="o3-deep-research-2025-06-26",
     input=[
@@ -150,11 +150,11 @@ response = client.responses.create(
     tools=[{"type": "web_search_preview"}]
 )
 
-# 从响应中访问并打印最终报告
+## 从响应中访问并打印最终报告
 final_report = response.output[-1].content[0].text
 print(final_report)
 
-# --- 访问内联引用和元数据 ---
+## --- 访问内联引用和元数据 ---
 print("--- 引用 ---")
 annotations = response.output[-1].content[0].annotations
 
@@ -172,10 +172,10 @@ else:
 
 print("\n" + "="*50 + "\n")
 
-# --- 检查中间步骤 ---
+## --- 检查中间步骤 ---
 print("--- 中间步骤 ---")
 
-# 1. 推理步骤：模型生成的内部计划和摘要。
+## 1. 推理步骤：模型生成的内部计划和摘要。
 try:
     reasoning_step = next(item for item in response.output if item.type == "reasoning")
     print("\n[找到推理步骤]")
@@ -184,7 +184,7 @@ try:
 except StopIteration:
     print("\n未找到推理步骤。")
 
-# 2. 网络搜索调用：Agent 执行的确切搜索查询。
+## 2. 网络搜索调用：Agent 执行的确切搜索查询。
 try:
     search_step = next(item for item in response.output if item.type == "web_search_call")
     print("\n[找到网络搜索调用]")
@@ -193,7 +193,7 @@ try:
 except StopIteration:
     print("\n未找到网络搜索步骤。")
 
-# 3. 代码执行：Agent 使用代码解释器运行的任何代码。
+## 3. 代码执行：Agent 使用代码解释器运行的任何代码。
 try:
     code_step = next(item for item in response.output if item.type == "code_interpreter_call")
     print("\n[找到代码执行步骤]")
@@ -209,7 +209,7 @@ except StopIteration:
 
 随后，它尝试访问并显示报告注释中的内联引用和元数据，包括引用文本、标题、URL 和报告中的位置。最后，它检查并打印模型采取的中间步骤的详细信息，例如推理步骤、网络搜索调用（包括执行的查询）以及如果使用了代码解释器的任何代码执行步骤。
 
-# 概览
+## 概览
 
 **什么：** 复杂问题通常无法通过单个操作解决，需要远见才能实现期望的结果。没有结构化的方法，Agent 系统难以处理涉及多个步骤和依赖关系的多方面请求。这使得将高级目标分解为一系列可管理的、更小的可执行任务变得困难。因此，系统无法有效地制定策略，在面对复杂目标时导致不完整或不正确的结果。
 
@@ -221,7 +221,7 @@ except StopIteration:
 **![][image4]**  
 图 4；规划设计模式
 
-# 关键要点
+## 关键要点
 
 * 规划使 Agent 能够将复杂目标分解为可操作的顺序步骤。
 * 它对于处理多步任务、工作流自动化和导航复杂环境至关重要。
@@ -229,11 +229,11 @@ except StopIteration:
 * 明确提示或设计任务以要求规划步骤会在 Agent 框架中鼓励这种行为。
 * Google Deep Research 是一个代表我们分析使用 Google 搜索作为工具获得的来源的 Agent。它反思、规划并执行。
 
-# 结论
+## 结论
 
 总之，规划模式是将 Agent 系统从简单的反应性响应者提升为战略性、目标导向的执行者的基础组件。现代大型语言模型为此提供了核心能力，自主地将高级目标分解为连贯的、可操作的步骤。此模式从简单的顺序任务执行（如 CrewAI Agent 创建并遵循写作计划所演示的）扩展到更复杂和动态的系统。Google DeepResearch Agent 体现了这种高级应用，创建基于持续信息收集而适应和演化的迭代研究计划。最终，规划为复杂问题的人类意图和自动化执行之间提供了必要的桥梁。通过构建问题解决方法，此模式使 Agent 能够管理复杂的工作流并提供全面的、综合的结果。
 
-# 参考文献
+## 参考文献
 
 1. Google DeepResearch (Gemini Feature): [gemini.google.com](http://gemini.google.com)
 2. OpenAI ,Introducing deep research  [https://openai.com/index/introducing-deep-research/](https://openai.com/index/introducing-deep-research/)

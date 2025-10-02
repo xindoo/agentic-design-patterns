@@ -7,7 +7,7 @@
 * **短期内存（上下文内存）：** 类似于工作记忆，它保存当前正在处理或最近访问的信息。对于使用大语言模型（LLM）的 Agent，短期内存主要存在于上下文窗口中。此窗口包含最近的消息、Agent 回复、工具使用结果以及当前交互中的 Agent 反思，所有这些都会为 LLM 的后续响应和操作提供信息。上下文窗口具有有限的容量，限制了 Agent 可以直接访问的最近信息量。高效的短期内存管理涉及在这个有限空间内保留最相关的信息，可能通过总结旧的对话片段或强调关键细节等技术。具有"长上下文"窗口的模型的出现只是扩展了这种短期内存的大小，允许在单次交互中保存更多信息。然而，这个上下文仍然是临时的，一旦会话结束就会丢失，并且每次处理都可能成本高昂且效率低下。因此，Agent 需要单独的内存类型来实现真正的持久性、从过去交互中调用信息并建立持久的知识库。
 * **长期内存（持久内存）：** 这充当 Agent 需要跨各种交互、任务或延长期间保留的信息的存储库，类似于长期知识库。数据通常存储在 Agent 的即时处理环境之外，通常存储在数据库、知识图谱或向量数据库中。在向量数据库中，信息被转换为数字向量并存储，使 Agent 能够基于语义相似性而不是精确关键字匹配来检索数据，这个过程称为语义搜索。当 Agent 需要来自长期内存的信息时，它查询外部存储，检索相关数据，并将其集成到短期上下文中以供即时使用，从而将先前的知识与当前交互结合起来。
 
-# 实际应用与用例
+## 实际应用与用例
 
 内存管理对于 Agent 跟踪信息并随时间智能执行至关重要。这对于 Agent 超越基本问答能力是必不可少的。应用包括：
 
@@ -20,7 +20,7 @@
 
 内存使 Agent 能够维护历史、学习、个性化交互并管理复杂的、时间依赖的问题。
 
-# 实操代码：Google Agent Developer Kit (ADK) 中的内存管理
+## 实操代码：Google Agent Developer Kit (ADK) 中的内存管理
 
 Google Agent Developer Kit（ADK）提供了一种结构化的方法来管理上下文和内存，包括用于实际应用的组件。深入理解 ADK 的 Session、State 和 Memory 对于构建需要保留信息的 Agent 至关重要。
 
@@ -41,8 +41,8 @@ SessionService 和 MemoryService 都提供各种配置选项，允许用户根�
 ADK 中的 Session 对象旨在跟踪和管理单个聊天线程。在与 Agent 开始对话时，SessionService 生成一个 Session 对象，表示为 `google.adk.sessions.Session`。此对象封装了与特定对话线程相关的所有数据，包括唯一标识符（id、app_name、user_id）、作为 Event 对象的事件的时间顺序记录、用于会话特定临时数据的存储区域（称为 state）以及指示最后更新的时间戳（last_update_time）。开发人员通常通过 SessionService 间接与 Session 对象交互。SessionService 负责管理对话会话的生命周期，包括启动新会话、恢复先前的会话、记录会话活动（包括状态更新）、识别活动会话以及管理会话数据的删除。ADK 提供几种具有不同存储机制的 SessionService 实现，用于会话历史和临时数据，例如 InMemorySessionService，适合测试但不提供跨应用程序重启的数据持久性。
 
 ```python
-# 示例：使用 InMemorySessionService
-# 这适用于不需要跨应用程序重启的数据持久性的本地开发和测试。
+## 示例：使用 InMemorySessionService
+## 这适用于不需要跨应用程序重启的数据持久性的本地开发和测试。
 from google.adk.sessions import InMemorySessionService
 
 session_service = InMemorySessionService()
@@ -51,13 +51,13 @@ session_service = InMemorySessionService()
 然后是 DatabaseSessionService，如果您想可靠地保存到您管理的数据库。
 
 ```python
-# 示例：使用 DatabaseSessionService
-# 这适用于需要持久存储的生产或开发。
-# 您需要配置数据库 URL（例如，用于 SQLite、PostgreSQL 等）。
-# 需要：pip install google-adk[sqlalchemy] 和数据库驱动程序（例如，PostgreSQL 的 psycopg2）
+## 示例：使用 DatabaseSessionService
+## 这适用于需要持久存储的生产或开发。
+## 您需要配置数据库 URL（例如，用于 SQLite、PostgreSQL 等）。
+## 需要：pip install google-adk[sqlalchemy] 和数据库驱动程序（例如，PostgreSQL 的 psycopg2）
 from google.adk.sessions import DatabaseSessionService
 
-# 示例使用本地 SQLite 文件：
+## 示例使用本地 SQLite 文件：
 db_url = "sqlite:///./my_agent_data.db"
 session_service = DatabaseSessionService(db_url=db_url)
 ```
@@ -65,25 +65,25 @@ session_service = DatabaseSessionService(db_url=db_url)
 此外，还有 VertexAiSessionService，它使用 Vertex AI 基础设施在 Google Cloud 上进行可扩展的生产。
 
 ```python
-# 示例：使用 VertexAiSessionService
-# 这适用于 Google Cloud Platform 上的可扩展生产，利用
-# Vertex AI 基础设施进行会话管理。
-# 需要：pip install google-adk[vertexai] 和 GCP 设置/身份验证
+## 示例：使用 VertexAiSessionService
+## 这适用于 Google Cloud Platform 上的可扩展生产，利用
+## Vertex AI 基础设施进行会话管理。
+## 需要：pip install google-adk[vertexai] 和 GCP 设置/身份验证
 from google.adk.sessions import VertexAiSessionService
 
 PROJECT_ID = "your-gcp-project-id"  # 替换为您的 GCP 项目 ID
 LOCATION = "us-central1"  # 替换为您想要的 GCP 位置
 
-# 与此服务一起使用的 app_name 应对应于 Reasoning Engine ID 或名称
+## 与此服务一起使用的 app_name 应对应于 Reasoning Engine ID 或名称
 REASONING_ENGINE_APP_NAME = "projects/your-gcp-project-id/locations/us-central1/reasoningEngines/your-engine-id"  # 替换为您的 Reasoning Engine 资源名称
 
 session_service = VertexAiSessionService(project=PROJECT_ID, location=LOCATION)
 
-# 使用此服务时，将 REASONING_ENGINE_APP_NAME 传递给服务方法：
-# session_service.create_session(app_name=REASONING_ENGINE_APP_NAME, ...)
-# session_service.get_session(app_name=REASONING_ENGINE_APP_NAME, ...)
-# session_service.append_event(session, event, app_name=REASONING_ENGINE_APP_NAME)
-# session_service.delete_session(app_name=REASONING_ENGINE_APP_NAME, ...)
+## 使用此服务时，将 REASONING_ENGINE_APP_NAME 传递给服务方法：
+## session_service.create_session(app_name=REASONING_ENGINE_APP_NAME, ...)
+## session_service.get_session(app_name=REASONING_ENGINE_APP_NAME, ...)
+## session_service.append_event(session, event, app_name=REASONING_ENGINE_APP_NAME)
+## session_service.delete_session(app_name=REASONING_ENGINE_APP_NAME, ...)
 ```
 
 选择适当的 SessionService 至关重要，因为它决定了 Agent 的交互历史和临时数据的存储方式及其持久性。
@@ -109,13 +109,13 @@ Agent 通过单个 session.state 字典访问所有状态数据。SessionService
 1. **简单方法：使用 output_key（用于 Agent 文本回复）：** 如果您只想将 Agent 的最终文本响应直接保存到状态中，这是最简单的方法。设置 LlmAgent 时，只需告诉它要使用的 output_key。Runner 看到这一点并在追加事件时自动创建必要的操作以将响应保存到状态。让我们看一个通过 output_key 演示状态更新的代码示例。
 
 ```python
-# 从 Google Agent Developer Kit (ADK) 导入必要的类
+## 从 Google Agent Developer Kit (ADK) 导入必要的类
 from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService, Session
 from google.adk.runners import Runner
 from google.genai.types import Content, Part
 
-# 定义带有 output_key 的 LlmAgent。
+## 定义带有 output_key 的 LlmAgent。
 greeting_agent = LlmAgent(
     name="Greeter",
     model="gemini-2.0-flash",
@@ -123,7 +123,7 @@ greeting_agent = LlmAgent(
     output_key="last_greeting"
 )
 
-# --- 设置 Runner 和 Session ---
+## --- 设置 Runner 和 Session ---
 app_name, user_id, session_id = "state_app", "user1", "session1"
 session_service = InMemorySessionService()
 runner = Runner(
@@ -140,7 +140,7 @@ session = session_service.create_session(
 
 print(f"初始状态：{session.state}")
 
-# --- 运行 Agent ---
+## --- 运行 Agent ---
 user_message = Content(parts=[Part(text="你好")])
 print("\n--- 运行 agent ---")
 for event in runner.run(
@@ -151,8 +151,8 @@ for event in runner.run(
     if event.is_final_response():
         print("Agent 已响应。")
 
-# --- 检查更新的状态 ---
-# 在 runner 完成处理所有事件*之后*正确检查状态。
+## --- 检查更新的状态 ---
+## 在 runner 完成处理所有事件*之后*正确检查状态。
 updated_session = session_service.get_session(app_name, user_id, session_id)
 print(f"\nAgent 运行后的状态：{updated_session.state}")
 ```
@@ -166,7 +166,7 @@ import time
 from google.adk.tools.tool_context import ToolContext
 from google.adk.sessions import InMemorySessionService
 
-# --- 定义推荐的基于工具的方法 ---
+## --- 定义推荐的基于工具的方法 ---
 def log_user_login(tool_context: ToolContext) -> dict:
     """
     在用户登录事件时更新会话状态。
@@ -194,11 +194,11 @@ def log_user_login(tool_context: ToolContext) -> dict:
         "message": f"已跟踪用户登录。总登录次数：{login_count}。"
     }
 
-# --- 使用演示 ---
-# 在真实应用程序中，LLM Agent 会决定调用此工具。
-# 在这里，我们模拟直接调用以进行演示。
+## --- 使用演示 ---
+## 在真实应用程序中，LLM Agent 会决定调用此工具。
+## 在这里，我们模拟直接调用以进行演示。
 
-# 1. 设置
+## 1. 设置
 session_service = InMemorySessionService()
 app_name, user_id, session_id = "state_app_tool", "user3", "session3"
 session = session_service.create_session(
@@ -210,8 +210,8 @@ session = session_service.create_session(
 
 print(f"初始状态：{session.state}")
 
-# 2. 模拟工具调用（在真实应用中，ADK Runner 会执行此操作）
-# 我们仅为此独立示例手动创建 ToolContext。
+## 2. 模拟工具调用（在真实应用中，ADK Runner 会执行此操作）
+## 我们仅为此独立示例手动创建 ToolContext。
 from google.adk.tools.tool_context import InvocationContext
 mock_context = ToolContext(
     invocation_context=InvocationContext(
@@ -220,16 +220,16 @@ mock_context = ToolContext(
     )
 )
 
-# 3. 执行工具
+## 3. 执行工具
 log_user_login(mock_context)
 
-# 4. 检查更新的状态
+## 4. 检查更新的状态
 updated_session = session_service.get_session(app_name, user_id, session_id)
 print(f"工具执行后的状态：{updated_session.state}")
 
-# 预期输出将显示与"之前"情况相同的状态更改，
-# 但代码组织明显更清晰
-# 且更健壮。
+## 预期输出将显示与"之前"情况相同的状态更改，
+## 但代码组织明显更清晰
+## 且更健壮。
 ```
 
 此代码演示了一种基于工具的方法来管理应用程序中的用户会话状态。它定义了一个函数 *log_user_login*，充当工具。此工具负责在用户登录时更新会话状态。  
@@ -246,9 +246,9 @@ print(f"工具执行后的状态：{updated_session.state}")
 在 Agent 系统中，Session 组件维护当前聊天历史（events）和特定于单个对话的临时数据（state）的记录。然而，为了使 Agent 在多次交互中保留信息或访问外部数据，需要长期知识管理。这由 MemoryService 促进。
 
 ```python
-# 示例：使用 InMemoryMemoryService
-# 这适用于不需要跨应用程序重启的数据持久性的本地开发和测试。
-# 应用停止时内存内容会丢失。
+## 示例：使用 InMemoryMemoryService
+## 这适用于不需要跨应用程序重启的数据持久性的本地开发和测试。
+## 应用停止时内存内容会丢失。
 from google.adk.memory import InMemoryMemoryService
 
 memory_service = InMemoryMemoryService()
@@ -259,18 +259,18 @@ Session 和 State 可以概念化为单个聊天会话的短期内存，而由 M
 ADK 提供了几种实现来创建这个长期知识存储。InMemoryMemoryService 提供了适合测试目的的临时存储解决方案，但数据不会在应用程序重启后保留。对于生产环境，通常使用 VertexAiRagMemoryService。此服务利用 Google Cloud 的检索增强生成（RAG）服务，实现可扩展、持久和语义搜索功能（另外，请参阅第 14 章关于 RAG）。
 
 ```python
-# 示例：使用 VertexAiRagMemoryService
-# 这适用于 GCP 上的可扩展生产，利用
-# Vertex AI RAG（检索增强生成）实现持久的、
-# 可搜索的内存。
-# 需要：pip install google-adk[vertexai]，GCP
-# 设置/身份验证和 Vertex AI RAG Corpus。
+## 示例：使用 VertexAiRagMemoryService
+## 这适用于 GCP 上的可扩展生产，利用
+## Vertex AI RAG（检索增强生成）实现持久的、
+## 可搜索的内存。
+## 需要：pip install google-adk[vertexai]，GCP
+## 设置/身份验证和 Vertex AI RAG Corpus。
 from google.adk.memory import VertexAiRagMemoryService
 
-# 您的 Vertex AI RAG Corpus 的资源名称
+## 您的 Vertex AI RAG Corpus 的资源名称
 RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id"  # 替换为您的 Corpus 资源名称
 
-# 检索行为的可选配置
+## 检索行为的可选配置
 SIMILARITY_TOP_K = 5  # 要检索的顶部结果数
 VECTOR_DISTANCE_THRESHOLD = 0.7  # 向量相似度阈值
 
@@ -280,12 +280,12 @@ memory_service = VertexAiRagMemoryService(
     vector_distance_threshold=VECTOR_DISTANCE_THRESHOLD
 )
 
-# 使用此服务时，像 add_session_to_memory
-# 和 search_memory 这样的方法将与指定的 Vertex AI
-# RAG Corpus 交互。
+## 使用此服务时，像 add_session_to_memory
+## 和 search_memory 这样的方法将与指定的 Vertex AI
+## RAG Corpus 交互。
 ```
 
-# 实操代码：LangChain 和 LangGraph 中的内存管理
+## 实操代码：LangChain 和 LangGraph 中的内存管理
 
 在 LangChain 和 LangGraph 中，Memory 是创建智能且自然的对话应用程序的关键组件。它允许 AI Agent 记住过去交互的信息、从反馈中学习并适应用户偏好。LangChain 的内存功能通过引用存储的历史来丰富当前提示词，然后记录最新交换以供将来使用，从而提供了这一基础。随着 Agent 处理更复杂的任务，这种能力对于效率和用户满意度变得至关重要。
 
@@ -300,14 +300,14 @@ LangChain 提供了几种工具来管理对话历史，从手动控制到链内�
 ```python
 from langchain.memory import ChatMessageHistory
 
-# 初始化历史对象
+## 初始化历史对象
 history = ChatMessageHistory()
 
-# 添加用户和 AI 消息
+## 添加用户和 AI 消息
 history.add_user_message("我下周要去纽约。")
 history.add_ai_message("太好了！这是一个很棒的城市。")
 
-# 访问消息列表
+## 访问消息列表
 print(history.messages)
 ```
 
@@ -321,13 +321,13 @@ print(history.messages)
 ```python
 from langchain.memory import ConversationBufferMemory
 
-# 初始化内存
+## 初始化内存
 memory = ConversationBufferMemory()
 
-# 保存对话轮次
+## 保存对话轮次
 memory.save_context({"input": "天气怎么样？"}, {"output": "今天是晴天。"})
 
-# 将内存作为字符串加载
+## 将内存作为字符串加载
 print(memory.load_memory_variables({}))
 ```
 
@@ -339,7 +339,7 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 
-# 1. 定义 LLM 和提示词
+## 1. 定义 LLM 和提示词
 llm = OpenAI(temperature=0)
 template = """你是一个有帮助的旅行代理。
 之前的对话：
@@ -348,14 +348,14 @@ template = """你是一个有帮助的旅行代理。
 响应："""
 prompt = PromptTemplate.from_template(template)
 
-# 2. 配置内存
-# memory_key "history" 与提示词中的变量匹配
+## 2. 配置内存
+## memory_key "history" 与提示词中的变量匹配
 memory = ConversationBufferMemory(memory_key="history")
 
-# 3. 构建链
+## 3. 构建链
 conversation = LLMChain(llm=llm, prompt=prompt, memory=memory)
 
-# 4. 运行对话
+## 4. 运行对话
 response = conversation.predict(question="我想预订航班。")
 print(response)
 response = conversation.predict(question="顺便说一下，我叫 Sam。")
@@ -377,7 +377,7 @@ from langchain_core.prompts import (
     HumanMessagePromptTemplate,
 )
 
-# 1. 定义聊天模型和提示词
+## 1. 定义聊天模型和提示词
 llm = ChatOpenAI()
 prompt = ChatPromptTemplate(
     messages=[
@@ -387,14 +387,14 @@ prompt = ChatPromptTemplate(
     ]
 )
 
-# 2. 配置内存
-# return_messages=True 对于聊天模型是必不可少的
+## 2. 配置内存
+## return_messages=True 对于聊天模型是必不可少的
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-# 3. 构建链
+## 3. 构建链
 conversation = LLMChain(llm=llm, prompt=prompt, memory=memory)
 
-# 4. 运行对话
+## 4. 运行对话
 response = conversation.predict(question="嗨，我是 Jane。")
 print(response)
 response = conversation.predict(question="你记得我的名字吗？")
@@ -410,7 +410,7 @@ print(response)
 下面是演示 Agent 如何使用反思来更新存储在 LangGraph BaseStore 中的程序记忆的伪代码
 
 ```python
-# 更新 agent 指令的节点
+## 更新 agent 指令的节点
 def update_instructions(state: State, store: BaseStore):
     namespace = ("instructions",)
     # 从存储中获取当前指令
@@ -430,7 +430,7 @@ def update_instructions(state: State, store: BaseStore):
     # 将更新的指令保存回存储
     store.put(("agent_instructions",), "agent_a", {"instructions": new_instructions})
 
-# 使用指令生成响应的节点
+## 使用指令生成响应的节点
 def call_model(state: State, store: BaseStore):
     namespace = ("agent_instructions", )
     # 从存储中检索最新指令
@@ -446,20 +446,20 @@ LangGraph 将长期记忆存储为存储中的 JSON 文档。每个记忆都在�
 ```python
 from langgraph.store.memory import InMemoryStore
 
-# 真实嵌入函数的占位符
+## 真实嵌入函数的占位符
 def embed(texts: list[str]) -> list[list[float]]:
     # 在真实应用程序中，使用适当的嵌入模型
     return [[1.0, 2.0] for _ in texts]
 
-# 初始化内存存储。对于生产，使用数据库支持的存储。
+## 初始化内存存储。对于生产，使用数据库支持的存储。
 store = InMemoryStore(index={"embed": embed, "dims": 2})
 
-# 为特定用户和应用程序上下文定义命名空间
+## 为特定用户和应用程序上下文定义命名空间
 user_id = "my-user"
 application_context = "chitchat"
 namespace = (user_id, application_context)
 
-# 1. 将记忆放入存储
+## 1. 将记忆放入存储
 store.put(
     namespace,
     "a-memory",  # 此记忆的键
@@ -472,12 +472,12 @@ store.put(
     },
 )
 
-# 2. 通过其命名空间和键获取记忆
+## 2. 通过其命名空间和键获取记忆
 item = store.get(namespace, "a-memory")
 print("检索的项目：", item)
 
-# 3. 在命名空间内搜索记忆，按内容过滤
-# 并按与查询的向量相似度排序。
+## 3. 在命名空间内搜索记忆，按内容过滤
+## 并按与查询的向量相似度排序。
 items = store.search(
     namespace,
     filter={"my-key": "my-value"},
@@ -486,7 +486,7 @@ items = store.search(
 print("搜索结果：", items)
 ```
 
-# Vertex Memory Bank
+## Vertex Memory Bank
 
 Memory Bank 是 Vertex AI Agent Engine 中的托管服务，为 Agent 提供持久的长期内存。该服务使用 Gemini 模型异步分析对话历史以提取关键事实和用户偏好。
 
@@ -515,7 +515,7 @@ await memory_service.add_session_to_memory(session)
 
 Memory Bank 提供与 Google ADK 的无缝集成，提供即开即用的体验。对于使用其他 Agent 框架（如 LangGraph 和 CrewAI）的用户，Memory Bank 还通过直接 API 调用提供支持。演示这些集成的在线代码示例可供感兴趣的读者使用。
 
-# 概览
+## 概览
 
 **什么**：Agent 系统需要记住过去交互的信息以执行复杂任务并提供连贯的体验。没有内存机制，Agent 是无状态的，无法维护对话上下文、从经验中学习或为用户个性化响应。这从根本上将它们限制在简单的、一次性交互中，无法处理多步骤过程或不断变化的用户需求。核心问题是如何有效管理单个对话的即时临时信息和随时间收集的大量持久知识。
 
@@ -529,7 +529,7 @@ Memory Bank 提供与 Google ADK 的无缝集成，提供即开即用的体验�
 
 图 1：内存管理设计模式
 
-# 关键要点
+## 关键要点
 
 快速回顾关于内存管理的要点：
 
@@ -546,11 +546,11 @@ Memory Bank 提供与 Google ADK 的无缝集成，提供即开即用的体验�
 * LangGraph 通过使用存储来保存和检索跨不同用户会话的语义事实、情景经验或甚至可更新的程序规则，实现高级的长期内存。
 * Memory Bank 是一种托管服务，通过自动提取、存储和调用用户特定信息，为 Agent 提供持久的长期内存，以在 Google 的 ADK、LangGraph 和 CrewAI 等框架中实现个性化、持续的对话。
 
-# 结论
+## 结论
 
 本章深入探讨了 Agent 系统的内存管理的真正重要工作，展示了短暂上下文和长期持久知识之间的区别。我们讨论了这些类型的内存如何设置以及在构建更智能的 Agent 时在哪里看到它们的使用。我们详细了解了 Google ADK 如何为您提供像 Session、State 和 MemoryService 这样的特定部分来处理这一点。既然我们已经介绍了 Agent 如何记住事物（短期和长期），我们可以继续了解它们如何学习和适应。下一个模式"学习和适应"是关于 Agent 根据新经验或数据改变其思考、行动或所知的方式。
 
-# 参考文献
+## 参考文献
 
 1. ADK Memory, [https://google.github.io/adk-docs/sessions/memory/](https://google.github.io/adk-docs/sessions/memory/)
 2. LangGraph Memory, [https://langchain-ai.github.io/langgraph/concepts/memory/](https://langchain-ai.github.io/langgraph/concepts/memory/)

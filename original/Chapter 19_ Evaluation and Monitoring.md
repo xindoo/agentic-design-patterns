@@ -6,7 +6,7 @@ This chapter examines methodologies that allow intelligent agents to systematica
 
 Fig:1. Best practices for evaluation and monitoring
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Most Common Applications and Use Cases:
 
@@ -18,7 +18,7 @@ Most Common Applications and Use Cases:
 * **Anomaly Detection in Agent Behavior:** Identifying unusual or unexpected actions taken by an agent that might indicate an error, a malicious attack, or an emergent un-desired behavior.  
 * **Learning Progress Assessment:** For agents designed to learn, tracking their learning curve, improvement in specific skills, or generalization capabilities over different tasks or data sets.
 
-# Hands-On Code Example
+## Hands-On Code Example
 
 Developing a comprehensive evaluation framework for AI agents is a challenging endeavor, comparable to an academic discipline or a substantial publication in its complexity. This difficulty stems from the multitude of factors to consider, such as model performance, user interaction, ethical implications, and broader societal impact. Nevertheless, for practical implementation, the focus can be narrowed to critical use cases essential for the efficient and effective functioning of AI agents.
 
@@ -30,7 +30,7 @@ def evaluate_response_accuracy(agent_output: str, expected_output: str) -> float
     # This is a very basic exact match; real-world would use more sophisticated metrics
     return 1.0 if agent_output.strip().lower() == expected_output.strip().lower() else 0.0
 
-# Example usage
+## Example usage
 agent_response = "The capital of France is Paris."
 ground_truth = "Paris is the capital of France."
 score = evaluate_response_accuracy(agent_response, ground_truth)
@@ -53,7 +53,7 @@ A straightforward comparison falls short in assessing semantic similarity, only 
 **Tracking Token Usage for LLM Interactions:** For LLM-powered agents, tracking token usage is crucial for managing costs and optimizing resource allocation. Billing for LLM interactions often depends on the number of tokens processed (input and output). Therefore, efficient token usage directly reduces operational expenses. Additionally, monitoring token counts helps identify potential areas for improvement in prompt engineering or response generation processes.
 
 ```python
-# This is conceptual as actual token counting depends on the LLM API
+## This is conceptual as actual token counting depends on the LLM API
 class LLMInteractionMonitor:
     def __init__(self):
         self.total_input_tokens = 0
@@ -70,7 +70,7 @@ class LLMInteractionMonitor:
     def get_total_tokens(self):
         return self.total_input_tokens, self.total_output_tokens
 
-# Example usage
+## Example usage
 monitor = LLMInteractionMonitor()
 monitor.record_interaction("What is the capital of France?", "The capital of France is Paris.")
 monitor.record_interaction("Tell me a joke.", "Why don't scientists trust atoms? Because they make up everything!")
@@ -89,18 +89,18 @@ import json
 import logging
 from typing import Optional
 
-# --- Configuration ---
+## --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Set your API key as an environment variable to run this script
-# For example, in your terminal: export GOOGLE_API_KEY='your_key_here'
+## Set your API key as an environment variable to run this script
+## For example, in your terminal: export GOOGLE_API_KEY='your_key_here'
 try:
     genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 except KeyError:
     logging.error("Error: GOOGLE_API_KEY environment variable not set.")
     exit(1)
 
-# --- LLM-as-a-Judge Rubric for Legal Survey Quality ---
+## --- LLM-as-a-Judge Rubric for Legal Survey Quality ---
 LEGAL_SURVEY_RUBRIC = """
 You are an expert legal survey methodologist and a critical legal reviewer.
 Your task is to evaluate the quality of a given legal survey question.
@@ -189,7 +189,7 @@ class LLMJudgeForLegalSurvey:
             logging.error(f"An unexpected error occurred during LLM judgment: {e}")
             return None
 
-# --- Example Usage ---
+## --- Example Usage ---
 if __name__ == "__main__":
     judge = LLMJudgeForLegalSurvey()
 
@@ -237,7 +237,7 @@ Before we conclude, let's examine various evaluation methods, considering their 
 | LLM-as-a-Judge | Consistent, efficient, and scalable.  | Intermediate steps may be overlooked. Limited by LLM capabilities. |
 | Automated Metrics  | Scalable, efficient, and objective | Potential limitation in capturing complete capabilities. |
 
-# Agents trajectories 
+## Agents trajectories 
 
 Evaluating agents' trajectories is essential, as traditional software tests are insufficient. Standard code yields predictable pass/fail results, whereas agents operate probabilistically, necessitating qualitative assessment of both the final output and the agent's trajectory—the sequence of steps taken to reach a solution. Evaluating multi-agent systems is challenging because they are constantly in flux. This requires developing sophisticated metrics that go beyond individual performance to measure the effectiveness of communication and teamwork. Moreover, the environments themselves are not static, demanding that evaluation methods, including test cases, adapt over time.
 
@@ -254,11 +254,11 @@ To do this, you ask key questions about the team's dynamics, supported by concre
 * Is the right agent being chosen for the right task? If a user asks about the weather for their trip, the system should use a specialized 'Weather Agent' that provides live data. If it instead uses a 'General Knowledge Agent' that gives a generic answer like "it's usually warm in summer," it has chosen the wrong tool for the job.  
 * Finally, does adding more agents improve performance? If you add a new 'Restaurant-Reservation Agent' to the team, does it make the overall trip-planning better and more efficient? Or does it create conflicts and slow the system down, indicating a problem with scalability?.
 
-# From Agents to Advanced Contractors
+## From Agents to Advanced Contractors
 
-# Recently, it has been proposed (Agent Companion, gulli et al.) an evolution from simple AI agents to advanced "contractors", moving from probabilistic, often unreliable systems to more deterministic and accountable ones designed for complex, high-stakes environments (see Fig.2). 
+## Recently, it has been proposed (Agent Companion, gulli et al.) an evolution from simple AI agents to advanced "contractors", moving from probabilistic, often unreliable systems to more deterministic and accountable ones designed for complex, high-stakes environments (see Fig.2). 
 
-# Today's common AI agents operate on brief, underspecified instructions, which makes them suitable for simple demonstrations but brittle in production, where ambiguity leads to failure. The "contractor" model addresses this by establishing a rigorous, formalized relationship between the user and the AI, built upon a foundation of clearly defined and mutually agreed-upon terms, much like a legal service agreement in the human world. This transformation is supported by four key pillars that collectively ensure clarity, reliability, and robust execution of tasks that were previously beyond the scope of autonomous systems.
+## Today's common AI agents operate on brief, underspecified instructions, which makes them suitable for simple demonstrations but brittle in production, where ambiguity leads to failure. The "contractor" model addresses this by establishing a rigorous, formalized relationship between the user and the AI, built upon a foundation of clearly defined and mutually agreed-upon terms, much like a legal service agreement in the human world. This transformation is supported by four key pillars that collectively ensure clarity, reliability, and robust execution of tasks that were previously beyond the scope of autonomous systems.
 
 First is the pillar of the Formalized Contract, a detailed specification that serves as the single source of truth for a task. It goes far beyond a simple prompt. For example, a contract for a financial analysis task wouldn't just say "analyze last quarter's sales"; it would demand "a 20-page PDF report analyzing European market sales from Q1 2025, including five specific data visualizations, a comparative analysis against Q1 2024, and a risk assessment based on the included dataset of supply chain disruptions." This contract explicitly defines the required deliverables, their precise specifications, the acceptable data sources, the scope of work, and even the expected computational cost and completion time, making the outcome objectively verifiable.
 
@@ -274,7 +274,7 @@ Finally, the fourth pillar is Hierarchical Decomposition via Subcontracts. For t
 
 Ultimately, this contractor framework reimagines AI interaction by embedding principles of formal specification, negotiation, and verifiable execution directly into the agent's core logic. This methodical approach elevates artificial intelligence from a promising but often unpredictable assistant into a dependable system capable of autonomously managing complex projects with auditable precision. By solving the critical challenges of ambiguity and reliability, this model paves the way for deploying AI in mission-critical domains where trust and accountability are paramount.
 
-# Google's ADK 
+## Google's ADK 
 
 Before concluding, let's look at a concrete example of a framework that supports evaluation. Agent evaluation with Google's ADK (see Fig.3) can be conducted via three methods: web-based UI (adk web) for interactive evaluation and dataset generation, programmatic integration using pytest for incorporation into testing pipelines, and direct command-line interface (adk eval) for automated evaluations suitable for regular build generation and verification processes. 
 
@@ -286,7 +286,7 @@ The web-based UI enables interactive session creation and saving into existing o
 
 The command-line interface facilitates automated evaluation by providing the agent module path and eval set file, with options to specify a configuration file or print detailed results. Specific evals within a larger eval set can be selected for execution by listing them after the eval set filename, separated by commas.
 
-# At a Glance
+## At a Glance
 
 **What:** Agentic systems and LLMs operate in complex, dynamic environments where their performance can degrade over time. Their probabilistic and non-deterministic nature means that traditional software testing is insufficient for ensuring reliability. Evaluating dynamic multi-agent systems is a significant challenge because their constantly changing nature and that of their environments demand the development of adaptive testing methods and sophisticated metrics that can measure collaborative success beyond individual performance. Problems like data drift, unexpected interactions, tool calling, and deviations from intended goals can arise after deployment. Continuous assessment is therefore necessary to measure an agent's effectiveness, efficiency, and adherence to operational and safety requirements.
 
@@ -299,7 +299,7 @@ The command-line interface facilitates automated evaluation by providing the age
 ![][image4]  
 Fig.4: Evaluation and Monitoring design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Evaluating intelligent agents goes beyond traditional tests to continuously measure their effectiveness, efficiency, and adherence to requirements in real-world environments.  
 * Practical applications of agent evaluation include performance tracking in live systems, A/B testing for improvements, compliance audits, and detecting drift or anomalies in behavior.  
@@ -309,13 +309,13 @@ Fig.4: Evaluation and Monitoring design pattern
 * Agent evaluations can be executed via a web-based UI for interactive testing, programmatically with pytest for CI/CD integration, or through a command-line interface for automated workflows.  
 * In order to make AI reliable for complex, high-stakes tasks, we must move from simple prompts to formal "contracts" that precisely define verifiable deliverables and scope. This structured agreement allows the Agents to negotiate, clarify ambiguities, and iteratively validate its own work, transforming it from an unpredictable tool into an accountable and trustworthy system.
 
-# Conclusions
+## Conclusions
 
 In conclusion, effectively evaluating AI agents requires moving beyond simple accuracy checks to a continuous, multi-faceted assessment of their performance in dynamic environments. This involves practical monitoring of metrics like latency and resource consumption, as well as sophisticated analysis of an agent's decision-making process through its trajectory. For nuanced qualities like helpfulness, innovative methods such as the LLM-as-a-Judge are becoming essential, while frameworks like Google's ADK provide structured tools for both unit and integration testing. The challenge intensifies with multi-agent systems, where the focus shifts to evaluating collaborative success and effective cooperation.
 
 To ensure reliability in critical applications, the paradigm is shifting from simple, prompt-driven agents to advanced "contractors" bound by formal agreements. These contractor agents operate on explicit, verifiable terms, allowing them to negotiate, decompose tasks, and self-validate their work to meet rigorous quality standards. This structured approach transforms agents from unpredictable tools into accountable systems capable of handling complex, high-stakes tasks. Ultimately, this evolution is crucial for building the trust required to deploy sophisticated agentic AI in mission-critical domains.
 
-# References
+## References
 
 Relevant research includes:
 

@@ -4,7 +4,7 @@ Throughout this book  we have journeyed from the foundational concepts of agenti
 
 This concluding chapter will synthesize the core principles we have explored. We will first review the key agentic patterns, grouping them into a cohesive framework that underscores their collective importance. Next, we will examine how these individual patterns can be composed into more complex systems, creating a powerful synergy. Finally, we will look ahead to the future of agent development, exploring the emerging trends and challenges that will shape the next generation of intelligent systems.
 
-# Review of key agentic principles
+## Review of key agentic principles
 
 The 21 patterns detailed in this guide represent a comprehensive toolkit for agent development. While each pattern addresses a specific design challenge, they can be understood collectively by grouping them into foundational categories that mirror the core competencies of an intelligent agent.
 
@@ -15,9 +15,9 @@ The 21 patterns detailed in this guide represent a comprehensive toolkit for age
 
 These principles, when applied through their respective patterns, provide a robust framework for building intelligent systems. They guide the developer in creating agents that are not only capable of performing complex tasks but are also structured, reliable, and adaptable.
 
-# Combining Patterns for Complex Systems
+## Combining Patterns for Complex Systems
 
-# The true power of agentic design emerges not from the application of a single pattern in isolation, but from the artful composition of multiple patterns to create sophisticated, multi-layered systems. The agentic canvas is rarely populated by a single, simple workflow; instead, it becomes a tapestry of interconnected patterns that work in concert to achieve a complex objective.
+## The true power of agentic design emerges not from the application of a single pattern in isolation, but from the artful composition of multiple patterns to create sophisticated, multi-layered systems. The agentic canvas is rarely populated by a single, simple workflow; instead, it becomes a tapestry of interconnected patterns that work in concert to achieve a complex objective.
 
 Consider the development of an autonomous AI research assistant, a task that requires a combination of planning, information retrieval, analysis, and synthesis. Such a system would be a prime example of pattern composition:
 
@@ -29,7 +29,7 @@ Consider the development of an autonomous AI research assistant, a task that req
 
 In this example, at least five distinct agentic patterns are woven together. The Planning pattern provides the high-level structure, Tool Use grounds the operation in real-world data, Multi-Agent Collaboration enables specialization and division of labor, Reflection ensures quality, and Memory Management maintains coherence. This composition transforms a set of individual capabilities into a powerful, autonomous system capable of tackling a task that would be far too complex for a single prompt or a simple chain.
 
-# Looking to the Future
+## Looking to the Future
 
 The composition of agentic patterns into complex systems, as illustrated by our AI research assistant, is not the end of the story but rather the beginning of a new chapter in software development. As we look ahead, several emerging trends and challenges will define the next generation of intelligent systems, pushing the boundaries of what is possible and demanding even greater sophistication from their creators.
 
@@ -41,7 +41,7 @@ A prime example of this growing ecosystem is the "Awesome Agents" GitHub reposit
 
 However, this path is not without its formidable challenges. The core issues of **safety, alignment, and robustness** will become even more critical as agents become more autonomous and interconnected. How do we ensure an agent’s learning and adaptation do not cause it to drift from its original purpose? How do we build systems that are resilient to adversarial attacks and unpredictable real-world scenarios? Answering these questions will require a new set of "safety patterns" and a rigorous engineering discipline focused on testing, validation, and ethical alignment.
 
-# Final Thoughts
+## Final Thoughts
 
 Throughout this guide, we have framed the construction of intelligent agents as an art form practiced on a technical canvas. These Agentic Design patterns are your palette and your brushstrokes—the foundational elements that allow you to move beyond simple prompts and create dynamic, responsive, and goal-oriented entities. They provide the architectural discipline needed to transform the raw cognitive power of a large language model into a reliable and purposeful system.
 

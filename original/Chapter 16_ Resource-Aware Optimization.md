@@ -4,7 +4,7 @@ Resource-Aware Optimization enables intelligent agents to dynamically monitor an
 
 For example, consider an agent tasked with analyzing a large dataset for a financial analyst. If the analyst needs a preliminary report immediately, the agent might use a faster, more affordable model to quickly summarize key trends. However, if the analyst requires a highly accurate forecast for a critical investment decision and has a larger budget and more time, the agent would allocate more resources to utilize a powerful, slower, but more precise predictive model. A key strategy in this category is the fallback mechanism, which acts as a safeguard when a preferred model is unavailable due to being overloaded or throttled. To ensure graceful degradation, the system automatically switches to a default or more affordable model, maintaining service continuity instead of failing completely.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Practical use cases include: 
 
@@ -15,7 +15,7 @@ Practical use cases include:
 * **Data Usage Management:** An agent opting for summarized data retrieval instead of full dataset downloads to save bandwidth or storage.  
 * **Adaptive Task Allocation:** In multi-agent systems, agents self-assign tasks based on their current computational load or available time.
 
-# Hands-On Code Example
+## Hands-On Code Example
 
 An intelligent system for answering user questions can assess the difficulty of each question. For simple queries, it utilizes a cost-effective language model such as Gemini Flash. For complex inquiries, a more powerful, but expensive, language model (like Gemini Pro) is considered. The decision to use the more powerful model also depends on resource availability, specifically budget and time constraints. This system dynamically selects appropriate models.
 
@@ -28,11 +28,11 @@ Google's ADK supports this approach through its multi-agent architecture, which 
 Next, two agents with identical setup but utilizing different models and costs will be defined.
 
 ```python
-# Conceptual Python-like structure, not runnable code
+## Conceptual Python-like structure, not runnable code
 from google.adk.agents import Agent
-# from google.adk.models.lite_llm import LiteLlm  # If using models not directly supported by ADK's default Agent
+## from google.adk.models.lite_llm import LiteLlm  # If using models not directly supported by ADK's default Agent
 
-# Agent using the more expensive Gemini Pro 2.5
+## Agent using the more expensive Gemini Pro 2.5
 gemini_pro_agent = Agent(
     name="GeminiProAgent",
     model="gemini-2.5-pro",  # Placeholder for actual model name if different
@@ -40,7 +40,7 @@ gemini_pro_agent = Agent(
     instruction="You are an expert assistant for complex problem-solving."
 )
 
-# Agent using the less expensive Gemini Flash 2.5
+## Agent using the less expensive Gemini Flash 2.5
 gemini_flash_agent = Agent(
     name="GeminiFlashAgent",
     model="gemini-2.5-flash",  # Placeholder for actual model name if different
@@ -54,7 +54,7 @@ A Router Agent can direct queries based on simple metrics like query length, whe
 Optimization techniques can further enhance the LLM router's effectiveness. Prompt tuning involves crafting prompts to guide the router LLM for better routing decisions. Fine-tuning the LLM router on a dataset of queries and their optimal model choices improves its accuracy and efficiency. This dynamic routing capability balances response quality with cost-effectiveness.
 
 ```python
-# Conceptual Python-like structure, not runnable code
+## Conceptual Python-like structure, not runnable code
 from google.adk.agents import Agent, BaseAgent
 from google.adk.events import Event
 from google.adk.agents.invocation_context import InvocationContext
@@ -107,7 +107,7 @@ Your overarching aim is to ensure the final research product meets the highest p
 
 The Critic Agent operates based on a predefined system prompt that outlines its role, responsibilities, and feedback approach. A well-designed prompt for this agent must clearly establish its function as an evaluator. It should specify the areas for critical focus and emphasize providing constructive feedback rather than mere dismissal. The prompt should also encourage the identification of both strengths and weaknesses, and it must guide the agent on how to structure and present its feedback.
 
-# Hands-On Code with OpenAI
+## Hands-On Code with OpenAI
 
 This system uses a resource-aware optimization strategy to handle user queries efficiently. It first classifies each query into one of three categories to determine the most appropriate and cost-effective processing pathway. This approach avoids wasting computational resources on simple requests while ensuring complex queries get the necessary attention. The three categories are:
 
@@ -118,9 +118,9 @@ This system uses a resource-aware optimization strategy to handle user queries e
 The code is under the MIT license and available on Github: ([https://github.com/mahtabsyed/21-Agentic-Patterns/blob/main/16\_Resource\_Aware\_Opt\_LLM\_Reflection\_v2.ipynb](https://github.com/mahtabsyed/21-Agentic-Patterns/blob/main/16_Resource_Aware_Opt_LLM_Reflection_v2.ipynb))
 
 ```python
-# MIT License
-# Copyright (c) 2025 Mahtab Syed
-# https://www.linkedin.com/in/mahtabsyed/
+## MIT License
+## Copyright (c) 2025 Mahtab Syed
+## https://www.linkedin.com/in/mahtabsyed/
 
 import os
 import requests
@@ -128,7 +128,7 @@ import json
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# Load environment variables
+## Load environment variables
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -142,7 +142,7 @@ if not OPENAI_API_KEY or not GOOGLE_CUSTOM_SEARCH_API_KEY or not GOOGLE_CSE_ID:
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# --- Step 1: Classify the Prompt ---
+## --- Step 1: Classify the Prompt ---
 def classify_prompt(prompt: str) -> dict:
     system_message = {
         "role": "system",
@@ -166,7 +166,7 @@ def classify_prompt(prompt: str) -> dict:
     reply = response.choices[0].message.content
     return json.loads(reply)
 
-# --- Step 2: Google Search ---
+## --- Step 2: Google Search ---
 def google_search(query: str, num_results=1) -> list:
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -193,7 +193,7 @@ def google_search(query: str, num_results=1) -> list:
     except requests.exceptions.RequestException as e:
         return {"error": str(e)}
 
-# --- Step 3: Generate Response ---
+## --- Step 3: Generate Response ---
 def generate_response(prompt: str, classification: str, search_results=None) -> str:
     if classification == "simple":
         model = "gpt-4o-mini"
@@ -222,7 +222,7 @@ def generate_response(prompt: str, classification: str, search_results=None) -> 
     )
     return response.choices[0].message.content, model
 
-# --- Step 4: Combined Router ---
+## --- Step 4: Combined Router ---
 def handle_prompt(prompt: str) -> dict:
     classification_result = classify_prompt(prompt)
     # Remove or comment out the next line to avoid duplicate printing
@@ -238,8 +238,8 @@ def handle_prompt(prompt: str) -> dict:
     return {"classification": classification, "response": answer, "model": model}
 
 test_prompt = "What is the capital of Australia?"
-# test_prompt = "Explain the impact of quantum computing on cryptography."
-# test_prompt = "When does the Australian Open 2026 start, give me full date?"
+## test_prompt = "Explain the impact of quantum computing on cryptography."
+## test_prompt = "When does the Australian Open 2026 start, give me full date?"
 result = handle_prompt(test_prompt)
 print("🔍 Classification:", result["classification"])
 print("🧠 Model Used:", result["model"])
@@ -248,7 +248,7 @@ print("🧠 Response:\n", result["response"])
 
 This Python code implements a prompt routing system to answer user questions. It begins by loading necessary API keys from a .env file for OpenAI and Google Custom Search. The core functionality lies in classifying the user's prompt into three categories: simple, reasoning, or internet search. A dedicated function utilizes an OpenAI model for this classification step. If the prompt requires current information, a Google search is performed using the Google Custom Search API. Another function then generates the final response, selecting an appropriate OpenAI model based on the classification. For internet search queries, the search results are provided as context to the model. The main handle\_prompt function orchestrates this workflow, calling the classification and search (if needed) functions before generating the response. It returns the classification, the model used, and the generated answer. This system efficiently directs different types of queries to optimized methods for a better response.
 
-# Hands-On Code Example (OpenRouter)
+## Hands-On Code Example (OpenRouter)
 
 OpenRouter offers a unified interface to hundreds of AI models via a single API endpoint. It provides automated failover and cost-optimization, with easy integration through your preferred SDK or framework.
 
@@ -302,7 +302,7 @@ OpenRouter offers a detailed leaderboard ( [https://openrouter.ai/rankings](http
 ![][image1]  
 Fig. 1: OpenRouter Web site ([https://openrouter.ai/](https://openrouter.ai/))
 
-# Beyond Dynamic Model Switching: A Spectrum of Agent Resource Optimizations
+## Beyond Dynamic Model Switching: A Spectrum of Agent Resource Optimizations
 
 Resource-aware optimization is paramount in developing intelligent agent systems that operate efficiently and effectively within real-world constraints. Let's see a number of additional techniques:
 
@@ -324,7 +324,7 @@ Resource-aware optimization is paramount in developing intelligent agent systems
 
 **Graceful Degradation and Fallback Mechanisms** ensure that intelligent agent systems can continue to function, albeit perhaps at a reduced capacity, even when resource constraints are severe, gracefully degrading performance and falling back to alternative strategies to maintain operation and provide essential functionality.
 
-# At a Glance
+## At a Glance
 
 **What:** Resource-Aware Optimization addresses the challenge of managing the consumption of computational, temporal, and financial resources in intelligent systems. LLM-based applications can be expensive and slow, and selecting the best model or tool for every task is often inefficient. This creates a fundamental trade-off between the quality of a system's output and the resources required to produce it. Without a dynamic management strategy, systems cannot adapt to varying task complexities or operate within budgetary and performance constraints.
 
@@ -338,7 +338,7 @@ Resource-aware optimization is paramount in developing intelligent agent systems
 
 Fig. 2: Resource-Aware Optimization Design Pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Resource-Aware Optimization is Essential: Intelligent agents can manage computational, temporal, and financial resources dynamically. Decisions regarding model usage and execution paths are made based on real-time constraints and objectives.  
 * Multi-Agent Architecture for Scalability: Google's ADK provides a multi-agent framework, enabling modular design. Different agents (answering, routing, critique) handle specific tasks.  
@@ -347,11 +347,11 @@ Fig. 2: Resource-Aware Optimization Design Pattern
 * Optimization Through Feedback and Flexibility: Evaluation capabilities for critique and model integration flexibility contribute to adaptive and self-improving system behavior.  
 * Additional Resource-Aware Optimizations: Other methods include Adaptive Tool Use & Selection, Contextual Pruning & Summarization, Proactive Resource Prediction, Cost-Sensitive Exploration in Multi-Agent Systems, Energy-Efficient Deployment, Parallelization & Distributed Computing Awareness, Learned Resource Allocation Policies, Graceful Degradation and Fallback Mechanisms, and Prioritization of Critical Tasks.
 
-# Conclusions
+## Conclusions
 
 Resource-aware optimization is essential for the development of intelligent agents, enabling efficient operation within real-world constraints. By managing computational, temporal, and financial resources, agents can achieve optimal performance and cost-effectiveness. Techniques such as dynamic model switching, adaptive tool use, and contextual pruning are crucial for attaining these efficiencies. Advanced strategies, including learned resource allocation policies and graceful degradation, enhance an agent's adaptability and resilience under varying conditions. Integrating these optimization principles into agent design is fundamental for building scalable, robust, and sustainable AI systems.
 
-# References
+## References
 
 1. Google's Agent Development Kit (ADK): [https://google.github.io/adk-docs/](https://google.github.io/adk-docs/)   
 2. Gemini Flash 2.5 & Gemini 2.5 Pro:  [https://aistudio.google.com/](https://aistudio.google.com/)   

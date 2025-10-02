@@ -2,7 +2,7 @@
 
 要使 AI Agent 真正有效和有目的性，它们不仅需要处理信息或使用工具的能力；它们需要明确的方向感和一种知道自己是否真正成功的方法。这就是目标设定和监控模式发挥作用的地方。它是关于为 Agent 提供具体的工作目标，并为它们配备跟踪进度和确定这些目标是否已实现的手段。
 
-# 目标设定和监控模式概述
+## 目标设定和监控模式概述
 
 想想规划一次旅行。你不会自发地出现在目的地。你决定想去哪里（目标状态），弄清楚从哪里开始（初始状态），考虑可用的选项（交通工具、路线、预算），然后制定一系列步骤：订票、打包行李、前往机场/车站、登机/上车、抵达、找住宿等。这个逐步的过程，通常考虑依赖关系和约束条件，从根本上就是我们在 Agent 系统中所说的规划。
 
@@ -10,7 +10,7 @@
 
 良好的规划能力使 Agent 能够处理不是简单的单步查询的问题。它使它们能够处理多方面的请求，通过重新规划适应不断变化的情况，并编排复杂的工作流。它是支撑许多高级 Agent 行为的基础模式，将简单的反应系统转变为能够主动朝着定义的目标工作的系统。
 
-# 实际应用和用例
+## 实际应用和用例
 
 目标设定和监控模式对于构建能够在复杂的现实场景中自主可靠运行的 Agent 至关重要。以下是一些实际应用：
 
@@ -23,7 +23,7 @@
 
 此模式对于需要可靠运行、实现特定成果并适应动态条件的 Agent 至关重要，为智能自我管理提供了必要的框架。
 
-# 实践代码示例
+## 实践代码示例
 
 为了说明目标设定和监控模式，我们有一个使用 LangChain 和 OpenAI API 的示例。这个 Python 脚本概述了一个旨在生成和完善 Python 代码的自主 AI Agent。其核心功能是为指定的问题生成解决方案，确保符合用户定义的质量基准。
 
@@ -33,15 +33,15 @@
 
 ```bash
 pip install langchain_openai openai python-dotenv
-# .env 文件中需要有 OPENAI_API_KEY
+## .env 文件中需要有 OPENAI_API_KEY
 ```
 
 你可以通过将此脚本想象为分配给项目的自主 AI 程序员来最好地理解它（见图 1）。该过程从你向 AI 提供详细的项目简报开始，这是它需要解决的特定编码问题。
 
 ```python
-# MIT License
-# Copyright (c) 2025 Mahtab Syed
-# https://www.linkedin.com/in/mahtabsyed/
+## MIT License
+## Copyright (c) 2025 Mahtab Syed
+## https://www.linkedin.com/in/mahtabsyed/
 
 """
 实践代码示例 - 迭代 2
@@ -62,14 +62,14 @@ from pathlib import Path
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv, find_dotenv
 
-# 🔐 加载环境变量
+## 🔐 加载环境变量
 _ = load_dotenv(find_dotenv())
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 if not OPENAI_API_KEY:
    raise EnvironmentError("❌ 请设置 OPENAI_API_KEY 环境变量。")
 
-# ✅ 初始化 OpenAI 模型
+## ✅ 初始化 OpenAI 模型
 print("📡 初始化 OpenAI LLM (gpt-4o)...")
 llm = ChatOpenAI(
    model="gpt-4o",  # 如果你无法访问 gpt-4o，请使用其他 OpenAI LLM
@@ -77,7 +77,7 @@ llm = ChatOpenAI(
    openai_api_key=OPENAI_API_KEY,
 )
 
-# --- 实用函数 ---
+## --- 实用函数 ---
 
 def generate_prompt(
    use_case: str, goals: list[str], previous_code: str = "", feedback: str = ""
@@ -170,7 +170,7 @@ def save_code_to_file(code: str, use_case: str) -> str:
    print(f"✅ 代码保存到：{filepath}")
    return str(filepath)
 
-# --- 主 Agent 函数 ---
+## --- 主 Agent 函数 ---
 
 def run_code_agent(use_case: str, goals_input: str, max_iterations: int = 5) -> str:
    goals = [g.strip() for g in goals_input.split(",")]
@@ -210,7 +210,7 @@ def run_code_agent(use_case: str, goals_input: str, max_iterations: int = 5) -> 
    final_code = add_comment_header(code, use_case)
    return save_code_to_file(final_code, use_case)
 
-# --- CLI 测试运行 ---
+## --- CLI 测试运行 ---
 
 if __name__ == "__main__":
    print("\n🧠 欢迎使用 AI 代码生成 Agent")
@@ -270,7 +270,7 @@ if __name__ == "__main__":
 
 我留给感兴趣的读者添加这些更复杂的控制并使代码更接近生产就绪的任务。
 
-# 概览
+## 概览
 
 **是什么**：AI Agent 通常缺乏明确的方向，阻止它们有目的地行动，超越简单的反应性任务。如果没有定义的目标，它们无法独立处理复杂的、多步骤的问题或编排复杂的工作流。此外，它们没有固有的机制来确定其行动是否导致成功的结果。这限制了它们的自主性，并阻止它们在仅执行任务不足的动态、现实世界场景中真正有效。
 
@@ -284,7 +284,7 @@ if __name__ == "__main__":
 
 图 2：目标设计模式
 
-# 关键要点
+## 关键要点
 
 关键要点包括：
 
@@ -295,10 +295,10 @@ if __name__ == "__main__":
 * 来自监控的反馈循环允许 Agent 调整、修订计划或升级问题。
 * 在 Google 的 ADK 中，目标通常通过 Agent 指令传达，监控通过状态管理和工具交互完成。
 
-# 结论
+## 结论
 
 本章重点介绍了目标设定和监控的关键范式。我强调了这个概念如何将 AI Agent 从仅仅是反应系统转变为主动的、以目标为驱动的实体。文本强调了定义清晰、可衡量的目标以及建立严格的监控程序来跟踪进度的重要性。实际应用展示了这个范式如何支持在各个领域（包括客户服务和机器人）的可靠自主运行。一个概念性的编码示例说明了这些原则在结构化框架内的实现，使用 Agent 指令和状态管理来指导和评估 Agent 对其指定目标的实现。最终，为 Agent 配备制定和监督目标的能力是构建真正智能和负责任的 AI 系统的基本步骤。
 
-# 参考文献
+## 参考文献
 
 1. SMART Goals Framework. [https://en.wikipedia.org/wiki/SMART_criteria](https://en.wikipedia.org/wiki/SMART_criteria)

@@ -7,7 +7,7 @@ In agent systems, memory refers to an agent's ability to retain and utilize info
 * **Short-Term Memory (Contextual Memory):** Similar to working memory, this holds information currently being processed or recently accessed. For agents using large language models (LLMs), short-term memory primarily exists within the context window. This window contains recent messages, agent replies, tool usage results, and agent reflections from the current interaction, all of which inform the LLM's subsequent responses and actions. The context window has a limited capacity, restricting the amount of recent information an agent can directly access. Efficient short-term memory management involves keeping the most relevant information within this limited space, possibly through techniques like summarizing older conversation segments or emphasizing key details. The advent of models with 'long context' windows simply expands the size of this short-term memory, allowing more information to be held within a single interaction. However, this context is still ephemeral and is lost once the session concludes, and it can be costly and inefficient to process every time. Consequently, agents require separate memory types to achieve true persistence, recall information from past interactions, and build a lasting knowledge base.  
 * **Long-Term Memory (Persistent Memory):** This acts as a repository for information agents need to retain across various interactions, tasks, or extended periods, akin to long-term knowledge bases. Data is typically stored outside the agent's immediate processing environment, often in databases, knowledge graphs, or vector databases. In vector databases, information is converted into numerical vectors and stored, enabling agents to retrieve data based on semantic similarity rather than exact keyword matches, a process known as semantic search. When an agent needs information from long-term memory, it queries the external storage, retrieves relevant data, and integrates it into the short-term context for immediate use, thus combining prior knowledge with the current interaction.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Memory management is vital for agents to track information and perform intelligently over time. This is essential for agents to surpass basic question-answering capabilities. Applications include:
 
@@ -20,7 +20,7 @@ Memory management is vital for agents to track information and perform intellige
 
 Memory enables agents to maintain history, learn, personalize interactions, and manage complex, time-dependent problems.
 
-# Hands-On Code: Memory Management in Google Agent Developer Kit (ADK)
+## Hands-On Code: Memory Management in Google Agent Developer Kit (ADK)
 
 The Google Agent Developer Kit (ADK) offers a structured method for managing context and memory, including components for practical application. A solid grasp of ADK's Session, State, and Memory is vital for building agents that need to retain information.
 
@@ -41,9 +41,9 @@ Both the SessionService and MemoryService offer various configuration options, a
 A Session object in ADK is designed to track and manage individual chat threads. Upon initiation of a conversation with an agent, the SessionService generates a Session object, represented as \`google.adk.sessions.Session\`. This object encapsulates all data relevant to a specific conversation thread, including unique identifiers (id, app\_name, user\_id), a chronological record of events as Event objects, a storage area for session-specific temporary data known as state, and a timestamp indicating the last update (last\_update\_time). Developers typically interact with Session objects indirectly through the SessionService. The SessionService is responsible for managing the lifecycle of conversation sessions, which includes initiating new sessions, resuming previous sessions, recording session activity (including state updates), identifying active sessions, and managing the removal of session data. The ADK provides several SessionService implementations with varying storage mechanisms for session history and temporary data, such as the InMemorySessionService, which is suitable for testing but does not provide data persistence across application restarts.
 
 ```python
-# Example: Using InMemorySessionService
-# This is suitable for local development and testing where data
-# persistence across application restarts is not required.
+## Example: Using InMemorySessionService
+## This is suitable for local development and testing where data
+## persistence across application restarts is not required.
 from google.adk.sessions import InMemorySessionService
 
 session_service = InMemorySessionService()
@@ -52,13 +52,13 @@ session_service = InMemorySessionService()
 Then there's DatabaseSessionService if you want reliable saving to a database you manage. 
 
 ```python
-# Example: Using DatabaseSessionService
-# This is suitable for production or development requiring persistent storage.
-# You need to configure a database URL (e.g., for SQLite, PostgreSQL, etc.).
-# Requires: pip install google-adk[sqlalchemy] and a database driver (e.g., psycopg2 for PostgreSQL)
+## Example: Using DatabaseSessionService
+## This is suitable for production or development requiring persistent storage.
+## You need to configure a database URL (e.g., for SQLite, PostgreSQL, etc.).
+## Requires: pip install google-adk[sqlalchemy] and a database driver (e.g., psycopg2 for PostgreSQL)
 from google.adk.sessions import DatabaseSessionService
 
-# Example using a local SQLite file:
+## Example using a local SQLite file:
 db_url = "sqlite:///./my_agent_data.db"
 session_service = DatabaseSessionService(db_url=db_url)
 ```
@@ -66,25 +66,25 @@ session_service = DatabaseSessionService(db_url=db_url)
 Besides, there's VertexAiSessionService which uses Vertex AI infrastructure for scalable production on Google Cloud.
 
 ```python
-# Example: Using VertexAiSessionService
-# This is suitable for scalable production on Google Cloud Platform, leveraging
-# Vertex AI infrastructure for session management.
-# Requires: pip install google-adk[vertexai] and GCP setup/authentication
+## Example: Using VertexAiSessionService
+## This is suitable for scalable production on Google Cloud Platform, leveraging
+## Vertex AI infrastructure for session management.
+## Requires: pip install google-adk[vertexai] and GCP setup/authentication
 from google.adk.sessions import VertexAiSessionService
 
 PROJECT_ID = "your-gcp-project-id" # Replace with your GCP project ID
 LOCATION = "us-central1" # Replace with your desired GCP location
 
-# The app_name used with this service should correspond to the Reasoning Engine ID or name
+## The app_name used with this service should correspond to the Reasoning Engine ID or name
 REASONING_ENGINE_APP_NAME = "projects/your-gcp-project-id/locations/us-central1/reasoningEngines/your-engine-id" # Replace with your Reasoning Engine resource name
 
 session_service = VertexAiSessionService(project=PROJECT_ID, location=LOCATION)
 
-# When using this service, pass REASONING_ENGINE_APP_NAME to service methods:
-# session_service.create_session(app_name=REASONING_ENGINE_APP_NAME, ...)
-# session_service.get_session(app_name=REASONING_ENGINE_APP_NAME, ...)
-# session_service.append_event(session, event, app_name=REASONING_ENGINE_APP_NAME)
-# session_service.delete_session(app_name=REASONING_ENGINE_APP_NAME, ...)
+## When using this service, pass REASONING_ENGINE_APP_NAME to service methods:
+## session_service.create_session(app_name=REASONING_ENGINE_APP_NAME, ...)
+## session_service.get_session(app_name=REASONING_ENGINE_APP_NAME, ...)
+## session_service.append_event(session, event, app_name=REASONING_ENGINE_APP_NAME)
+## session_service.delete_session(app_name=REASONING_ENGINE_APP_NAME, ...)
 ```
 
 Choosing an appropriate SessionService is crucial as it determines how the agent's interaction history and temporary data are stored and their persistence.
@@ -110,13 +110,13 @@ The agent accesses all state data through a single session.state dictionary. The
 1. **The Simple Way: Using output\_key (for Agent Text Replies):** This is the easiest method if you just want to save your agent's final text response directly into the state. When you set up your LlmAgent, just tell it the output\_key you want to use. The Runner sees this and automatically creates the necessary actions to save the response to the state when it appends the event. Let's look at a code example demonstrating state update via output\_key.
 
 ```python
-# Import necessary classes from the Google Agent Developer Kit (ADK)
+## Import necessary classes from the Google Agent Developer Kit (ADK)
 from google.adk.agents import LlmAgent
 from google.adk.sessions import InMemorySessionService, Session
 from google.adk.runners import Runner
 from google.genai.types import Content, Part
 
-# Define an LlmAgent with an output_key.
+## Define an LlmAgent with an output_key.
 greeting_agent = LlmAgent(
    name="Greeter",
    model="gemini-2.0-flash",
@@ -124,7 +124,7 @@ greeting_agent = LlmAgent(
    output_key="last_greeting"
 )
 
-# --- Setup Runner and Session ---
+## --- Setup Runner and Session ---
 app_name, user_id, session_id = "state_app", "user1", "session1"
 session_service = InMemorySessionService()
 runner = Runner(
@@ -139,7 +139,7 @@ session = session_service.create_session(
 )
 print(f"Initial state: {session.state}")
 
-# --- Run the Agent ---
+## --- Run the Agent ---
 user_message = Content(parts=[Part(text="Hello")])
 print("\n--- Running the agent ---")
 for event in runner.run(
@@ -150,8 +150,8 @@ for event in runner.run(
    if event.is_final_response():
      print("Agent responded.")
 
-# --- Check Updated State ---
-# Correctly check the state *after* the runner has finished processing all events.
+## --- Check Updated State ---
+## Correctly check the state *after* the runner has finished processing all events.
 updated_session = session_service.get_session(app_name, user_id, session_id)
 print(f"\nState after agent run: {updated_session.state}")
 ```
@@ -165,7 +165,7 @@ import time
 from google.adk.tools.tool_context import ToolContext
 from google.adk.sessions import InMemorySessionService
 
-# --- Define the Recommended Tool-Based Approach ---
+## --- Define the Recommended Tool-Based Approach ---
 def log_user_login(tool_context: ToolContext) -> dict:
    """
    Updates the session state upon a user login event.
@@ -193,11 +193,11 @@ def log_user_login(tool_context: ToolContext) -> dict:
        "message": f"User login tracked. Total logins: {login_count}."
    }
 
-# --- Demonstration of Usage ---
-# In a real application, an LLM Agent would decide to call this tool.
-# Here, we simulate a direct call for demonstration purposes.
+## --- Demonstration of Usage ---
+## In a real application, an LLM Agent would decide to call this tool.
+## Here, we simulate a direct call for demonstration purposes.
 
-# 1. Setup
+## 1. Setup
 session_service = InMemorySessionService()
 app_name, user_id, session_id = "state_app_tool", "user3", "session3"
 session = session_service.create_session(
@@ -208,8 +208,8 @@ session = session_service.create_session(
 )
 print(f"Initial state: {session.state}")
 
-# 2. Simulate a tool call (in a real app, the ADK Runner does this)
-# We create a ToolContext manually just for this standalone example.
+## 2. Simulate a tool call (in a real app, the ADK Runner does this)
+## We create a ToolContext manually just for this standalone example.
 from google.adk.tools.tool_context import InvocationContext
 mock_context = ToolContext(
    invocation_context=InvocationContext(
@@ -218,17 +218,17 @@ mock_context = ToolContext(
    )
 )
 
-# 3. Execute the tool
+## 3. Execute the tool
 log_user_login(mock_context)
 
-# 4. Check the updated state
+## 4. Check the updated state
 updated_session = session_service.get_session(app_name, user_id, session_id)
 print(f"State after tool execution: {updated_session.state}")
 
-# Expected output will show the same state change as the
-# "Before" case,
-# but the code organization is significantly cleaner
-# and more robust.
+## Expected output will show the same state change as the
+## "Before" case,
+## but the code organization is significantly cleaner
+## and more robust.
 ```
 
 This code demonstrates a tool-based approach for managing user session state in an application. It defines a function *log\_user\_login*, which acts as a tool. This tool is responsible for updating the session state when a user logs in.  
@@ -245,10 +245,10 @@ To recap, when designing your state, keep it simple, use basic data types, give 
 In agent systems, the Session component maintains a record of the current chat history (events) and temporary data (state) specific to a single conversation. However, for agents to retain information across multiple interactions or access external data, long-term knowledge management is necessary. This is facilitated by the MemoryService.
 
 ```python
-# Example: Using InMemoryMemoryService
-# This is suitable for local development and testing where data
-# persistence across application restarts is not required.
-# Memory content is lost when the app stops.
+## Example: Using InMemoryMemoryService
+## This is suitable for local development and testing where data
+## persistence across application restarts is not required.
+## Memory content is lost when the app stops.
 from google.adk.memory import InMemoryMemoryService
 
 memory_service = InMemoryMemoryService()
@@ -259,18 +259,18 @@ Session and State can be conceptualized as short-term memory for a single chat s
 The ADK offers several implementations for creating this long-term knowledge store. The InMemoryMemoryService provides a temporary storage solution suitable for testing purposes, but data is not preserved across application restarts. For production environments, the VertexAiRagMemoryService is typically utilized. This service leverages Google Cloud's Retrieval Augmented Generation (RAG) service, enabling scalable, persistent, and semantic search capabilities (Also, refer to the chapter 14 on RAG).
 
 ```python
-# Example: Using VertexAiRagMemoryService
-# This is suitable for scalable production on GCP, leveraging
-# Vertex AI RAG (Retrieval Augmented Generation) for persistent,
-# searchable memory.
-# Requires: pip install google-adk[vertexai], GCP
-# setup/authentication, and a Vertex AI RAG Corpus.
+## Example: Using VertexAiRagMemoryService
+## This is suitable for scalable production on GCP, leveraging
+## Vertex AI RAG (Retrieval Augmented Generation) for persistent,
+## searchable memory.
+## Requires: pip install google-adk[vertexai], GCP
+## setup/authentication, and a Vertex AI RAG Corpus.
 from google.adk.memory import VertexAiRagMemoryService
 
-# The resource name of your Vertex AI RAG Corpus
+## The resource name of your Vertex AI RAG Corpus
 RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id" # Replace with your Corpus resource name
 
-# Optional configuration for retrieval behavior
+## Optional configuration for retrieval behavior
 SIMILARITY_TOP_K = 5 # Number of top results to retrieve
 VECTOR_DISTANCE_THRESHOLD = 0.7 # Threshold for vector similarity
 
@@ -280,12 +280,12 @@ memory_service = VertexAiRagMemoryService(
    vector_distance_threshold=VECTOR_DISTANCE_THRESHOLD
 )
 
-# When using this service, methods like add_session_to_memory
-# and search_memory will interact with the specified Vertex AI
-# RAG Corpus.
+## When using this service, methods like add_session_to_memory
+## and search_memory will interact with the specified Vertex AI
+## RAG Corpus.
 ```
 
-# Hands-on code: Memory Management in LangChain and LangGraph
+## Hands-on code: Memory Management in LangChain and LangGraph
 
 In LangChain and LangGraph, Memory is a critical component for creating intelligent and natural-feeling conversational applications. It allows an AI agent to remember information from past interactions, learn from feedback, and adapt to user preferences. LangChain's memory feature provides the foundation for this by referencing a stored history to enrich current prompts and then recording the latest exchange for future use. As agents handle more complex tasks, this capability becomes essential for both efficiency and user satisfaction.
 
@@ -300,14 +300,14 @@ LangChain provides several tools for managing conversation history, ranging from
 ```python
 from langchain.memory import ChatMessageHistory
 
-# Initialize the history object
+## Initialize the history object
 history = ChatMessageHistory()
 
-# Add user and AI messages
+## Add user and AI messages
 history.add_user_message("I'm heading to New York next week.")
 history.add_ai_message("Great! It's a fantastic city.")
 
-# Access the list of messages
+## Access the list of messages
 print(history.messages)
 ```
 
@@ -321,13 +321,13 @@ print(history.messages)
 ```python
 from langchain.memory import ConversationBufferMemory
 
-# Initialize memory
+## Initialize memory
 memory = ConversationBufferMemory()
 
-# Save a conversation turn
+## Save a conversation turn
 memory.save_context({"input": "What's the weather like?"}, {"output": "It's sunny today."})
 
-# Load the memory as a string
+## Load the memory as a string
 print(memory.load_memory_variables({}))
 ```
 
@@ -339,7 +339,7 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 
-# 1. Define LLM and Prompt
+## 1. Define LLM and Prompt
 llm = OpenAI(temperature=0)
 template = """You are a helpful travel agent.
 Previous conversation: {history}
@@ -347,14 +347,14 @@ New question: {question}
 Response:"""
 prompt = PromptTemplate.from_template(template)
 
-# 2. Configure Memory
-# The memory_key "history" matches the variable in the prompt
+## 2. Configure Memory
+## The memory_key "history" matches the variable in the prompt
 memory = ConversationBufferMemory(memory_key="history")
 
-# 3. Build the Chain
+## 3. Build the Chain
 conversation = LLMChain(llm=llm, prompt=prompt, memory=memory)
 
-# 4. Run the Conversation
+## 4. Run the Conversation
 response = conversation.predict(question="I want to book a flight.")
 print(response)
 response = conversation.predict(question="My name is Sam, by the way.")
@@ -376,7 +376,7 @@ from langchain_core.prompts import (
    HumanMessagePromptTemplate,
 )
 
-# 1. Define Chat Model and Prompt
+## 1. Define Chat Model and Prompt
 llm = ChatOpenAI()
 prompt = ChatPromptTemplate(
    messages=[
@@ -386,14 +386,14 @@ prompt = ChatPromptTemplate(
    ]
 )
 
-# 2. Configure Memory
-# return_messages=True is essential for chat models
+## 2. Configure Memory
+## return_messages=True is essential for chat models
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-# 3. Build the Chain
+## 3. Build the Chain
 conversation = LLMChain(llm=llm, prompt=prompt, memory=memory)
 
-# 4. Run the Conversation
+## 4. Run the Conversation
 response = conversation.predict(question="Hi, I'm Jane.")
 print(response)
 response = conversation.predict(question="Do you remember my name?")
@@ -409,7 +409,7 @@ print(response)
 Below is pseudo-code demonstrating how an agent might use reflection to update its procedural memory stored in a LangGraph BaseStore
 
 ```python
-# Node that updates the agent's instructions
+## Node that updates the agent's instructions
 def update_instructions(state: State, store: BaseStore):
    namespace = ("instructions",)
    # Get the current instructions from the store
@@ -429,7 +429,7 @@ def update_instructions(state: State, store: BaseStore):
    # Save the updated instructions back to the store
    store.put(("agent_instructions",), "agent_a", {"instructions": new_instructions})
 
-# Node that uses the instructions to generate a response
+## Node that uses the instructions to generate a response
 def call_model(state: State, store: BaseStore):
    namespace = ("agent_instructions", )
    # Retrieve the latest instructions from the store
@@ -445,20 +445,20 @@ LangGraph stores long-term memories as JSON documents in a store. Each memory is
 ```python
 from langgraph.store.memory import InMemoryStore
 
-# A placeholder for a real embedding function
+## A placeholder for a real embedding function
 def embed(texts: list[str]) -> list[list[float]]:
    # In a real application, use a proper embedding model
    return [[1.0, 2.0] for _ in texts]
 
-# Initialize an in-memory store. For production, use a database-backed store.
+## Initialize an in-memory store. For production, use a database-backed store.
 store = InMemoryStore(index={"embed": embed, "dims": 2})
 
-# Define a namespace for a specific user and application context
+## Define a namespace for a specific user and application context
 user_id = "my-user"
 application_context = "chitchat"
 namespace = (user_id, application_context)
 
-# 1. Put a memory into the store
+## 1. Put a memory into the store
 store.put(
    namespace,
    "a-memory",  # The key for this memory
@@ -471,12 +471,12 @@ store.put(
    },
 )
 
-# 2. Get the memory by its namespace and key
+## 2. Get the memory by its namespace and key
 item = store.get(namespace, "a-memory")
 print("Retrieved Item:", item)
 
-# 3. Search for memories within the namespace, filtering by content
-# and sorting by vector similarity to the query.
+## 3. Search for memories within the namespace, filtering by content
+## and sorting by vector similarity to the query.
 items = store.search(
    namespace,
    filter={"my-key": "my-value"},
@@ -485,7 +485,7 @@ items = store.search(
 print("Search Results:", items)
 ```
 
-# Vertex Memory Bank
+## Vertex Memory Bank
 
 Memory Bank, a managed service in the Vertex AI Agent Engine, provides agents with persistent, long-term memory. The service uses Gemini models to asynchronously analyze conversation histories to extract key facts and user preferences.
 
@@ -514,7 +514,7 @@ await memory_service.add_session_to_memory(session)
 
 Memory Bank offers seamless integration with the Google ADK, providing an immediate out-of-the-box experience. For users of other agent frameworks, such as LangGraph and CrewAI, Memory Bank also offers support through direct API calls. Online code examples demonstrating these integrations are readily available for interested readers.
 
-# At a Glance
+## At a Glance
 
 **What**: Agentic systems need to remember information from past interactions to perform complex tasks and provide coherent experiences. Without a memory mechanism, agents are stateless, unable to maintain conversational context, learn from experience, or personalize responses for users. This fundamentally limits them to simple, one-shot interactions, failing to handle multi-step processes or evolving user needs. The core problem is how to effectively manage both the immediate, temporary information of a single conversation and the vast, persistent knowledge gathered over time.
 
@@ -528,7 +528,7 @@ Memory Bank offers seamless integration with the Google ADK, providing an immedi
 
 Fig.1: Memory management design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 To quickly recap the main points about memory management:
 
@@ -545,11 +545,11 @@ To quickly recap the main points about memory management:
 * LangGraph enables advanced, long-term memory by using a store to save and retrieve semantic facts, episodic experiences, or even updatable procedural rules across different user sessions.  
 * Memory Bank is a managed service that provides agents with persistent, long-term memory by automatically extracting, storing, and recalling user-specific information to enable personalized, continuous conversations across frameworks like Google's ADK, LangGraph, and CrewAI.
 
-# Conclusion
+## Conclusion
 
 This chapter dove into the really important job of memory management for agent systems, showing the difference between the short-lived context and the knowledge that sticks around for a long time. We talked about how these types of memory are set up and where you see them used in building smarter agents that can remember things. We took a detailed look at how Google ADK gives you specific pieces like Session, State, and MemoryService to handle this. Now that we've covered how agents can remember things, both short-term and long-term, we can move on to how they can learn and adapt. The next pattern ​​"Learning and Adaptation" is about an agent changing how it thinks, acts, or what it knows, all based on new experiences or data. 
 
-# References
+## References
 
 1. ADK Memory, [https://google.github.io/adk-docs/sessions/memory/](https://google.github.io/adk-docs/sessions/memory/)   
 2. LangGraph Memory, [https://langchain-ai.github.io/langgraph/concepts/memory/](https://langchain-ai.github.io/langgraph/concepts/memory/)   

@@ -2,7 +2,7 @@
 
 学习和适应对于增强人工智能 Agent 的能力至关重要。这些过程使 Agent 能够超越预定义参数进行演化，使它们能够通过经验和环境交互自主改进。通过学习和适应，Agent 可以有效管理新情况并优化其性能，而无需持续的人工干预。本章详细探讨支撑 Agent 学习和适应的原理和机制。
 
-# 全局视角
+## 全局视角
 
 Agent 通过基于新经验和数据改变其思维、行动或知识来学习和适应。这使 Agent 能够从简单地遵循指令演化为随时间变得更智能。
 
@@ -40,7 +40,7 @@ PPO 背后的核心思想是对 Agent 的策略进行小而谨慎的更新。它
 
 本质上，DPO 通过直接在人类偏好数据上优化语言模型来简化对齐。这避免了训练和使用单独奖励模型的复杂性和潜在不稳定性，使对齐过程更高效和健壮。
 
-# 实际应用与用例
+## 实际应用与用例
 
 自适应 Agent 通过由经验数据驱动的迭代更新在可变环境中表现出增强的性能。
 
@@ -53,7 +53,7 @@ PPO 背后的核心思想是对 Agent 的策略进行小而谨慎的更新。它
 * **游戏 AI Agent** 通过动态调整战略算法来增强玩家参与度，从而增加游戏复杂性和挑战。
 * **知识库学习 Agent**：Agent 可以利用检索增强生成（RAG）来维护问题描述和经过验证的解决方案的动态知识库（参见第 14 章）。通过存储成功的策略和遇到的挑战，Agent 可以在决策期间引用此数据，使其能够通过应用先前成功的模式或避免已知陷阱来更有效地适应新情况。
 
-# 案例研究：自我改进编码 Agent（SICA）
+## 案例研究：自我改进编码 Agent（SICA）
 
 自我改进编码 Agent（SICA），由 Maxime Robeyns、Laurence Aitchison 和 Martin Szummer 开发，代表了基于 Agent 的学习的进步，展示了 Agent 修改其自身源代码的能力。这与传统方法形成对比，在传统方法中，一个 Agent 可能训练另一个 Agent；SICA 既是修改者又是被修改实体，迭代地改进其代码库以提高在各种编码挑战中的性能。
 
@@ -89,7 +89,7 @@ SICA 的 LLM 以结构化方式在其上下文窗口（其短期内存）中组�
 
 初始 SICA 实现中的一个显著挑战是提示基于 LLM 的 Agent 在每次元改进迭代期间独立提出新颖、创新、可行和引人入胜的修改。这一限制，特别是在培养 LLM Agent 的开放式学习和真正创造力方面，仍然是当前研究的关键领域。
 
-# AlphaEvolve 和 OpenEvolve
+## AlphaEvolve 和 OpenEvolve
 
 **AlphaEvolve** 是 Google 开发的一个 AI Agent，旨在发现和优化算法。它利用 LLM 的组合，特别是 Gemini 模型（Flash 和 Pro）、自动化评估系统和进化算法框架。该系统旨在推进理论数学和实际计算应用。
 
@@ -110,14 +110,14 @@ AlphaEvolve 采用 Gemini 模型的集合。Flash 用于生成广泛的初始算
 ```python
 from openevolve import OpenEvolve
 
-# 初始化系统
+## 初始化系统
 evolve = OpenEvolve(
     initial_program_path="path/to/initial_program.py",
     evaluation_file="path/to/evaluator.py",
     config_path="path/to/config.yaml"
 )
 
-# 运行进化
+## 运行进化
 best_program = await evolve.run(iterations=1000)
 
 print(f"最佳程序指标：")
@@ -125,7 +125,7 @@ for name, value in best_program.metrics.items():
     print(f"  {name}: {value:.4f}")
 ```
 
-# 概览
+## 概览
 
 **什么：** AI Agent 通常在动态和不可预测的环境中运行，其中预编程逻辑是不够的。当面对初始设计期间未预料到的新情况时，它们的性能可能会下降。没有从经验中学习的能力，Agent 无法随时间优化其策略或个性化其交互。这种刚性限制了它们的有效性，并阻止它们在复杂的现实世界场景中实现真正的自主性。
 
@@ -139,7 +139,7 @@ for name, value in best_program.metrics.items():
 
 图 4：学习和适应模式
 
-# 关键要点
+## 关键要点
 
 * 学习和适应是关于 Agent 通过使用其经验来改进其所做的事情并处理新情况。
 * "适应"是来自学习的 Agent 行为或知识的可见变化。
@@ -151,7 +151,7 @@ for name, value in best_program.metrics.items():
 * 配备基本编码工具的 Agent 系统可以自主编辑自己，从而提高其在基准任务上的性能。
 * AlphaEvolve 是 Google 的 AI Agent，利用 LLM 和进化框架自主发现和优化算法，显著增强基础研究和实际计算应用。
 
-# 结论
+## 结论
 
 本章研究了学习和适应在人工智能中的关键作用。AI Agent 通过持续的数据获取和经验来增强其性能。自我改进编码 Agent（SICA）通过代码修改自主改进其能力来例证这一点。
 
@@ -159,7 +159,7 @@ for name, value in best_program.metrics.items():
 
 这些元素促成了重大进展，如 Google 的 AlphaEvolve。这个 AI 系统通过 LLM、自动化评估和进化方法独立发现和改进算法，推动科学研究和计算技术的进步。这些模式可以组合起来构建复杂的 AI 系统。像 AlphaEvolve 这样的发展表明，AI Agent 的自主算法发现和优化是可以实现的。
 
-# 参考文献
+## 参考文献
 
 1. Sutton, R. S., & Barto, A. G. (2018). *Reinforcement Learning: An Introduction*. MIT Press.
 2. Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press.

@@ -2,7 +2,7 @@
 
 Intelligent behavior often involves more than just reacting to the immediate input. It requires foresight, breaking down complex tasks into smaller, manageable steps, and strategizing how to achieve a desired outcome. This is where the Planning pattern comes into play. At its core, planning is the ability for an agent or a system of agents to formulate a sequence of actions to move from an initial state towards a goal state.
 
-# Planning Pattern Overview
+## Planning Pattern Overview
 
 In the context of AI, it's helpful to think of a planning agent as a specialist to whom you delegate a complex goal. When you ask it to "organize a team offsite," you are defining the what—the objective and its constraints—but not the how. The agent's core task is to autonomously chart a course to that goal. It must first understand the initial state (e.g., budget, number of participants, desired dates) and the goal state (a successfully booked offsite), and then discover the optimal sequence of actions to connect them. The plan is not known in advance; it is created in response to the request.
 
@@ -10,7 +10,7 @@ A hallmark of this process is adaptability. An initial plan is merely a starting
 
 However, it is crucial to recognize the trade-off between flexibility and predictability. Dynamic planning is a specific tool, not a universal solution. When a problem's solution is already well-understood and repeatable, constraining the agent to a predetermined, fixed workflow is more effective. This approach limits the agent's autonomy to reduce uncertainty and the risk of unpredictable behavior, guaranteeing a reliable and consistent outcome. Therefore, the decision to use a planning agent versus a simple task-execution agent hinges on a single question: does the "how" need to be discovered, or is it already known?
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 The Planning pattern is a core computational process in autonomous systems, enabling an agent to synthesize a sequence of actions to achieve a specified goal, particularly within dynamic or complex environments. This process transforms a high-level objective into a structured plan composed of discrete, executable steps.
 
@@ -22,7 +22,7 @@ This pattern is also critical for structured information synthesis. When tasked 
 
 In essence, the Planning pattern allows an agent to move beyond simple, reactive actions to goal-oriented behavior. It provides the logical framework necessary to solve problems that require a coherent sequence of interdependent operations.
 
-# Hands-on code (Crew AI)
+## Hands-on code (Crew AI)
 
 The following section will demonstrate an implementation of the Planner pattern using the Crew AI framework. This pattern involves an agent that first formulates a multi-step plan to address a complex query and then executes that plan sequentially.
 
@@ -32,13 +32,13 @@ from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# Load environment variables from .env file for security
+## Load environment variables from .env file for security
 load_dotenv()
 
-# 1. Explicitly define the language model for clarity
+## 1. Explicitly define the language model for clarity
 llm = ChatOpenAI(model="gpt-4-turbo")
 
-# 2. Define a clear and focused agent
+## 2. Define a clear and focused agent
 planner_writer_agent = Agent(
    role='Article Planner and Writer',
    goal='Plan and then write a concise, engaging summary on a specified topic.',
@@ -52,7 +52,7 @@ planner_writer_agent = Agent(
    llm=llm # Assign the specific LLM to the agent
 )
 
-# 3. Define a task with a more structured and specific expected output
+## 3. Define a task with a more structured and specific expected output
 topic = "The importance of Reinforcement Learning in AI"
 high_level_task = Task(
    description=(
@@ -69,14 +69,14 @@ high_level_task = Task(
    agent=planner_writer_agent,
 )
 
-# Create the crew with a clear process
+## Create the crew with a clear process
 crew = Crew(
    agents=[planner_writer_agent],
    tasks=[high_level_task],
    process=Process.sequential,
 )
 
-# Execute the task
+## Execute the task
 print("## Running the planning and writing task ##")
 result = crew.kickoff()
 print("\n\n---\n## Task Result ##\n---")
@@ -85,7 +85,7 @@ print(result)
 
 This code uses the CrewAI library to create an AI agent that plans and writes a summary on a given topic. It starts by importing necessary libraries, including Crew.ai and langchain\_openai, and loading environment variables from a .env file. A ChatOpenAI language model is explicitly defined for use with the agent. An Agent named planner\_writer\_agent is created with a specific role and goal: to plan and then write a concise summary. The agent's backstory emphasizes its expertise in planning and technical writing. A Task is defined with a clear description to first create a plan and then write a summary on the topic "The importance of Reinforcement Learning in AI", with a specific format for the expected output. A Crew is assembled with the agent and task, set to process them sequentially. Finally, the crew.kickoff() method is called to execute the defined task and the result is printed.
 
-# Google DeepResearch
+## Google DeepResearch
 
 Google Gemini DeepResearch (see Fig.1)  is an agent-based system designed for autonomous information retrieval and synthesis. It functions through a multi-step agentic pipeline that dynamically and iteratively queries Google Search to systematically explore complex topics. The system is engineered to process a large corpus of web-based sources, evaluate the collected data for relevance and knowledge gaps, and perform subsequent searches to address them. The final output consolidates the vetted information into a structured, multi-page summary with citations to the original sources.
 
@@ -110,7 +110,7 @@ Similarly, in academic exploration, the system serves as a powerful tool for con
 
 The efficiency of this approach stems from the automation of the iterative search-and-filter cycle, which is a core bottleneck in manual research. Comprehensiveness is achieved by the system's capacity to process a larger volume and variety of information sources than is typically feasible for a human researcher within a comparable timeframe. This broader scope of analysis helps to reduce the potential for selection bias and increases the likelihood of uncovering less obvious but potentially critical information, leading to a more robust and well-supported understanding of the subject matter.
 
-# OpenAI Deep Research API
+## OpenAI Deep Research API
 
 The OpenAI Deep Research API is a specialized tool designed to automate complex research tasks. It utilizes an advanced, agentic model that can independently reason, plan, and synthesize information from real-world sources. Unlike a simple Q\&A model, it takes a high-level query and autonomously breaks it down into sub-questions, performs web searches using its built-in tools, and delivers a structured, citation-rich final report. The API provides direct programmatic access to this entire process, using  at the time of writing models like o3-deep-research-2025-06-26 for high-quality synthesis and the faster o4-mini-deep-research-2025-06-26 for latency-sensitive application
 
@@ -125,14 +125,14 @@ To use the API, you send a request to the client.responses.create endpoint, spec
 ```python
 from openai import OpenAI
 
-# Initialize the client with your API key
+## Initialize the client with your API key
 client = OpenAI(api_key="YOUR_OPENAI_API_KEY")
 
-# Define the agent's role and the user's research question
+## Define the agent's role and the user's research question
 system_message = """You are a professional researcher preparing a structured, data-driven report. Focus on data-rich insights, use reliable sources, and include inline citations."""
 user_query = "Research the economic impact of semaglutide on global healthcare systems."
 
-# Create the Deep Research API call
+## Create the Deep Research API call
 response = client.responses.create(
  model="o3-deep-research-2025-06-26",
  input=[
@@ -149,11 +149,11 @@ response = client.responses.create(
  tools=[{"type": "web_search_preview"}]
 )
 
-# Access and print the final report from the response
+## Access and print the final report from the response
 final_report = response.output[-1].content[0].text
 print(final_report)
 
-# --- ACCESS INLINE CITATIONS AND METADATA ---
+## --- ACCESS INLINE CITATIONS AND METADATA ---
 print("--- CITATIONS ---")
 annotations = response.output[-1].content[0].annotations
 if not annotations:
@@ -170,10 +170,10 @@ else:
 
 print("\n" + "="*50 + "\n")
 
-# --- INSPECT INTERMEDIATE STEPS ---
+## --- INSPECT INTERMEDIATE STEPS ---
 print("--- INTERMEDIATE STEPS ---")
 
-# 1. Reasoning Steps: Internal plans and summaries generated by the model.
+## 1. Reasoning Steps: Internal plans and summaries generated by the model.
 try:
    reasoning_step = next(item for item in response.output if item.type == "reasoning")
    print("\n[Found a Reasoning Step]")
@@ -182,7 +182,7 @@ try:
 except StopIteration:
    print("\nNo reasoning steps found.")
 
-# 2. Web Search Calls: The exact search queries the agent executed.
+## 2. Web Search Calls: The exact search queries the agent executed.
 try:
    search_step = next(item for item in response.output if item.type == "web_search_call")
    print("\n[Found a Web Search Call]")
@@ -191,7 +191,7 @@ try:
 except StopIteration:
    print("\nNo web search steps found.")
 
-# 3. Code Execution: Any code run by the agent using the code interpreter.
+## 3. Code Execution: Any code run by the agent using the code interpreter.
 try:
    code_step = next(item for item in response.output if item.type == "code_interpreter_call")
    print("\n[Found a Code Execution Step]")
@@ -207,7 +207,7 @@ This code snippet utilizes the OpenAI API to perform a "Deep Research" task. It 
 
 Subsequently, it attempts to access and display inline citations and metadata from the report's annotations, including the cited text, title, URL, and location within the report. Finally, it inspects and prints details about the intermediate steps the model took, such as reasoning steps, web search calls (including the query executed), and any code execution steps if a code interpreter was used.
 
-# At a Glance
+## At a Glance
 
 **What:** Complex problems often cannot be solved with a single action and require foresight to achieve a desired outcome. Without a structured approach, an agentic system struggles to handle multifaceted requests that involve multiple steps and dependencies. This makes it difficult to break down high-level objectives into a manageable series of smaller, executable tasks. Consequently, the system fails to strategize effectively, leading to incomplete or incorrect results when faced with intricate goals.
 
@@ -219,7 +219,7 @@ Subsequently, it attempts to access and display inline citations and metadata fr
 **![][image4]**  
 Fig.4; Planning design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Planning enables agents to break down complex goals into actionable, sequential steps.  
 * It is essential for handling multi-step tasks, workflow automation, and navigating complex environments.  
@@ -227,11 +227,11 @@ Fig.4; Planning design pattern
 * Explicitly prompting or designing tasks to require planning steps encourages this behavior in agent frameworks.  
 * Google Deep Research is an agent analyzing on our behalf sources obtained using Google Search as a tool. It reflects, plans, and executes
 
-# Conclusion
+## Conclusion
 
 In conclusion, the Planning pattern is a foundational component that elevates agentic systems from simple reactive responders to strategic, goal-oriented executors. Modern large language models provide the core capability for this, autonomously decomposing high-level objectives into coherent, actionable steps. This pattern scales from straightforward, sequential task execution, as demonstrated by the CrewAI agent creating and following a writing plan, to more complex and dynamic systems. The Google DeepResearch agent exemplifies this advanced application, creating iterative research plans that adapt and evolve based on continuous information gathering. Ultimately, planning provides the essential bridge between human intent and automated execution for complex problems. By structuring a problem-solving approach, this pattern enables agents to manage intricate workflows and deliver comprehensive, synthesized results.
 
-# References
+## References
 
 1. Google DeepResearch (Gemini Feature): [gemini.google.com](http://gemini.google.com)   
 2. OpenAI ,Introducing deep research  [https://openai.com/index/introducing-deep-research/](https://openai.com/index/introducing-deep-research/)   

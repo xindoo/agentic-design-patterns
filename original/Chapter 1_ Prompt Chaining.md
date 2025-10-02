@@ -1,6 +1,6 @@
 # Chapter 1: Prompt Chaining
 
-# Prompt Chaining Pattern Overview
+## Prompt Chaining Pattern Overview
 
 Prompt chaining, sometimes referred to as Pipeline pattern, represents a powerful paradigm for handling intricate tasks when leveraging large language models (LLMs). Rather than expecting an LLM to solve a complex problem in a single, monolithic step, prompt chaining advocates for a divide-and-conquer strategy. The core idea is to break down the original, daunting problem into a sequence of smaller, more manageable sub-problems. Each sub-problem is addressed individually through a specifically designed prompt, and the output generated from one prompt is strategically fed as input into the subsequent prompt in the chain.
 
@@ -43,7 +43,7 @@ For example, the output from the trend identification step could be formatted as
 
 This structured format ensures that the data is machine-readable and can be precisely parsed and inserted into the next prompt without ambiguity. This practice minimizes errors that can arise from interpreting natural language and is a key component in building robust, multi-step LLM-based systems. 
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Prompt chaining is a versatile pattern applicable in a wide range of scenarios when building agentic systems. Its core utility lies in breaking down complex problems into sequential, manageable steps. Here are several practical applications and use cases:
 
@@ -118,7 +118,7 @@ In applications such as AI-assisted software development, the utility of prompt 
 * Prompt 2: Link the extracted image text with its corresponding labels.  
 * Prompt 3: Interpret the gathered information using a table to determine the required output.
 
-# Hands-On Code Example
+## Hands-On Code Example
 
 Implementing prompt chaining ranges from direct, sequential function calls within a script to the utilization of specialized frameworks designed to manage control flow, state, and component integration. Frameworks such as LangChain, LangGraph, Crew AI, and the Google Agent Development Kit (ADK) offer structured environments for constructing and executing these multi-step processes, which is particularly advantageous for complex architectures.
 
@@ -140,30 +140,30 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# For better security, load environment variables from a .env file
-# from dotenv import load_dotenv
-# load_dotenv()
-# Make sure your OPENAI_API_KEY is set in the .env file
+## For better security, load environment variables from a .env file
+## from dotenv import load_dotenv
+## load_dotenv()
+## Make sure your OPENAI_API_KEY is set in the .env file
 
-# Initialize the Language Model (using ChatOpenAI is recommended)
+## Initialize the Language Model (using ChatOpenAI is recommended)
 llm = ChatOpenAI(temperature=0)
 
-# --- Prompt 1: Extract Information ---
+## --- Prompt 1: Extract Information ---
 prompt_extract = ChatPromptTemplate.from_template(
     "Extract the technical specifications from the following text:\n\n{text_input}"
 )
 
-# --- Prompt 2: Transform to JSON ---
+## --- Prompt 2: Transform to JSON ---
 prompt_transform = ChatPromptTemplate.from_template(
     "Transform the following specifications into a JSON object with 'cpu', 'memory', and 'storage' as keys:\n\n{specifications}"
 )
 
-# --- Build the Chain using LCEL ---
-# The StrOutputParser() converts the LLM's message output to a simple string.
+## --- Build the Chain using LCEL ---
+## The StrOutputParser() converts the LLM's message output to a simple string.
 extraction_chain = prompt_extract | llm | StrOutputParser()
 
-# The full chain passes the output of the extraction chain into the 'specifications'
-# variable for the transformation prompt.
+## The full chain passes the output of the extraction chain into the 'specifications'
+## variable for the transformation prompt.
 full_chain = (
     {"specifications": extraction_chain}
     | prompt_transform
@@ -171,10 +171,10 @@ full_chain = (
     | StrOutputParser()
 )
 
-# --- Run the Chain ---
+## --- Run the Chain ---
 input_text = "The new laptop model features a 3.5 GHz octa-core processor, 16GB of RAM, and a 1TB NVMe SSD."
 
-# Execute the chain with the input text dictionary.
+## Execute the chain with the input text dictionary.
 final_result = full_chain.invoke({"text_input": input_text})
 
 print("\n--- Final JSON Output ---")
@@ -183,7 +183,7 @@ print(final_result)
 
 This Python code demonstrates how to use the LangChain library to process text. It utilizes two separate prompts: one to extract technical specifications from an input string and another to format these specifications into a JSON object. The ChatOpenAI model is employed for language model interactions, and the StrOutputParser ensures the output is in a usable string format. The LangChain Expression Language (LCEL) is used to elegantly chain these prompts and the language model together. The first chain, extraction\_chain, extracts the specifications. The full\_chain then takes the output of the extraction and uses it as input for the transformation prompt. A sample input text describing a laptop is provided. The full\_chain is invoked with this text, processing it through both steps. The final result, a JSON string containing the extracted and formatted specifications, is then printed.
 
-# Context Engineering and Prompt Engineering
+## Context Engineering and Prompt Engineering
 
 Context Engineering (see Fig.1) is the systematic discipline of designing, constructing, and delivering a complete informational environment to an AI model prior to token generation. This methodology asserts that the quality of a model's output is less dependent on the model's architecture itself and more on the richness of the context provided. 
 
@@ -199,7 +199,7 @@ To implement this, specialized tuning systems can be used to automate the improv
 
 This structured approach is what differentiates a rudimentary AI tool from a more sophisticated and contextually-aware system. It treats the context itself as a primary component, placing critical importance on what the agent knows, when it knows it, and how it uses that information. The practice ensures the model has a well-rounded understanding of the user's intent, history, and current environment. Ultimately, Context Engineering is a crucial methodology for advancing stateless chatbots into highly capable, situationally-aware systems.
 
-# At a Glance
+## At a Glance
 
 **What:** Complex tasks often overwhelm LLMs when handled within a single prompt, leading to significant performance issues. The cognitive load on the model increases the likelihood of errors such as overlooking instructions, losing context, and generating incorrect information. A monolithic prompt struggles to manage multiple constraints and sequential reasoning steps effectively. This results in unreliable and inaccurate outputs, as the LLM fails to address all facets of the multifaceted request.
 
@@ -213,7 +213,7 @@ This structured approach is what differentiates a rudimentary AI tool from a mor
 
 Fig. 2: Prompt Chaining Pattern: Agents receive a series of prompts from the user, with the output of each agent serving as the input for the next in the chain.
 
-# Key Takeaways
+## Key Takeaways
 
 Here are some key takeaways: 
 
@@ -222,11 +222,11 @@ Here are some key takeaways:
 * This pattern improves the reliability and manageability of complex interactions with language models.  
 * Frameworks like LangChain/LangGraph, and Google ADK  provide robust tools to define, manage, and execute these multi-step sequences.
 
-# Conclusion
+## Conclusion
 
 By deconstructing complex problems into a sequence of simpler, more manageable sub-tasks, prompt chaining provides a robust framework for guiding large language models. This "divide-and-conquer" strategy significantly enhances the reliability and control of the output by focusing the model on one specific operation at a time. As a foundational pattern, it enables the development of sophisticated AI agents capable of multi-step reasoning, tool integration, and state management. Ultimately, mastering prompt chaining is crucial for building robust, context-aware systems that can execute intricate workflows well beyond the capabilities of a single prompt.
 
-# References
+## References
 
 1. LangChain Documentation on LCEL: [https://python.langchain.com/v0.2/docs/core\_modules/expression\_language/](https://python.langchain.com/v0.2/docs/core_modules/expression_language/)     
 2. LangGraph Documentation: [https://langchain-ai.github.io/langgraph/](https://langchain-ai.github.io/langgraph/)  

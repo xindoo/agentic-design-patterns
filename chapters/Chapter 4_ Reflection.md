@@ -1,6 +1,6 @@
 # 第 4 章：反思
 
-# 反思模式概述
+## 反思模式概述
 
 在前面的章节中，我们探讨了基本的 Agent 模式：用于顺序执行的链接、用于动态路径选择的路由以及用于并发任务执行的并行化。这些模式使 Agent 能够更高效、更灵活地执行复杂任务。然而，即使使用复杂的工作流，Agent 的初始输出或计划可能也不是最优的、准确的或完整的。这就是**反思**模式发挥作用的地方。
 
@@ -31,7 +31,7 @@
 
 此外，当 LLM 保留对话记忆（见第 8 章）时，反思模式的有效性会显著增强。这种对话历史为评估阶段提供了关键上下文，使 Agent 能够不仅孤立地评估其输出，而且能够在先前交互、用户反馈和不断发展的目标的背景下进行评估。它使 Agent 能够从过去的批评中学习并避免重复错误。没有记忆，每次反思都是一个独立的事件；有了记忆，反思成为一个累积过程，其中每个周期都建立在上一个周期的基础上，导致更智能和上下文感知的完善。
 
-# 实际应用与用例
+## 实际应用与用例
 
 反思模式在输出质量、准确性或对复杂约束的遵守至关重要的场景中很有价值：
 
@@ -79,7 +79,7 @@
 
 反思为 Agent 系统增加了一层元认知，使它们能够从自己的输出和过程中学习，从而产生更智能、更可靠和更高质量的结果。
 
-# 实操代码示例（LangChain）
+## 实操代码示例（LangChain）
 
 实现完整的迭代反思过程需要状态管理和循环执行的机制。虽然这些在基于图的框架（如 LangGraph）中本地处理或通过自定义程序代码处理，但单个反思周期的基本原理可以使用 LCEL（LangChain 表达式语言）的组合语法有效地演示。
 
@@ -100,16 +100,16 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import SystemMessage, HumanMessage
 
-# --- 配置 ---
-# 从 .env 文件加载环境变量（用于 OPENAI_API_KEY）
+## --- 配置 ---
+## 从 .env 文件加载环境变量（用于 OPENAI_API_KEY）
 load_dotenv()
 
-# 检查是否设置了 API 密钥
+## 检查是否设置了 API 密钥
 if not os.getenv("OPENAI_API_KEY"):
     raise ValueError("在 .env 文件中未找到 OPENAI_API_KEY。请添加它。")
 
-# 初始化聊天 LLM。我们使用 gpt-4o 以获得更好的推理。
-# 使用较低的温度以获得更确定性的输出。
+## 初始化聊天 LLM。我们使用 gpt-4o 以获得更好的推理。
+## 使用较低的温度以获得更确定性的输出。
 llm = ChatOpenAI(model="gpt-4o", temperature=0.1)
 
 def run_reflection_loop():
@@ -196,14 +196,14 @@ if __name__ == "__main__":
 
 代码首先设置环境，加载 API 密钥，并使用低温度初始化强大的语言模型（如 GPT-4o）以获得聚焦的输出。核心任务由提示词定义，要求创建一个计算数字阶乘的 Python 函数，包括文档字符串、边缘情况（0 的阶乘）和负输入的错误处理的特定要求。run_reflection_loop 函数协调迭代完善过程。在循环中，在第一次迭代中，语言模型根据任务提示词生成初始代码。在后续迭代中，它根据前一步的批评完善代码。一个单独的"反思者"角色，也由语言模型扮演但使用不同的系统提示词，充当高级软件工程师来根据原始任务要求批评生成的代码。此批评以问题的项目符号列表或短语 'CODE_IS_PERFECT'（如果未发现问题）的形式提供。循环继续，直到批评指示代码完美或达到最大迭代次数。对话历史被维护并在每一步传递给语言模型，为生成/完善和反思阶段提供上下文。最后，脚本在循环结束后打印最后生成的代码版本。
 
-# 实操代码示例（ADK）
+## 实操代码示例（ADK）
 
 现在让我们看一个使用 Google ADK 实现的概念性代码示例。具体来说，代码通过采用生成器-批评者结构来展示这一点，其中一个组件（生成器）产生初始结果或计划，另一个组件（批评者）提供批判性反馈或批评，引导生成器朝向更精炼或准确的最终输出。
 
 ```python
 from google.adk.agents import SequentialAgent, LlmAgent
 
-# 第一个 Agent 生成初始草稿。
+## 第一个 Agent 生成初始草稿。
 generator = LlmAgent(
     name="DraftWriter",
     description="生成关于给定主题的初始草稿内容。",
@@ -211,7 +211,7 @@ generator = LlmAgent(
     output_key="draft_text" # 输出保存到此状态键。
 )
 
-# 第二个 Agent 批评第一个 Agent 的草稿。
+## 第二个 Agent 批评第一个 Agent 的草稿。
 reviewer = LlmAgent(
     name="FactChecker",
     description="审查给定文本的事实准确性并提供结构化批评。",
@@ -226,22 +226,22 @@ reviewer = LlmAgent(
     output_key="review_output" # 结构化字典保存在这里。
 )
 
-# SequentialAgent 确保生成器在审查者之前运行。
+## SequentialAgent 确保生成器在审查者之前运行。
 review_pipeline = SequentialAgent(
     name="WriteAndReview_Pipeline",
     sub_agents=[generator, reviewer]
 )
 
-# 执行流程：
-# 1. generator 运行 -> 将其段落保存到 state['draft_text']。
-# 2. reviewer 运行 -> 读取 state['draft_text'] 并将其字典输出保存到 state['review_output']。
+## 执行流程：
+## 1. generator 运行 -> 将其段落保存到 state['draft_text']。
+## 2. reviewer 运行 -> 读取 state['draft_text'] 并将其字典输出保存到 state['review_output']。
 ```
 
 此代码演示了在 Google ADK 中使用顺序 Agent 管道生成和审查文本。它定义了两个 LlmAgent 实例：generator 和 reviewer。generator Agent 设计用于创建关于给定主题的初始草稿段落。它被指示撰写简短而信息丰富的文章，并将其输出保存到状态键 draft_text。reviewer Agent 充当生成器产生的文本的事实核查员。它被指示从 draft_text 读取文本并验证其事实准确性。审查者的输出是一个包含两个键的结构化字典：status 和 reasoning。status 指示文本是"ACCURATE"还是"INACCURATE"，而 reasoning 提供对状态的解释。此字典保存到状态键 review_output。创建了一个名为 review_pipeline 的 SequentialAgent 来管理两个 Agent 的执行顺序。它确保生成器首先运行，然后是审查者。整体执行流程是生成器产生文本，然后保存到状态。随后，审查者从状态读取此文本，执行其事实核查，并将其发现（状态和推理）保存回状态。此管道允许使用单独的 Agent 进行结构化的内容创建和审查过程。**注意：** 对于感兴趣的人，还提供了利用 ADK 的 LoopAgent 的替代实现。
 
 在结束之前，重要的是要考虑，虽然反思模式显著提高了输出质量，但它带来了重要的权衡。迭代过程虽然强大，但可能导致更高的成本和延迟，因为每个完善循环可能需要新的 LLM 调用，使其对时间敏感的应用程序不是最优的。此外，该模式是内存密集型的；随着每次迭代，对话历史扩展，包括初始输出、批评和后续完善。
 
-# 概览
+## 概览
 
 **什么：** Agent 的初始输出通常是次优的，存在不准确、不完整或未能满足复杂要求的问题。基本的 Agent 工作流缺乏 Agent 识别和修复自身错误的内置过程。这通过让 Agent 评估自己的工作，或更稳健地通过引入单独的逻辑 Agent 充当批评者来解决，防止初始响应无论质量如何都成为最终响应。
 
@@ -259,7 +259,7 @@ review_pipeline = SequentialAgent(
 
 图 2：反思设计模式，生产者和批评者 Agent
 
-# 关键要点
+## 关键要点
 
 * 反思模式的主要优势是其迭代自我纠正和完善输出的能力，导致显著更高的质量、准确性和对复杂指令的遵守。
 * 它涉及执行、评估/批评和完善的反馈循环。反思对于需要高质量、准确或细微输出的任务至关重要。
@@ -269,13 +269,13 @@ review_pipeline = SequentialAgent(
 * Google ADK 可以通过顺序工作流促进反思，其中一个 Agent 的输出被另一个 Agent 批评，允许后续完善步骤。
 * 此模式使 Agent 能够执行自我纠正并随时间提高其性能。
 
-# 结论
+## 结论
 
 反思模式为 Agent 工作流中的自我纠正提供了关键机制，实现了超越单次执行的迭代改进。这是通过创建一个循环来实现的，其中系统生成输出，根据特定标准对其进行评估，然后使用该评估来产生精炼的结果。此评估可以由 Agent 本身（自我反思）执行，或者通常更有效地由不同的批评者 Agent 执行，这代表了模式内的关键架构选择。
 
 虽然完全自主的多步反思过程需要强大的状态管理架构，但其核心原理可以在单个生成-批评-完善周期中有效演示。作为控制结构，反思可以与其他基础模式集成，以构建更稳健和功能更复杂的 Agent 系统。
 
-# 参考文献
+## 参考文献
 
 以下是有关反思模式和相关概念的一些进一步阅读资源：
 

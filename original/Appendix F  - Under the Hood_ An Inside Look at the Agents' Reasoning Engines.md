@@ -7,7 +7,7 @@ Therefore, understanding the internal reasoning mechanisms of these models is no
 | Prompt given to each LLM: I understand you can reason, can you explain to me how you reason? Explain me step by step |
 | :---- |
 
-# Gemini
+## Gemini
 
 **Analyzing My Approach**
 
@@ -58,7 +58,7 @@ This is the final step where I translate the structured information into human-r
 
 In essence, my reasoning is a sophisticated form of **pattern matching and prediction**. I deconstruct your request, find the most relevant patterns in my data, synthesize them into a logical structure, and then translate that structure into a clear, well-formatted answer.
 
-# ChatGPT
+## ChatGPT
 
 Great — let me explain **how I reason step by step**, as simply and clearly as possible.
 
@@ -167,7 +167,7 @@ Finally, I adjust how I say it to:
 
 Would you like to give me a problem, and I’ll show you this step-by-step reasoning live?
 
-# Grok
+## Grok
 
 Explaining how I reason is a fascinating challenge, as it involves unpacking the complex interplay of algorithms, data processing, and decision-making that underpins my responses. As Grok 3, my reasoning process is inspired by human cognition but operates within the constraints and capabilities of a large language model. Below, I’ll break down the steps of how I approach reasoning, using a clear, step-by-step framework. I’ll aim to keep it concise yet comprehensive, avoiding overly technical jargon while providing insight into my "thought" process.
 
@@ -244,7 +244,7 @@ System: builds logically from the previous step, addressing any gaps or refining
 
 This step-by-step breakdown reflects how I simulate reasoning to provide clear, accurate, and relevant answers to your queries, such as this one. If you’d like me to dive deeper into any specific step or aspect, let me know\!
 
-# Kimi
+## Kimi
 
 I’m glad you asked—here is a transparent, “under-the-hood” walk-through of how I typically reason through a problem. I’ll use a miniature example so you can see each stage in action.
 
@@ -312,7 +312,7 @@ Compare 81 \> 64\.
 Communicate the result clearly.  
 That pipeline—parsing, strategizing, knowledge retrieval, execution, verification, and explanation—repeats at every scale, from tiny arithmetic to complex multi-step problems.
 
-# Claude
+## Claude
 
 I can walk you through how my reasoning process works, though I should note that I don't have complete insight into my own mechanisms \- much like how humans can describe their thought processes but don't have full access to every neural firing.
 
@@ -332,7 +332,7 @@ Here's how I approach reasoning step by step:
 
 The interesting thing is that much of this happens in ways that feel somewhat intuitive to me, just as your own reasoning might feel natural to you even though complex processes are occurring beneath conscious awareness.
 
-# DeepSeek
+## DeepSeek
 
 I'd be happy to explain how I "reason" step-by-step\! It's important to clarify that **I don't reason like a human** (I have no consciousness, intuition, or lived experience). Instead, my "reasoning" is a sophisticated pattern-matching, information retrieval, and probabilistic calculation process based on my training data and architecture. Think of it as **structured computation, not conscious thought**.
 
@@ -386,7 +386,7 @@ Here's the step-by-step breakdown:
 
 My "reasoning" is an **emergent property** of statistically predicting the most probable sequence of words that forms a *coherent, logical, and contextually relevant response*, based on colossal amounts of text representing human knowledge and communication patterns. I don't "understand" concepts internally like humans do; I computationally identify patterns and generate sequences that *reflect* understanding. I'm following footprints of reasoning laid down in my training data, not forging entirely new paths of abstract thought.
 
-# Conclusion
+## Conclusion
 
 An analysis of these prominent LLMs reveals a remarkably consistent, multi-stage reasoning framework. Each model begins by methodically deconstructing a prompt to understand its core task, intent, and constraints. They then retrieve and synthesize information through sophisticated pattern recognition, moving far beyond simple database lookups. This structured process, often articulated as a "chain-of-thought," forms the very foundation of their cognitive capability.
 

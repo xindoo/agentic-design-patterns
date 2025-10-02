@@ -2,7 +2,7 @@
 
 To enable LLMs to function effectively as agents, their capabilities must extend beyond multimodal generation. Interaction with the external environment is necessary, including access to current data, utilization of external software, and execution of specific operational tasks. The Model Context Protocol (MCP) addresses this need by providing a standardized interface for LLMs to interface with external resources. This protocol serves as a key mechanism to facilitate consistent and predictable integration.
 
-# MCP Pattern Overview
+## MCP Pattern Overview
 
 Imagine a universal adapter that allows any LLM to plug into any external system, database, or tool without a custom integration for each one. That's essentially what the Model Context Protocol (MCP) is. It's an open standard designed to standardize how LLMs like Gemini, OpenAI's GPT models, Mixtral, and Claude communicate with external applications, data sources, and tools. Think of it as a universal connection mechanism that simplifies how LLMs obtain context, execute actions, and interact with various systems.
 
@@ -12,7 +12,7 @@ However, MCP is a contract for an "agentic interface," and its effectiveness dep
 
 Furthermore, MCP can wrap an API whose input or output is still not inherently understandable by the agent. An API is only useful if its data format is agent-friendly, a guarantee that MCP itself does not enforce. For instance, creating an MCP server for a document store that returns files as PDFs is mostly useless if the consuming agent cannot parse PDF content. The better approach would be to first create an API that returns a textual version of the document, such as Markdown, which the agent can actually read and process. This demonstrates that developers must consider not just the connection, but the nature of the data being exchanged to ensure true compatibility.
 
-# MCP vs. Tool Function Calling
+## MCP vs. Tool Function Calling
 
 The Model Context Protocol (MCP) and tool function calling are distinct mechanisms that enable LLMs to interact with external capabilities (including tools) and execute actions. While both serve to extend LLM capabilities beyond text generation, they differ in their approach and level of abstraction.
 
@@ -34,7 +34,7 @@ Think of tool function calling as giving an AI a specific set of custom-built to
 
 In short, function calling provides direct access to a few specific functions, while MCP is the standardized communication framework that lets LLMs discover and use a vast range of external resources. For simple applications, specific tools are enough; for complex, interconnected AI systems that need to adapt, a universal standard like MCP is essential.
 
-# Additional considerations for MCP
+## Additional considerations for MCP
 
 While MCP presents a powerful framework, a thorough evaluation requires considering several crucial aspects that influence its suitability for a given use case. Let's see some aspects in more details:
 
@@ -62,7 +62,7 @@ The interaction flows as follows:
 4. **Server Execution**: The MCP Server receives the request. It authenticates the client, validates the request, and then executes the specified action by interfacing with the underlying software (e.g., calling the send() function of an email API).  
 5. **Response and Context Update**: After execution, the MCP Server sends a standardized response back to the MCP Client. This response indicates whether the action was successful and includes any relevant output (e.g., a confirmation ID for the sent email). The client then passes this result back to the LLM, updating its context and enabling it to proceed with the next step of its task.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 MCP significantly broadens AI/LLM capabilities, making them more versatile and powerful. Here are nine key use cases:
 
@@ -78,7 +78,7 @@ MCP significantly broadens AI/LLM capabilities, making them more versatile and p
 
 In short, the Model Context Protocol (MCP) enables agents to access real-time information from databases, APIs, and web resources. It also allows agents to perform actions like sending emails, updating records, controlling devices, and executing complex tasks by integrating and processing data from various sources. Additionally, MCP supports media generation tools for AI applications.
 
-# Hands-On Code Example with ADK
+## Hands-On Code Example with ADK
 
 This section outlines how to connect to a local MCP server that provides file system operations, enabling an ADK  agent to interact with the local file system.
 
@@ -91,13 +91,13 @@ import os
 from google.adk.agents import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
 
-# Create a reliable absolute path to a folder named 'mcp_managed_files'
-# within the same directory as this agent script.
-# This ensures the agent works out-of-the-box for demonstration.
-# For production, you would point this to a more persistent and secure location.
+## Create a reliable absolute path to a folder named 'mcp_managed_files'
+## within the same directory as this agent script.
+## This ensures the agent works out-of-the-box for demonstration.
+## For production, you would point this to a more persistent and secure location.
 TARGET_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mcp_managed_files")
 
-# Ensure the target directory exists before the agent needs it.
+## Ensure the target directory exists before the agent needs it.
 os.makedirs(TARGET_FOLDER_PATH, exist_ok=True)
 
 root_agent = LlmAgent(
@@ -131,7 +131,7 @@ root_agent = LlmAgent(
 Creating an \_\_init\_\_.py file is necessary to ensure the agent.py file is recognized as part of a discoverable Python package for the Agent Development Kit (ADK). This file should reside in the same directory as [agent.py](http://agent.py).
 
 ```python
-# ./adk_agent_samples/mcp_agent/__init__.py
+## ./adk_agent_samples/mcp_agent/__init__.py
 from . import agent
 ```
 
@@ -195,20 +195,20 @@ Beyond basic tool creation, FastMCP facilitates advanced architectural patterns 
 ## To illustrate, consider a basic "greet" tool provided by the server. ADK agents and other MCP clients can interact with this tool using HTTP once it is active.
 
 ```python
-# fastmcp_server.py
-# This script demonstrates how to create a simple MCP server using FastMCP.
-# It exposes a single tool that generates a greeting.
+## fastmcp_server.py
+## This script demonstrates how to create a simple MCP server using FastMCP.
+## It exposes a single tool that generates a greeting.
 
-# 1. Make sure you have FastMCP installed:
-# pip install fastmcp
+## 1. Make sure you have FastMCP installed:
+## pip install fastmcp
 from fastmcp import FastMCP, Client
 
-# Initialize the FastMCP server.
+## Initialize the FastMCP server.
 mcp_server = FastMCP()
 
-# Define a simple tool function.
-# The `@mcp_server.tool` decorator registers this Python function as an MCP tool.
-# The docstring becomes the tool's description for the LLM.
+## Define a simple tool function.
+## The `@mcp_server.tool` decorator registers this Python function as an MCP tool.
+## The docstring becomes the tool's description for the LLM.
 @mcp_server.tool
 def greet(name: str) -> str:
     """
@@ -220,7 +220,7 @@ def greet(name: str) -> str:
     """
     return f"Hello, {name}! Nice to meet you."
 
-# Or if you want to run it from the script:
+## Or if you want to run it from the script:
 if __name__ == "__main__":
     mcp_server.run(
         transport="http",
@@ -242,13 +242,13 @@ A tool\_filter parameter can be included to restrict the agent's tool usage to s
 To establish this configuration, an agent file (e.g., agent.py located in ./adk\_agent\_samples/fastmcp\_client\_agent/) is required. This file will instantiate an ADK agent and use HttpServerParameters to establish a connection with the operational FastMCP server.
 
 ```python
-# ./adk_agent_samples/fastmcp_client_agent/agent.py
+## ./adk_agent_samples/fastmcp_client_agent/agent.py
 import os
 from google.adk.agents import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, HttpServerParameters
 
-# Define the FastMCP server's address.
-# Make sure your fastmcp_server.py (defined previously) is running on this port.
+## Define the FastMCP server's address.
+## Make sure your fastmcp_server.py (defined previously) is running on this port.
 FASTMCP_SERVER_URL = "http://localhost:8000"
 
 root_agent = LlmAgent(
@@ -274,7 +274,7 @@ Creating an \_\_init\_\_.py file within the fastmcp\_client\_agent directory is 
 
 To begin, open a new terminal and run \`python fastmcp\_server.py\` to start the FastMCP server. Next, go to the parent directory of \`fastmcp\_client\_agent\` (for example, \`adk\_agent\_samples\`) in your terminal and execute \`adk web\`. Once the ADK Web UI loads in your browser, select the \`fastmcp\_greeter\_agent\` from the agent menu. You can then test it by entering a prompt like "Greet John Doe." The agent will use the \`greet\` tool on your FastMCP server to create a response.
 
-# At a Glance
+## At a Glance
 
 **What:** To function as effective agents, LLMs must move beyond simple text generation. They require the ability to interact with the external environment to access current data and utilize external software. Without a standardized communication method, each integration between an LLM and an external tool or data source becomes a custom, complex, and non-reusable effort. This ad-hoc approach hinders scalability and makes building complex, interconnected AI systems difficult and inefficient.
 
@@ -286,7 +286,7 @@ To begin, open a new terminal and run \`python fastmcp\_server.py\` to start the
 
 Fig.1: Model Context protocol
 
-# Key Takeaways
+## Key Takeaways
 
 These are the key takeaways:
 
@@ -297,11 +297,11 @@ These are the key takeaways:
 * MCP Tools for Genmedia Services allows agents to integrate with Google Cloud's generative media capabilities (Imagen, Veo, Chirp 3 HD, Lyria).  
 * MCP enables LLMs and agents to interact with real-world systems, access dynamic information, and perform actions beyond text generation.
 
-# Conclusion
+## Conclusion
 
 The Model Context Protocol (MCP) is an open standard that facilitates communication between Large Language Models (LLMs) and external systems. It employs a client-server architecture, enabling LLMs to access resources, utilize prompts, and execute actions through standardized tools. MCP allows LLMs to interact with databases, manage generative media workflows, control IoT devices, and automate financial services. Practical examples demonstrate setting up agents to communicate with MCP servers, including filesystem servers and servers built with FastMCP, illustrating its integration with the Agent Development Kit (ADK). MCP is a key component for developing interactive AI agents that extend beyond basic language capabilities.
 
-# References
+## References
 
 1. Model Context Protocol (MCP) Documentation. (Latest). *Model Context Protocol (MCP)*. [https://google.github.io/adk-docs/mcp/](https://google.github.io/adk-docs/mcp/)  
 2. FastMCP Documentation. FastMCP. [https://github.com/jlowin/fastmcp](https://github.com/jlowin/fastmcp)  

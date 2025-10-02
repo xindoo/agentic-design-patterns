@@ -2,7 +2,7 @@
 
 In complex, dynamic environments, Agents frequently encounter numerous potential actions, conflicting goals, and limited resources. Without a defined process for determining the subsequent action, the agents may experience reduced efficiency, operational delays, or failures to achieve key objectives. The prioritization pattern addresses this issue by enabling agents to assess and rank tasks, objectives, or actions based on their significance, urgency, dependencies, and established criteria. This ensures the agents concentrate efforts on the most critical tasks, resulting in enhanced effectiveness and goal alignment.
 
-# Prioritization Pattern Overview
+## Prioritization Pattern Overview
 
 Agents employ prioritization to effectively manage tasks, goals, and sub-goals, guiding subsequent actions. This process facilitates informed decision-making when addressing multiple demands, prioritizing vital or urgent activities over less critical ones. It is particularly relevant in real-world scenarios where resources are constrained, time is limited, and objectives may conflict.
 
@@ -10,7 +10,7 @@ The fundamental aspects of agent prioritization typically involve several elemen
 
 Prioritization can occur at various levels: selecting an overarching objective (high-level goal prioritization), ordering steps within a plan (sub-task prioritization), or choosing the next immediate action from available options (action selection). Effective prioritization enables agents to exhibit more intelligent, efficient, and robust behavior, especially in complex, multi-objective environments. This mirrors human team organization, where managers prioritize tasks by considering input from all members.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 In various real-world applications, AI agents demonstrate a sophisticated use of prioritization to make timely and effective decisions. 
 
@@ -24,7 +24,7 @@ In various real-world applications, AI agents demonstrate a sophisticated use of
 
 These examples collectively illustrate how the ability to prioritize is fundamental to the enhanced performance and decision-making capabilities of AI agents across a wide spectrum of situations.
 
-# Hands-On Code Example
+## Hands-On Code Example
 
 The following demonstrates the development of a Project Manager AI agent using LangChain. This agent facilitates the creation, prioritization, and assignment of tasks to team members, illustrating the application of large language models with bespoke tools for automated project management.
 
@@ -40,14 +40,14 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain.memory import ConversationBufferMemory
 
-# --- 0. Configuration and Setup ---
-# Loads the OPENAI_API_KEY from the .env file.
+## --- 0. Configuration and Setup ---
+## Loads the OPENAI_API_KEY from the .env file.
 load_dotenv()
 
-# The ChatOpenAI client automatically picks up the API key from the environment.
+## The ChatOpenAI client automatically picks up the API key from the environment.
 llm = ChatOpenAI(temperature=0.5, model="gpt-4o-mini")
 
-# --- 1. Task Management System ---
+## --- 1. Task Management System ---
 class Task(BaseModel):
     """Represents a single task in the system."""
     id: str
@@ -99,8 +99,8 @@ class SuperSimpleTaskManager:
 
 task_manager = SuperSimpleTaskManager()
 
-# --- 2. Tools for the Project Manager Agent ---
-# Use Pydantic models for tool arguments for better validation and clarity.
+## --- 2. Tools for the Project Manager Agent ---
+## Use Pydantic models for tool arguments for better validation and clarity.
 class CreateTaskArgs(BaseModel):
     description: str = Field(description="A detailed description of the task.")
 
@@ -129,7 +129,7 @@ def assign_task_to_worker_tool(task_id: str, worker_name: str) -> str:
     task = task_manager.update_task(task_id, assigned_to=worker_name)
     return f"Assigned task {task.id} to {worker_name}." if task else f"Task {task_id} not found."
 
-# All tools the PM agent can use
+## All tools the PM agent can use
 pm_tools = [
     Tool(
         name="create_new_task",
@@ -156,7 +156,7 @@ pm_tools = [
     ),
 ]
 
-# --- 3. Project Manager Agent Definition ---
+## --- 3. Project Manager Agent Definition ---
 pm_prompt_template = ChatPromptTemplate.from_messages([
     ("system", """You are a focused Project Manager LLM agent. Your goal is to manage project tasks efficiently.
        When you receive a new task request, follow these steps:
@@ -174,7 +174,7 @@ pm_prompt_template = ChatPromptTemplate.from_messages([
     ("placeholder", "{agent_scratchpad}")
 ])
 
-# Create the agent executor
+## Create the agent executor
 pm_agent = create_react_agent(llm, pm_tools, pm_prompt_template)
 pm_agent_executor = AgentExecutor(
     agent=pm_agent,
@@ -184,7 +184,7 @@ pm_agent_executor = AgentExecutor(
     memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 )
 
-# --- 4. Simple Interaction Flow ---
+## --- 4. Simple Interaction Flow ---
 async def run_simulation():
     print("--- Project Manager Simulation ---")
     # Scenario 1: Handle a new, urgent feature request
@@ -197,7 +197,7 @@ async def run_simulation():
     await pm_agent_executor.ainvoke({"input": "Manage a new task: Review marketing website content."})
     print("\n--- Simulation Complete ---")
 
-# Run the simulation
+## Run the simulation
 if __name__ == "__main__":
     asyncio.run(run_simulation())
 ```
@@ -212,7 +212,7 @@ An AgentExecutor is configured with the language model, the toolset, and a conve
 
 The code incorporates a simulation function (run\_simulation) of asynchronous nature to demonstrate the agent's operational capacity. The simulation executes two distinct scenarios: the management of an urgent task with designated personnel, and the management of a less urgent task with minimal input. The agent's actions and logical processes are outputted to the console due to the activation of verbose=True within the AgentExecutor.
 
-# At a Glance
+## At a Glance
 
 **What:** AI agents operating in complex environments face a multitude of potential actions, conflicting goals, and finite resources. Without a clear method to determine their next move, these agents risk becoming inefficient and ineffective. This can lead to significant operational delays or a complete failure to accomplish primary objectives. The core challenge is to manage this overwhelming number of choices to ensure the agent acts purposefully and logically.
 
@@ -226,7 +226,7 @@ The code incorporates a simulation function (run\_simulation) of asynchronous na
 
 Fig.1: Prioritization Design pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Prioritization enables AI agents to function effectively in complex, multi-faceted environments.  
 * Agents utilize established criteria such as urgency, importance, and dependencies to evaluate and rank tasks.  
@@ -234,13 +234,13 @@ Fig.1: Prioritization Design pattern
 * Prioritization occurs at various levels, encompassing overarching strategic objectives and immediate tactical decisions.   
 * Effective prioritization results in increased efficiency and improved operational robustness of AI agents.
 
-# Conclusions
+## Conclusions
 
 In conclusion, the prioritization pattern is a cornerstone of effective agentic AI, equipping systems to navigate the complexities of dynamic environments with purpose and intelligence. It allows an agent to autonomously evaluate a multitude of conflicting tasks and goals, making reasoned decisions about where to focus its limited resources. This agentic capability moves beyond simple task execution, enabling the system to act as a proactive, strategic decision-maker. By weighing criteria such as urgency, importance, and dependencies, the agent demonstrates a sophisticated, human-like reasoning process.
 
 A key feature of this agentic behavior is dynamic re-prioritization, which grants the agent the autonomy to adapt its focus in real-time as conditions change. As demonstrated in the code example, the agent interprets ambiguous requests, autonomously selects and uses the appropriate tools, and logically sequences its actions to fulfill its objectives. This ability to self-manage its workflow is what separates a true agentic system from a simple automated script. Ultimately, mastering prioritization is fundamental for creating robust and intelligent agents that can operate effectively and reliably in any complex, real-world scenario.
 
-# References
+## References
 
 1. Examining the Security of Artificial Intelligence in Project Management: A Case Study of AI-driven Project Scheduling and Resource Allocation in Information Systems Projects ; [https://www.irejournals.com/paper-details/1706160](https://www.irejournals.com/paper-details/1706160)   
 2. AI-Driven Decision Support Systems in Agile Software Project Management: Enhancing Risk Mitigation and Resource Allocation; [https://www.mdpi.com/2079-8954/13/3/208](https://www.mdpi.com/2079-8954/13/3/208)  

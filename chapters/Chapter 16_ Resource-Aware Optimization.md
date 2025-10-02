@@ -4,7 +4,7 @@
 
 例如，考虑一个被指派为金融分析师分析大型数据集的 Agent。如果分析师立即需要初步报告，Agent 可能会使用更快、更实惠的模型来快速总结关键趋势。然而，如果分析师需要高度准确的预测用于关键投资决策，并且有更大的预算和更多时间，Agent 将分配更多资源来利用强大、较慢但更精确的预测模型。此类别中的一个关键策略是回退机制，它在首选模型由于过载或受限而不可用时充当保障。为了确保优雅降级，系统会自动切换到默认或更实惠的模型，保持服务连续性而不是完全失败。
 
-# 实际应用和用例
+## 实际应用和用例
 
 实际用例包括：
 
@@ -15,7 +15,7 @@
 * **数据使用管理**：Agent 选择摘要数据检索而不是完整数据集下载，以节省带宽或存储。
 * **自适应任务分配**：在多 Agent 系统中，Agent 根据其当前计算负载或可用时间自行分配任务。
 
-# 实践代码示例
+## 实践代码示例
 
 一个用于回答用户问题的智能系统可以评估每个问题的难度。对于简单查询，它使用成本效益高的语言模型，如 Gemini Flash。对于复杂查询，会考虑更强大但更昂贵的语言模型（如 Gemini Pro）。使用更强大模型的决定还取决于资源可用性，特别是预算和时间约束。这个系统动态选择适当的模型。
 
@@ -28,11 +28,11 @@ Google 的 ADK 通过其多 Agent 架构支持这种方法，允许模块化和�
 接下来，将定义两个具有相同设置但使用不同模型和成本的 Agent。
 
 ```python
-# 概念性的类 Python 结构，非可运行代码
+## 概念性的类 Python 结构，非可运行代码
 from google.adk.agents import Agent
-# from google.adk.models.lite_llm import LiteLlm # 如果使用 ADK 默认 Agent 不直接支持的模型
+## from google.adk.models.lite_llm import LiteLlm # 如果使用 ADK 默认 Agent 不直接支持的模型
 
-# 使用更昂贵的 Gemini Pro 2.5 的 Agent
+## 使用更昂贵的 Gemini Pro 2.5 的 Agent
 gemini_pro_agent = Agent(
     name="GeminiProAgent",
     model="gemini-2.5-pro", # 如果实际模型名称不同，这是占位符
@@ -40,7 +40,7 @@ gemini_pro_agent = Agent(
     instruction="You are an expert assistant for complex problem-solving."
 )
 
-# 使用更便宜的 Gemini Flash 2.5 的 Agent
+## 使用更便宜的 Gemini Flash 2.5 的 Agent
 gemini_flash_agent = Agent(
     name="GeminiFlashAgent",
     model="gemini-2.5-flash", # 如果实际模型名称不同，这是占位符
@@ -54,7 +54,7 @@ gemini_flash_agent = Agent(
 优化技术可以进一步增强 LLM 路由器的有效性。提示词调优涉及精心设计提示词以指导路由器 LLM 做出更好的路由决策。在查询及其最优模型选择的数据集上微调 LLM 路由器可提高其准确性和效率。这种动态路由能力在响应质量和成本效益之间取得平衡。
 
 ```python
-# 概念性的类 Python 结构，非可运行代码
+## 概念性的类 Python 结构，非可运行代码
 from google.adk.agents import Agent, BaseAgent
 from google.adk.events import Event
 from google.adk.agents.invocation_context import InvocationContext
@@ -100,7 +100,7 @@ All criticism must be constructive. Your goal is to fortify the research, not in
 
 批评 Agent 基于预定义的系统提示词运行，该提示词概述其角色、职责和反馈方法。为此 Agent 设计良好的提示词必须清楚地确立其作为评估者的功能。它应指定批评重点领域，并强调提供建设性反馈而不仅仅是拒绝。提示词还应鼓励识别优势和弱点，并且必须指导 Agent 如何构建和呈现其反馈。
 
-# 使用 OpenAI 的实践代码
+## 使用 OpenAI 的实践代码
 
 该系统使用资源感知优化策略来有效处理用户查询。它首先将每个查询分类为三个类别之一，以确定最合适和最具成本效益的处理路径。这种方法避免在简单请求上浪费计算资源，同时确保复杂查询获得必要的关注。三个类别是：
 
@@ -111,9 +111,9 @@ All criticism must be constructive. Your goal is to fortify the research, not in
 代码在 MIT 许可证下，可在 Github 上获取：([https://github.com/mahtabsyed/21-Agentic-Patterns/blob/main/16\_Resource\_Aware\_Opt\_LLM\_Reflection\_v2.ipynb](https://github.com/mahtabsyed/21-Agentic-Patterns/blob/main/16_Resource_Aware_Opt_LLM_Reflection_v2.ipynb))
 
 ```python
-# MIT License
-# Copyright (c) 2025 Mahtab Syed
-# https://www.linkedin.com/in/mahtabsyed/
+## MIT License
+## Copyright (c) 2025 Mahtab Syed
+## https://www.linkedin.com/in/mahtabsyed/
 
 import os
 import requests
@@ -121,7 +121,7 @@ import json
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# 加载环境变量
+## 加载环境变量
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -135,7 +135,7 @@ if not OPENAI_API_KEY or not GOOGLE_CUSTOM_SEARCH_API_KEY or not GOOGLE_CSE_ID:
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# --- 步骤 1：分类提示词 ---
+## --- 步骤 1：分类提示词 ---
 def classify_prompt(prompt: str) -> dict:
     system_message = {
         "role": "system",
@@ -159,7 +159,7 @@ def classify_prompt(prompt: str) -> dict:
     reply = response.choices[0].message.content
     return json.loads(reply)
 
-# --- 步骤 2：Google 搜索 ---
+## --- 步骤 2：Google 搜索 ---
 def google_search(query: str, num_results=1) -> list:
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -186,7 +186,7 @@ def google_search(query: str, num_results=1) -> list:
     except requests.exceptions.RequestException as e:
         return {"error": str(e)}
 
-# --- 步骤 3：生成响应 ---
+## --- 步骤 3：生成响应 ---
 def generate_response(prompt: str, classification: str, search_results=None) -> str:
     if classification == "simple":
         model = "gpt-4o-mini"
@@ -214,7 +214,7 @@ def generate_response(prompt: str, classification: str, search_results=None) -> 
     )
     return response.choices[0].message.content, model
 
-# --- 步骤 4：组合路由器 ---
+## --- 步骤 4：组合路由器 ---
 def handle_prompt(prompt: str) -> dict:
     classification_result = classify_prompt(prompt)
     # 删除或注释掉下一行以避免重复打印
@@ -228,8 +228,8 @@ def handle_prompt(prompt: str) -> dict:
     return {"classification": classification, "response": answer, "model": model}
 
 test_prompt = "What is the capital of Australia?"
-# test_prompt = "Explain the impact of quantum computing on cryptography."
-# test_prompt = "When does the Australian Open 2026 start, give me full date?"
+## test_prompt = "Explain the impact of quantum computing on cryptography."
+## test_prompt = "When does the Australian Open 2026 start, give me full date?"
 result = handle_prompt(test_prompt)
 print("🔍 Classification:", result["classification"])
 print("🧠 Model Used:", result["model"])
@@ -238,7 +238,7 @@ print("🧠 Response:\n", result["response"])
 
 这段 Python 代码实现了一个提示词路由系统来回答用户问题。它首先从 .env 文件加载 OpenAI 和 Google 自定义搜索的必要 API 密钥。核心功能在于将用户的提示词分类为三个类别：simple、reasoning 或 internet search。专用函数利用 OpenAI 模型进行此分类步骤。如果提示词需要当前信息，则使用 Google 自定义搜索 API 执行 Google 搜索。另一个函数然后生成最终响应，根据分类选择适当的 OpenAI 模型。对于互联网搜索查询，搜索结果作为上下文提供给模型。主 handle_prompt 函数编排此工作流，在生成响应之前调用分类和搜索（如果需要）函数。它返回分类、使用的模型和生成的答案。该系统有效地将不同类型的查询引导到优化的方法以获得更好的响应。
 
-# 实践代码示例（OpenRouter）
+## 实践代码示例（OpenRouter）
 
 OpenRouter 通过单个 API 端点提供对数百个 AI 模型的统一接口。它提供自动故障转移和成本优化，可通过您首选的 SDK 或框架轻松集成。
 
@@ -292,7 +292,7 @@ OpenRouter 提供详细的排行榜（[https://openrouter.ai/rankings](https://o
 ![][image1]  
 图 1：OpenRouter 网站（[https://openrouter.ai/](https://openrouter.ai/)）
 
-# 超越动态模型切换：Agent 资源优化的范围
+## 超越动态模型切换：Agent 资源优化的范围
 
 资源感知优化对于开发在现实世界约束内高效有效运行的智能 Agent 系统至关重要。让我们看看一些额外的技术：
 
@@ -314,7 +314,7 @@ OpenRouter 提供详细的排行榜（[https://openrouter.ai/rankings](https://o
 
 **优雅降级和回退机制**确保智能 Agent 系统即使在资源约束严重时也能继续运行，尽管可能以降低的能力运行，优雅地降低性能并回退到替代策略以维持运营并提供基本功能。
 
-# 概览
+## 概览
 
 **什么**：资源感知优化解决了在智能系统中管理计算、时间和财务资源消耗的挑战。基于 LLM 的应用程序可能既昂贵又缓慢，为每项任务选择最佳模型或工具通常效率低下。这在系统输出的质量与产生它所需的资源之间创建了基本权衡。如果没有动态管理策略，系统无法适应不同的任务复杂性或在预算和性能约束内运行。
 
@@ -328,7 +328,7 @@ OpenRouter 提供详细的排行榜（[https://openrouter.ai/rankings](https://o
 
 图 2：资源感知优化设计模式
 
-# 关键要点
+## 关键要点
 
 * 资源感知优化至关重要：智能 Agent 可以动态管理计算、时间和财务资源。根据实时约束和目标做出关于模型使用和执行路径的决策。
 * 可扩展性的多 Agent 架构：Google 的 ADK 提供多 Agent 框架，实现模块化设计。不同的 Agent（回答、路由、批评）处理特定任务。
@@ -337,11 +337,11 @@ OpenRouter 提供详细的排行榜（[https://openrouter.ai/rankings](https://o
 * 通过反馈和灵活性进行优化：批评和模型集成灵活性的评估能力有助于自适应和自我改进的系统行为。
 * 其他资源感知优化：其他方法包括自适应工具使用和选择、上下文修剪和摘要、主动资源预测、多 Agent 系统中的成本敏感探索、节能部署、并行化和分布式计算感知、学习型资源分配策略、优雅降级和回退机制，以及关键任务的优先级排序。
 
-# 结论
+## 结论
 
 资源感知优化对于智能 Agent 的开发至关重要，能够在现实世界约束内高效运行。通过管理计算、时间和财务资源，Agent 可以实现最佳性能和成本效益。动态模型切换、自适应工具使用和上下文修剪等技术对于实现这些效率至关重要。高级策略，包括学习型资源分配策略和优雅降级，增强了 Agent 在不同条件下的适应性和弹性。将这些优化原则集成到 Agent 设计中对于构建可扩展、强大和可持续的 AI 系统至关重要。
 
-# 参考文献
+## 参考文献
 
 1. Google's Agent Development Kit (ADK): [https://google.github.io/adk-docs/](https://google.github.io/adk-docs/)
 2. Gemini Flash 2.5 & Gemini 2.5 Pro:  [https://aistudio.google.com/](https://aistudio.google.com/)

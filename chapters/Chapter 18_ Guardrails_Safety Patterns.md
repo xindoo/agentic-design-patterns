@@ -4,7 +4,7 @@ Guardrails（防护栏），也称为安全模式，是确保智能 Agent 安全
 
 防护栏的主要目的不是限制 Agent 的能力，而是确保其运行稳健、值得信赖且有益。它们作为安全措施和指导力量发挥作用，对构建负责任的 AI 系统、减轻风险以及通过确保可预测、安全和合规的行为来维护用户信任至关重要，从而防止操纵并维护道德和法律标准。没有它们，AI 系统可能会不受约束、不可预测且具有潜在危险。为了进一步缓解这些风险，可以使用计算密集度较低的模型作为快速的额外保障，预先筛选输入或对主模型的输出进行双重检查，以发现策略违规。
 
-# 实际应用与用例
+## 实际应用与用例
 
 Guardrails 应用于各种 Agent 应用：
 
@@ -18,7 +18,7 @@ Guardrails 应用于各种 Agent 应用：
 
 在这些场景中，guardrails 作为防御机制发挥作用，保护用户、组织和 AI 系统的声誉。
 
-# 实践代码 CrewAI 示例
+## 实践代码 CrewAI 示例
 
 让我们看看 CrewAI 的示例。使用 CrewAI 实施 guardrails 是一种多方面的方法，需要分层防御而不是单一解决方案。该过程从输入清理和验证开始，在 Agent 处理之前筛选和清理传入数据。这包括利用内容审核 API 来检测不当提示，以及使用像 Pydantic 这样的模式验证工具来确保结构化输入遵守预定义的规则，可能限制 Agent 参与敏感话题。
 
@@ -31,11 +31,11 @@ Agent 配置充当另一个 guardrail 层。定义角色、目标和背景故事
 让我们看一个例子。此代码演示了如何使用 CrewAI 通过使用专用 Agent 和任务（由特定提示词引导并通过基于 Pydantic 的 guardrail 验证）为 AI 系统添加安全层，在潜在有问题的用户输入到达主 AI 之前对其进行筛选。
 
 ```python
-# Copyright (c) 2025 Marco Fago
-# https://www.linkedin.com/in/marco-fago/
+## Copyright (c) 2025 Marco Fago
+## https://www.linkedin.com/in/marco-fago/
 #
-# 此代码采用 MIT 许可证授权。
-# 请参阅仓库中的 LICENSE 文件以获取完整的许可证文本。
+## 此代码采用 MIT 许可证授权。
+## 请参阅仓库中的 LICENSE 文件以获取完整的许可证文本。
 
 import os
 import json
@@ -47,24 +47,24 @@ from pydantic import BaseModel, Field, ValidationError
 from crewai.tasks.task_output import TaskOutput
 from crewai.crews.crew_output import CrewOutput
 
-# --- 0. 设置 ---
-# 设置日志记录以实现可观测性。设置为 logging.INFO 可查看详细的 guardrail 日志。
+## --- 0. 设置 ---
+## 设置日志记录以实现可观测性。设置为 logging.INFO 可查看详细的 guardrail 日志。
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# 为了演示，我们假设 GOOGLE_API_KEY 已在您的环境中设置
+## 为了演示，我们假设 GOOGLE_API_KEY 已在您的环境中设置
 if not os.environ.get("GOOGLE_API_KEY"):
     logging.error("GOOGLE_API_KEY 环境变量未设置。请设置它以运行 CrewAI 示例。")
     exit(1)
 
 logging.info("GOOGLE_API_KEY 环境变量已设置。")
 
-# 定义用作内容策略执行者的 LLM
-# 使用像 Gemini Flash 这样快速、成本效益高的模型是 guardrails 的理想选择。
+## 定义用作内容策略执行者的 LLM
+## 使用像 Gemini Flash 这样快速、成本效益高的模型是 guardrails 的理想选择。
 CONTENT_POLICY_MODEL = "gemini/gemini-2.0-flash"
 
-# --- AI 内容策略提示词 ---
-# 此提示词指示 LLM 充当内容策略执行者。
-# 它旨在根据预定义的规则过滤和阻止不合规的输入。
+## --- AI 内容策略提示词 ---
+## 此提示词指示 LLM 充当内容策略执行者。
+## 它旨在根据预定义的规则过滤和阻止不合规的输入。
 SAFETY_GUARDRAIL_PROMPT = """
 您是一个 AI 内容策略执行者，负责严格筛选用于主 AI 系统的输入。您的核心职责是确保只有符合严格安全和相关性策略的内容被处理。您将收到一个"待审查输入"，主 AI Agent 即将处理该输入。您的任务是根据以下策略指令评估此输入。
 
@@ -111,14 +111,14 @@ SAFETY_GUARDRAIL_PROMPT = """
 
 """
 
-# --- Guardrail 的结构化输出定义 ---
+## --- Guardrail 的结构化输出定义 ---
 class PolicyEvaluation(BaseModel):
     """策略执行者结构化输出的 Pydantic 模型。"""
     compliance_status: str = Field(description="合规状态：'compliant' 或 'non-compliant'。")
     evaluation_summary: str = Field(description="合规状态的简要解释。")
     triggered_policies: List[str] = Field(description="已触发的策略指令列表（如果有）。")
 
-# --- 输出验证 Guardrail 函数 ---
+## --- 输出验证 Guardrail 函数 ---
 def validate_policy_evaluation(output: Any) -> Tuple[bool, Any]:
     """
     根据 PolicyEvaluation Pydantic 模型验证 LLM 的原始字符串输出。
@@ -164,8 +164,8 @@ def validate_policy_evaluation(output: Any) -> Tuple[bool, Any]:
         logging.error(f"Guardrail 失败：发生意外错误：{e}")
         return False, f"验证期间发生意外错误：{e}"
 
-# --- Agent 和任务设置 ---
-# Agent 1：策略执行者 Agent
+## --- Agent 和任务设置 ---
+## Agent 1：策略执行者 Agent
 policy_enforcer_agent = Agent(
     role='AI 内容策略执行者',
     goal='严格根据预定义的安全和相关性策略筛选用户输入。',
@@ -175,7 +175,7 @@ policy_enforcer_agent = Agent(
     llm=LLM(model=CONTENT_POLICY_MODEL, temperature=0.0, api_key=os.environ.get("GOOGLE_API_KEY"), provider="google")
 )
 
-# 任务：评估用户输入
+## 任务：评估用户输入
 evaluate_input_task = Task(
     description=(
         f"{SAFETY_GUARDRAIL_PROMPT}"
@@ -188,7 +188,7 @@ evaluate_input_task = Task(
     output_pydantic=PolicyEvaluation,
 )
 
-# --- Crew 设置 ---
+## --- Crew 设置 ---
 crew = Crew(
     agents=[policy_enforcer_agent],
     tasks=[evaluate_input_task],
@@ -196,7 +196,7 @@ crew = Crew(
     verbose=False,
 )
 
-# --- 执行 ---
+## --- 执行 ---
 def run_guardrail_crew(user_input: str) -> Tuple[bool, str, List[str]]:
     """
     运行 CrewAI guardrail 以评估用户输入。
@@ -287,7 +287,7 @@ if __name__ == "__main__":
 
 最后，脚本包含一个主执行块（if __name__ == "__main__":），提供了演示。它定义了一个 test_cases 列表，表示各种用户输入，包括合规和不合规的示例。然后它遍历这些测试用例，为每个输入调用 run_guardrail_crew，并使用 print_test_case_result 函数格式化和显示每个测试的结果，清楚地指示输入、合规状态、摘要以及任何被违反的策略，以及建议的操作（继续或阻止）。此主块用于通过具体示例展示实施的 guardrail 系统的功能。
 
-# 实践代码 Vertex AI 示例
+## 实践代码 Vertex AI 示例
 
 Google Cloud 的 Vertex AI 提供了一种多方面的方法来减轻风险并开发可靠的智能 Agent。这包括建立 Agent 和用户身份和授权、实施过滤输入和输出的机制、设计具有嵌入式安全控制和预定义上下文的工具、利用内置的 Gemini 安全功能（如内容过滤器和系统指令）以及通过回调验证模型和工具调用。
 
@@ -324,7 +324,7 @@ def validate_tool_params(
     print(f"工具 '{tool.name}' 的回调验证通过。")
     return None
 
-# 使用文档化的类设置 Agent
+## 使用文档化的类设置 Agent
 root_agent = Agent( # 使用文档化的 Agent 类
     model='gemini-2.0-flash-exp', # 使用指南中的模型名称
     name='root_agent',
@@ -392,7 +392,7 @@ LLM（如 Gemini）可以支持强大的、基于提示词的安全措施，如�
 
 ```
 
-# 构建可靠的 Agent
+## 构建可靠的 Agent
 
 构建可靠的 AI Agent 要求我们应用与管理传统软件工程相同的严谨性和最佳实践。我们必须记住，即使是确定性代码也容易出现错误和不可预测的涌现行为，这就是为什么容错、状态管理和健壮测试等原则一直至关重要。我们不应将 Agent 视为全新的东西，而应将它们视为比以往任何时候都更需要这些经过验证的工程学科的复杂系统。
 
@@ -406,7 +406,7 @@ LLM（如 Gemini）可以支持强大的、基于提示词的安全措施，如�
 
 通过整合这些核心原则——容错、模块化设计、深度可观测性和严格的安全性——我们从简单地创建一个功能性 Agent 转向工程化一个具有弹性的、生产级的系统。这确保了 Agent 的操作不仅有效，而且稳健、可审计和值得信赖，满足任何精心设计的软件所需的高标准。
 
-# 概览
+## 概览
 
 **内容：** 随着智能 Agent 和 LLM 变得更加自主，如果不加约束，它们可能会带来风险，因为它们的行为可能是不可预测的。它们可能生成有害、有偏见、不道德或事实不正确的输出，可能造成现实世界的损害。这些系统容易受到对抗性攻击，例如越狱，这些攻击旨在绕过其安全协议。没有适当的控制，Agent 系统可能会以意想不到的方式行事，导致用户信任的丧失，并使组织面临法律和声誉损害。
 
@@ -420,7 +420,7 @@ LLM（如 Gemini）可以支持强大的、基于提示词的安全措施，如�
 
 图 1：Guardrail 设计模式
 
-# 关键要点
+## 关键要点
 
 * Guardrails 对于通过防止有害、有偏见或离题的响应来构建负责任、符合道德规范和安全的 Agent 至关重要。
 * 它们可以在各个阶段实施，包括输入验证、输出过滤、行为提示词、工具使用限制和外部审核。
@@ -429,7 +429,7 @@ LLM（如 Gemini）可以支持强大的、基于提示词的安全措施，如�
 * 有效的 guardrails 对于维护用户信任和保护 Agent 及其开发者的声誉至关重要。
 * 构建可靠的、生产级 Agent 的最有效方法是将它们视为复杂软件，应用与传统系统几十年来相同的经过验证的工程最佳实践——如容错、状态管理和健壮测试。
 
-# 结论
+## 结论
 
 实施有效的 guardrails 代表了对负责任的 AI 开发的核心承诺，超越了单纯的技术执行。这些安全模式的战略性应用使开发者能够构建既稳健又高效的智能 Agent，同时优先考虑可信度和有益结果。采用分层防御机制，整合从输入验证到人工监督的各种技术，可以产生一个对意外或有害输出具有弹性的系统。持续评估和改进这些 guardrails 对于适应不断演变的挑战并确保 Agent 系统的持久完整性至关重要。最终，精心设计的 guardrails 使 AI 能够以安全有效的方式服务于人类需求。
 

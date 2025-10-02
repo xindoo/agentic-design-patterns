@@ -4,7 +4,7 @@ LLM 在生成类人文本方面展现出了强大的能力。然而，它们的�
 
 对于 AI Agent 来说，这一点至关重要，因为它允许它们在实时、可验证的数据中立足，而不仅仅是静态的训练数据。这种能力使它们能够准确执行复杂任务，例如访问最新的公司政策来回答特定问题，或在下订单前检查当前库存。通过整合外部知识，RAG 将 Agent 从简单的对话者转变为能够执行有意义工作的有效的、数据驱动的工具。
 
-# 知识检索（RAG）模式概述
+## 知识检索（RAG）模式概述
 
 知识检索（RAG）模式通过在生成响应之前授予 LLM 访问外部知识库的权限，显著增强了它们的能力。RAG 不是仅依赖于其内部的预训练知识，而是允许 LLM "查找"信息，就像人类可能查阅书籍或搜索互联网一样。这个过程使 LLM 能够提供更准确、最新和可验证的答案。
 
@@ -54,7 +54,7 @@ RAG 框架提供了几个重要的优势。它允许 LLM 访问最新信息，�
 
 ### **总结：** Agentic RAG 代表了标准检索模式的复杂演进，将其从被动的数据管道转变为主动的、解决问题的框架。通过嵌入一个可以评估来源、协调冲突、分解复杂问题和使用外部工具的推理层，agent 显著提高了生成答案的可靠性和深度。这一进步使 AI 更加可信和有能力，尽管它带来了必须仔细管理的系统复杂性、延迟和成本方面的重要权衡。
 
-# 实际应用和用例
+## 实际应用和用例
 
 知识检索（RAG）正在改变大语言模型（LLM）在各个行业中的使用方式，增强了它们提供更准确和上下文相关响应的能力。
 
@@ -67,7 +67,7 @@ RAG 框架提供了几个重要的优势。它允许 LLM 访问最新信息，�
 
 通过整合外部知识，RAG 将 LLM 的能力从简单通信扩展到作为知识处理系统发挥作用。
 
-# 实践代码示例（ADK）
+## 实践代码示例（ADK）
 
 为了说明知识检索（RAG）模式，让我们看三个示例。
 
@@ -88,25 +88,25 @@ search_agent = Agent(
 其次，本节解释如何在 Google ADK 中利用 Vertex AI RAG 功能。提供的代码演示了从 ADK 初始化 VertexAiRagMemoryService。这允许建立到 Google Cloud Vertex AI RAG Corpus 的连接。该服务通过指定 corpus 资源名称和可选参数（如 SIMILARITY_TOP_K 和 VECTOR_DISTANCE_THRESHOLD）进行配置。这些参数影响检索过程。SIMILARITY_TOP_K 定义要检索的最相似结果的数量。VECTOR_DISTANCE_THRESHOLD 设置检索结果的语义距离限制。这种设置使 agent 能够从指定的 RAG Corpus 执行可扩展和持久的语义知识检索。该过程有效地将 Google Cloud 的 RAG 功能集成到 ADK agent 中，从而支持开发基于事实数据的响应。
 
 ```python
-# 从 google.adk.memory 模块导入必要的 VertexAiRagMemoryService 类。
+## 从 google.adk.memory 模块导入必要的 VertexAiRagMemoryService 类。
 from google.adk.memory import VertexAiRagMemoryService
 
 RAG_CORPUS_RESOURCE_NAME = "projects/your-gcp-project-id/locations/us-central1/ragCorpora/your-corpus-id"
 
-# 为要检索的最相似结果的数量定义一个可选参数。
-# 这控制 RAG 服务将返回多少相关文档块。
+## 为要检索的最相似结果的数量定义一个可选参数。
+## 这控制 RAG 服务将返回多少相关文档块。
 SIMILARITY_TOP_K = 5
 
-# 为向量距离阈值定义一个可选参数。
-# 此阈值确定检索结果允许的最大语义距离；
-# 距离大于此值的结果可能会被过滤掉。
+## 为向量距离阈值定义一个可选参数。
+## 此阈值确定检索结果允许的最大语义距离；
+## 距离大于此值的结果可能会被过滤掉。
 VECTOR_DISTANCE_THRESHOLD = 0.7
 
-# 初始化 VertexAiRagMemoryService 的实例。
-# 这设置了与您的 Vertex AI RAG Corpus 的连接。
-# - rag_corpus: 指定您的 RAG Corpus 的唯一标识符。
-# - similarity_top_k: 设置要获取的相似结果的最大数量。
-# - vector_distance_threshold: 定义用于过滤结果的相似度阈值。
+## 初始化 VertexAiRagMemoryService 的实例。
+## 这设置了与您的 Vertex AI RAG Corpus 的连接。
+## - rag_corpus: 指定您的 RAG Corpus 的唯一标识符。
+## - similarity_top_k: 设置要获取的相似结果的最大数量。
+## - vector_distance_threshold: 定义用于过滤结果的相似度阈值。
 memory_service = VertexAiRagMemoryService(
     rag_corpus=RAG_CORPUS_RESOURCE_NAME,
     similarity_top_k=SIMILARITY_TOP_K,
@@ -114,7 +114,7 @@ memory_service = VertexAiRagMemoryService(
 )
 ```
 
-# 实践代码示例（LangChain）
+## 实践代码示例（LangChain）
 
 第三，让我们使用 LangChain 走一遍完整的示例。
 
@@ -136,14 +136,14 @@ import weaviate
 from weaviate.embedded import EmbeddedOptions
 import dotenv
 
-# 加载环境变量（例如，OPENAI_API_KEY）
+## 加载环境变量（例如，OPENAI_API_KEY）
 dotenv.load_dotenv()
 
-# 设置您的 OpenAI API 密钥（确保从 .env 加载或在此处设置）
-# os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
+## 设置您的 OpenAI API 密钥（确保从 .env 加载或在此处设置）
+## os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
 
-# --- 1. 数据准备（预处理） ---
-# 加载数据
+## --- 1. 数据准备（预处理） ---
+## 加载数据
 url = "https://github.com/langchain-ai/langchain/blob/master/docs/docs/how_to/state_of_the_union.txt"
 res = requests.get(url)
 with open("state_of_the_union.txt", "w") as f:
@@ -151,11 +151,11 @@ with open("state_of_the_union.txt", "w") as f:
 loader = TextLoader('./state_of_the_union.txt')
 documents = loader.load()
 
-# 分块文档
+## 分块文档
 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 chunks = text_splitter.split_documents(documents)
 
-# 嵌入并将块存储在 Weaviate 中
+## 嵌入并将块存储在 Weaviate 中
 client = weaviate.Client(
     embedded_options = EmbeddedOptions()
 )
@@ -166,19 +166,19 @@ vectorstore = Weaviate.from_documents(
     by_text = False
 )
 
-# 定义检索器
+## 定义检索器
 retriever = vectorstore.as_retriever()
 
-# 初始化 LLM
+## 初始化 LLM
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-# --- 2. 为 LangGraph 定义状态 ---
+## --- 2. 为 LangGraph 定义状态 ---
 class RAGGraphState(TypedDict):
     question: str
     documents: List[Document]
     generation: str
 
-# --- 3. 定义节点（函数） ---
+## --- 3. 定义节点（函数） ---
 def retrieve_documents_node(state: RAGGraphState) -> RAGGraphState:
     """基于用户的问题检索文档。"""
     question = state["question"]
@@ -203,24 +203,24 @@ def generate_response_node(state: RAGGraphState) -> RAGGraphState:
     generation = rag_chain.invoke({"context": context, "question": question})
     return {"question": question, "documents": documents, "generation": generation}
 
-# --- 4. 构建 LangGraph 图 ---
+## --- 4. 构建 LangGraph 图 ---
 workflow = StateGraph(RAGGraphState)
 
-# 添加节点
+## 添加节点
 workflow.add_node("retrieve", retrieve_documents_node)
 workflow.add_node("generate", generate_response_node)
 
-# 设置入口点
+## 设置入口点
 workflow.set_entry_point("retrieve")
 
-# 添加边（转换）
+## 添加边（转换）
 workflow.add_edge("retrieve", "generate")
 workflow.add_edge("generate", END)
 
-# 编译图
+## 编译图
 app = workflow.compile()
 
-# --- 5. 运行 RAG 应用程序 ---
+## --- 5. 运行 RAG 应用程序 ---
 if __name__ == "__main__":
     print("\n--- Running RAG Query ---")
     query = "What did the president say about Justice Breyer"
@@ -237,7 +237,7 @@ if __name__ == "__main__":
 
 这段 Python 代码说明了使用 LangChain 和 LangGraph 实现的检索增强生成（RAG）管道。该过程从基于文本文档创建知识库开始，该文档被分割成块并转换为嵌入。然后将这些嵌入存储在 Weaviate 向量存储中，便于高效的信息检索。LangGraph 中的 StateGraph 用于管理两个关键函数之间的工作流：`retrieve_documents_node` 和 `generate_response_node`。`retrieve_documents_node` 函数查询向量存储，基于用户的输入识别相关文档块。随后，`generate_response_node` 函数利用检索的信息和预定义的提示模板，使用 OpenAI 大语言模型（LLM）生成响应。`app.stream` 方法允许通过 RAG 管道执行查询，展示系统生成上下文相关输出的能力。
 
-# 概览
+## 概览
 
 **什么**：LLM 在文本生成方面具有令人印象深刻的能力，但从根本上受到其训练数据的限制。这些知识是静态的，这意味着它不包括实时信息或私有的、特定领域的数据。因此，它们的响应可能过时、不准确或缺乏专业任务所需的特定上下文。这一差距限制了它们对需要当前和事实答案的应用的可靠性。
 
@@ -255,7 +255,7 @@ if __name__ == "__main__":
 
 图 3：知识检索模式：AI agent 响应用户查询，从公共互联网查找和综合信息。
 
-# 关键要点
+## 关键要点
 
 * 知识检索（RAG）通过允许 LLM 访问外部的、最新的和特定的信息来增强它们。
 * 该过程涉及检索（在知识库中搜索相关片段）和增强（将这些片段添加到 LLM 的提示中）。
@@ -265,13 +265,13 @@ if __name__ == "__main__":
 * Agentic RAG 超越了简单的信息检索，使用智能 agent 主动推理、验证和精炼外部知识，确保更准确和可靠的答案。
 * 实际应用涵盖企业搜索、客户支持、法律研究和个性化推荐。
 
-# 结论
+## 结论
 
 总之，检索增强生成（RAG）通过将大语言模型连接到外部的、最新的数据源，解决了其静态知识的核心限制。该过程通过首先检索相关信息片段，然后增强用户的提示来工作，使 LLM 能够生成更准确和上下文感知的响应。这是通过嵌入、语义搜索和向量数据库等基础技术实现的，这些技术基于含义而不仅仅是关键字来查找信息。通过将输出建立在可验证的数据上，RAG 显著减少了事实错误，并允许使用专有信息，通过引用增强信任。
 
 一个高级演进，Agentic RAG，引入了一个推理层，主动验证、协调和综合检索的知识，以获得更大的可靠性。类似地，像 GraphRAG 这样的专门方法利用知识图谱来导航明确的数据关系，允许系统综合对高度复杂、互联查询的答案。这个 agent 可以解决冲突信息，执行多步查询，并使用外部工具查找缺失的数据。虽然这些高级方法增加了复杂性和延迟，但它们大大提高了最终响应的深度和可信度。这些模式的实际应用已经在改变各个行业，从企业搜索和客户支持到个性化内容交付。尽管存在挑战，RAG 是使 AI 更加知识渊博、可靠和有用的关键模式。最终，它将 LLM 从闭卷对话者转变为强大的、开卷推理工具。
 
-# 参考文献
+## 参考文献
 
 1. Lewis, P., et al. (2020). *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*. [https://arxiv.org/abs/2005.11401](https://arxiv.org/abs/2005.11401)
 2. Google AI for Developers Documentation.  *Retrieval Augmented Generation - [https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview](https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview)*

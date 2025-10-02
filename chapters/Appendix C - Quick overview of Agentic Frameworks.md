@@ -1,6 +1,6 @@
 # 附录 C \- Agentic 框架快速概览
 
-# LangChain 
+## LangChain 
 
 LangChain 是一个用于开发由大语言模型驱动的应用程序的框架。其核心优势在于 LangChain 表达式语言（LCEL），它允许你将组件"管道化"到一个链中。这创建了一个清晰的线性序列，其中一个步骤的输出成为下一个步骤的输入。它专为有向无环图（DAG）工作流而构建，这意味着处理流程单向流动，没有循环。
 
@@ -13,8 +13,8 @@ LangChain 是一个用于开发由大语言模型驱动的应用程序的框架�
 Python
 
 ```python
-# 一个简单的 LCEL 链概念示例
-# （这不是可运行的代码，只是说明流程）
+## 一个简单的 LCEL 链概念示例
+## （这不是可运行的代码，只是说明流程）
 chain = prompt | model | output_parse
 ```
 
@@ -43,7 +43,7 @@ LangGraph 是建立在 LangChain 之上的库，用于处理更高级的 agentic
 Python
 
 ```python
-# 图状态
+## 图状态
 class State(TypedDict):
     topic: str
     joke: str
@@ -51,7 +51,7 @@ class State(TypedDict):
     poem: str
     combined_output: str
 
-# 节点
+## 节点
 def call_llm_1(state: State):
     """第一次 LLM 调用以生成初始笑话"""
     msg = llm.invoke(f"Write a joke about {state['topic']}")
@@ -75,16 +75,16 @@ def aggregator(state: State):
     combined += f"POEM:\n{state['poem']}"
     return {"combined_output": combined}
 
-# 构建工作流
+## 构建工作流
 parallel_builder = StateGraph(State)
 
-# 添加节点
+## 添加节点
 parallel_builder.add_node("call_llm_1", call_llm_1)
 parallel_builder.add_node("call_llm_2", call_llm_2)
 parallel_builder.add_node("call_llm_3", call_llm_3)
 parallel_builder.add_node("aggregator", aggregator)
 
-# 添加边来连接节点
+## 添加边来连接节点
 parallel_builder.add_edge(START, "call_llm_1")
 parallel_builder.add_edge(START, "call_llm_2")
 parallel_builder.add_edge(START, "call_llm_3")
@@ -95,17 +95,17 @@ parallel_builder.add_edge("aggregator", END)
 
 parallel_workflow = parallel_builder.compile()
 
-# 显示工作流
+## 显示工作流
 display(Image(parallel_workflow.get_graph().draw_mermaid_png()))
 
-# 调用
+## 调用
 state = parallel_workflow.invoke({"topic": "cats"})
 print(state["combined_output"])
 ```
 
 这段代码定义并运行了一个并行操作的 LangGraph 工作流。其主要目的是同时生成关于给定主题的笑话、故事和诗歌，然后将它们组合成单个格式化的文本输出。
 
-# Google's ADK
+## Google's ADK
 
 Google 的 Agent 开发工具包（ADK）提供了一个高级、结构化的框架，用于构建和部署由多个交互式 AI Agent 组成的应用程序。与 LangChain 和 LangGraph 相比，它提供了一个更具主观性和面向生产的系统来编排 Agent 协作，而不是提供 Agent 内部逻辑的基础构建块。
 

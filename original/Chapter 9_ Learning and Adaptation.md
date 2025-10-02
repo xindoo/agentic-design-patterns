@@ -2,7 +2,7 @@
 
 Learning and adaptation are pivotal for enhancing the capabilities of artificial intelligence agents. These processes enable agents to evolve beyond predefined parameters, allowing them to improve autonomously through experience and environmental interaction. By learning and adapting, agents can effectively manage novel situations and optimize their performance without constant manual intervention. This chapter explores the principles and mechanisms underpinning agent learning and adaptation in detail.
 
-# The big picture
+## The big picture
 
 Agents learn and adapt by changing their thinking, actions, or knowledge based on new experiences and data. This allows agents to evolve from simply following instructions to becoming smarter over time.
 
@@ -40,7 +40,7 @@ This two-step process can be complex and unstable. For instance, the LLM might f
 
 In essence, DPO simplifies alignment by directly optimizing the language model on human preference data. This avoids the complexity and potential instability of training and using a separate reward model, making the alignment process more efficient and robust.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 Adaptive agents exhibit enhanced performance in variable environments through iterative updates driven by experiential data.
 
@@ -53,7 +53,7 @@ Adaptive agents exhibit enhanced performance in variable environments through it
 * **Game AI agents** enhance player engagement by dynamically adapting strategic algorithms, thereby increasing game complexity and challenge.  
 * **Knowledge Base Learning Agents**: Agents can leverage Retrieval Augmented Generation (RAG) to maintain a dynamic knowledge base of problem descriptions and proven solutions (see the Chapter 14). By storing successful strategies and challenges encountered, the agent can reference this data during decision-making, enabling it to adapt to new situations more effectively by applying previously successful patterns or avoiding known pitfalls.
 
-# Case Study: The Self-Improving Coding Agent (SICA)
+## Case Study: The Self-Improving Coding Agent (SICA)
 
 The Self-Improving Coding Agent (SICA), developed by Maxime Robeyns, Laurence Aitchison, and Martin Szummer, represents an advancement in agent-based learning, demonstrating the capacity for an agent to modify its own source code. This contrasts with traditional approaches where one agent might train another; SICA acts as both the modifier and the modified entity, iteratively refining its code base to improve performance across various coding challenges.
 
@@ -89,7 +89,7 @@ In terms of its core intelligence, the agent framework supports LLM integration 
 
 A notable challenge in the initial SICA implementation was prompting the LLM-based agent to independently propose novel, innovative, feasible, and engaging modifications during each meta-improvement iteration. This limitation, particularly in fostering open-ended learning and authentic creativity in LLM agents, remains a key area of investigation in current research.
 
-# AlphaEvolve and OpenEvolve
+## AlphaEvolve and OpenEvolve
 
 **AlphaEvolve** is an AI agent developed by Google designed to discover and optimize algorithms. It utilizes a combination of LLMs, specifically Gemini models (Flash and Pro), automated evaluation systems, and an evolutionary algorithm framework. This system aims to advance both theoretical mathematics and practical computing applications.
 
@@ -110,21 +110,21 @@ This code snippet uses the OpenEvolve library to perform evolutionary optimizati
 ```python
 from openevolve import OpenEvolve
 
-# Initialize the system
+## Initialize the system
 evolve = OpenEvolve(
    initial_program_path="path/to/initial_program.py",
    evaluation_file="path/to/evaluator.py",
    config_path="path/to/config.yaml"
 )
 
-# Run the evolution
+## Run the evolution
 best_program = await evolve.run(iterations=1000)
 print(f"Best program metrics:")
 for name, value in best_program.metrics.items():
    print(f"  {name}: {value:.4f}")
 ```
 
-# At a Glance
+## At a Glance
 
 **What:** AI agents often operate in dynamic and unpredictable environments where pre-programmed logic is insufficient. Their performance can degrade when faced with novel situations not anticipated during their initial design. Without the ability to learn from experience, agents cannot optimize their strategies or personalize their interactions over time. This rigidity limits their effectiveness and prevents them from achieving true autonomy in complex, real-world scenarios.
 
@@ -138,7 +138,7 @@ for name, value in best_program.metrics.items():
 
 Fig.4: Learning and adapting pattern
 
-# Key Takeaways
+## Key Takeaways
 
 * Learning and Adaptation are about agents getting better at what they do and handling new situations by using their experiences.  
 * "Adaptation" is the visible change in an agent's behavior or knowledge that comes from learning.  
@@ -150,7 +150,7 @@ Fig.4: Learning and adapting pattern
 * An agent system, equipped with basic coding tools, can autonomously edit itself, and thereby improve its performance on benchmark tasks  
 * AlphaEvolve is Google's AI agent that leverages LLMs and an evolutionary framework to autonomously discover and optimize algorithms, significantly enhancing both fundamental research and practical computing applications..
 
-# Conclusion
+## Conclusion
 
 This chapter examines the crucial roles of learning and adaptation in Artificial Intelligence. AI agents enhance their performance through continuous data acquisition and experience. The Self-Improving Coding Agent (SICA) exemplifies this by autonomously improving its capabilities through code modifications.
 
@@ -158,7 +158,7 @@ We have reviewed the fundamental components of agentic AI, including architectur
 
 These elements contribute to significant advancements, such as Google's AlphaEvolve. This AI system independently discovers and refines algorithms by LLMs, automated assessment, and an evolutionary approach, driving progress in scientific research and computational techniques. Such patterns can be combined to construct sophisticated AI systems. Developments like AlphaEvolve demonstrate that autonomous algorithmic discovery and optimization by AI agents are attainable.
 
-# References
+## References
 
 1. Sutton, R. S., & Barto, A. G. (2018). *Reinforcement Learning: An Introduction*. MIT Press.   
 2. Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press.   

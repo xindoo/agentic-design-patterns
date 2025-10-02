@@ -2,7 +2,7 @@
 
 要使 LLM 作为 Agent 有效运作，它们的能力必须超越多模态生成。与外部环境的交互是必要的，包括访问当前数据、使用外部软件以及执行特定的操作任务。模型上下文协议（MCP）通过提供一个标准化接口来满足这一需求，使 LLM 能够与外部资源进行交互。该协议是促进一致和可预测集成的关键机制。
 
-# MCP 模式概述
+## MCP 模式概述
 
 想象一个通用适配器，它允许任何 LLM 连接到任何外部系统、数据库或工具，而无需为每一个进行自定义集成。这本质上就是模型上下文协议（MCP）的作用。它是一个开放标准，旨在标准化 Gemini、OpenAI 的 GPT 模型、Mixtral 和 Claude 等 LLM 与外部应用程序、数据源和工具的通信方式。可以将其视为一种通用连接机制，简化了 LLM 获取上下文、执行操作以及与各种系统交互的方式。
 
@@ -12,7 +12,7 @@ MCP 基于客户端-服务器架构运行。它定义了不同元素——数据
 
 此外，MCP 可以包装一个其输入或输出对 Agent 来说仍然不是固有可理解的 API。只有当 API 的数据格式对 Agent 友好时，它才有用，而这是 MCP 本身无法保证的。例如，为返回 PDF 文件的文档存储创建 MCP 服务器几乎是无用的，如果消费 Agent 无法解析 PDF 内容。更好的方法是首先创建一个返回文档文本版本的 API，例如 Markdown，这样 Agent 就可以实际阅读和处理。这表明开发人员必须考虑的不仅仅是连接，还要考虑所交换数据的性质，以确保真正的兼容性。
 
-# MCP 与工具函数调用
+## MCP 与工具函数调用
 
 模型上下文协议（MCP）和工具函数调用是使 LLM 能够与外部能力（包括工具）交互并执行操作的不同机制。虽然两者都服务于扩展 LLM 超越文本生成的能力，但它们在方法和抽象级别上有所不同。
 
@@ -34,7 +34,7 @@ MCP 基于客户端-服务器架构运行。它定义了不同元素——数据
 
 简而言之，函数调用提供对少数特定函数的直接访问，而 MCP 是标准化的通信框架，让 LLM 发现和使用广泛的外部资源。对于简单的应用程序，特定的工具就足够了；对于需要适应的复杂、互联的 AI 系统，像 MCP 这样的通用标准是必不可少的。
 
-# MCP 的其他考虑因素
+## MCP 的其他考虑因素
 
 虽然 MCP 提供了一个强大的框架，但全面的评估需要考虑影响其适用于特定用例的几个关键方面。让我们更详细地看看一些方面：
 
@@ -62,7 +62,7 @@ MCP 基于客户端-服务器架构运行。它定义了不同元素——数据
 4. **服务器执行**：MCP 服务器接收请求。它对客户端进行身份验证，验证请求，然后通过与底层软件交互来执行指定的操作（例如，调用电子邮件 API 的 send() 函数）。
 5. **响应和上下文更新**：执行后，MCP 服务器将标准化响应发送回 MCP 客户端。此响应指示操作是否成功，并包括任何相关输出（例如，已发送电子邮件的确认 ID）。然后客户端将此结果传递回 LLM，更新其上下文并使其能够继续其任务的下一步。
 
-# 实际应用和用例
+## 实际应用和用例
 
 MCP 显著扩展了 AI/LLM 的能力，使它们更加多功能和强大。以下是九个关键用例：
 
@@ -78,7 +78,7 @@ MCP 显著扩展了 AI/LLM 的能力，使它们更加多功能和强大。以�
 
 简而言之，模型上下文协议（MCP）使 Agent 能够从数据库、API 和 Web 资源访问实时信息。它还允许 Agent 执行诸如发送电子邮件、更新记录、控制设备以及通过集成和处理来自各种来源的数据来执行复杂任务等操作。此外，MCP 支持 AI 应用程序的媒体生成工具。
 
-# 使用 ADK 的实践代码示例
+## 使用 ADK 的实践代码示例
 
 本节概述了如何连接到提供文件系统操作的本地 MCP 服务器，使 ADK Agent 能够与本地文件系统交互。
 
@@ -91,13 +91,13 @@ import os
 from google.adk.agents import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
 
-# 创建一个可靠的绝对路径，指向名为 'mcp_managed_files' 的文件夹
-# 该文件夹位于此 Agent 脚本所在的同一目录中。
-# 这确保了 Agent 开箱即用地进行演示。
-# 对于生产环境，您需要将此路径指向一个更持久和安全的位置。
+## 创建一个可靠的绝对路径，指向名为 'mcp_managed_files' 的文件夹
+## 该文件夹位于此 Agent 脚本所在的同一目录中。
+## 这确保了 Agent 开箱即用地进行演示。
+## 对于生产环境，您需要将此路径指向一个更持久和安全的位置。
 TARGET_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mcp_managed_files")
 
-# 在 Agent 需要之前确保目标目录存在。
+## 在 Agent 需要之前确保目标目录存在。
 os.makedirs(TARGET_FOLDER_PATH, exist_ok=True)
 
 root_agent = LlmAgent(
@@ -131,7 +131,7 @@ root_agent = LlmAgent(
 创建 __init__.py 文件是必要的，以确保 agent.py 文件被识别为 Agent 开发工具包（ADK）的可发现 Python 包的一部分。此文件应与 [agent.py](http://agent.py) 位于同一目录中。
 
 ```python
-# ./adk_agent_samples/mcp_agent/__init__.py
+## ./adk_agent_samples/mcp_agent/__init__.py
 from . import agent
 ```
 
@@ -195,21 +195,21 @@ FastMCP 是一个高级 Python 框架，旨在简化 MCP 服务器的开发。�
 为了说明，考虑服务器提供的基本"greet"工具。一旦激活，ADK Agent 和其他 MCP 客户端可以使用 HTTP 与此工具交互。
 
 ```python
-# fastmcp_server.py
-# 此脚本演示如何使用 FastMCP 创建一个简单的 MCP 服务器。
-# 它公开一个生成问候语的单一工具。
+## fastmcp_server.py
+## 此脚本演示如何使用 FastMCP 创建一个简单的 MCP 服务器。
+## 它公开一个生成问候语的单一工具。
 
-# 1. 确保您已安装 FastMCP：
-# pip install fastmcp
+## 1. 确保您已安装 FastMCP：
+## pip install fastmcp
 
 from fastmcp import FastMCP, Client
 
-# 初始化 FastMCP 服务器。
+## 初始化 FastMCP 服务器。
 mcp_server = FastMCP()
 
-# 定义一个简单的工具函数。
-# `@mcp_server.tool` 装饰器将此 Python 函数注册为 MCP 工具。
-# 文档字符串成为 LLM 的工具描述。
+## 定义一个简单的工具函数。
+## `@mcp_server.tool` 装饰器将此 Python 函数注册为 MCP 工具。
+## 文档字符串成为 LLM 的工具描述。
 @mcp_server.tool
 def greet(name: str) -> str:
     """
@@ -223,7 +223,7 @@ def greet(name: str) -> str:
     """
     return f"Hello, {name}! Nice to meet you."
 
-# 或者如果您想从脚本运行它：
+## 或者如果您想从脚本运行它：
 if __name__ == "__main__":
     mcp_server.run(
         transport="http",
@@ -245,13 +245,13 @@ if __name__ == "__main__":
 要建立此配置，需要一个 Agent 文件（例如，位于 ./adk_agent_samples/fastmcp_client_agent/ 的 agent.py）。此文件将实例化一个 ADK Agent，并使用 HttpServerParameters 与正在运行的 FastMCP 服务器建立连接。
 
 ```python
-# ./adk_agent_samples/fastmcp_client_agent/agent.py
+## ./adk_agent_samples/fastmcp_client_agent/agent.py
 import os
 from google.adk.agents import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, HttpServerParameters
 
-# 定义 FastMCP 服务器的地址。
-# 确保您的 fastmcp_server.py（之前定义的）正在此端口上运行。
+## 定义 FastMCP 服务器的地址。
+## 确保您的 fastmcp_server.py（之前定义的）正在此端口上运行。
 FASTMCP_SERVER_URL = "http://localhost:8000"
 
 root_agent = LlmAgent(
@@ -277,7 +277,7 @@ root_agent = LlmAgent(
 
 首先，打开一个新终端并运行 `python fastmcp_server.py` 来启动 FastMCP 服务器。接下来，在终端中转到 `fastmcp_client_agent` 的父目录（例如，`adk_agent_samples`）并执行 `adk web`。一旦 ADK Web UI 在浏览器中加载，从 Agent 菜单中选择 `fastmcp_greeter_agent`。然后可以通过输入"Greet John Doe"等提示来测试它。Agent 将使用 FastMCP 服务器上的 `greet` 工具创建响应。
 
-# 概览
+## 概览
 
 **是什么**：要作为有效的 Agent 运作，LLM 必须超越简单的文本生成。它们需要与外部环境交互的能力，以访问当前数据并使用外部软件。如果没有标准化的通信方法，LLM 与外部工具或数据源之间的每次集成都成为一项定制的、复杂的和不可重用的工作。这种临时方法阻碍了可扩展性，并使构建复杂的、互联的 AI 系统变得困难和低效。
 
@@ -291,7 +291,7 @@ root_agent = LlmAgent(
 
 图 1：模型上下文协议
 
-# 关键要点
+## 关键要点
 
 以下是关键要点：
 
@@ -302,11 +302,11 @@ root_agent = LlmAgent(
 * 生成媒体服务的 MCP 工具允许 Agent 与 Google Cloud 的生成媒体能力（Imagen、Veo、Chirp 3 HD、Lyria）集成。
 * MCP 使 LLM 和 Agent 能够与现实世界的系统交互，访问动态信息，并执行超越文本生成的操作。
 
-# 结论
+## 结论
 
 模型上下文协议（MCP）是一个开放标准，促进大型语言模型（LLM）与外部系统之间的通信。它采用客户端-服务器架构，使 LLM 能够通过标准化工具访问资源、使用提示词和执行操作。MCP 允许 LLM 与数据库交互、管理生成媒体工作流、控制物联网设备以及自动化金融服务。实际示例演示了设置 Agent 与 MCP 服务器通信的方法，包括文件系统服务器和使用 FastMCP 构建的服务器，说明了其与 Agent 开发工具包（ADK）的集成。MCP 是开发超越基本语言能力的交互式 AI Agent 的关键组件。
 
-# 参考文献
+## 参考文献
 
 1. Model Context Protocol (MCP) Documentation. (Latest). *Model Context Protocol (MCP)*. [https://google.github.io/adk-docs/mcp/](https://google.github.io/adk-docs/mcp/)
 2. FastMCP Documentation. FastMCP. [https://github.com/jlowin/fastmcp](https://github.com/jlowin/fastmcp)

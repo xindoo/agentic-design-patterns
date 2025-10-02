@@ -1,6 +1,6 @@
 # 第 5 章：工具使用（函数调用）
 
-# 工具使用模式概述
+## 工具使用模式概述
 
 到目前为止，我们讨论的 Agent 模式主要涉及编排语言模型之间的交互和管理 Agent 内部工作流中的信息流（链接、路由、并行化、反思）。然而，要使 Agent 真正有用并与现实世界或外部系统交互，它们需要使用工具的能力。
 
@@ -23,7 +23,7 @@
 
 工具使用是构建强大、交互式和外部感知 Agent 的基石模式。
 
-# 实际应用与用例
+## 实际应用与用例
 
 工具使用模式几乎适用于 Agent 需要超越生成文本来执行操作或检索特定动态信息的任何场景：
 
@@ -75,7 +75,7 @@
 
 图 1：Agent 使用工具的一些示例
 
-# 实操代码示例（LangChain）
+## 实操代码示例（LangChain）
 
 在 LangChain 框架中实现工具使用是一个两阶段过程。首先，定义一个或多个工具，通常通过封装现有的 Python 函数或其他可运行组件。随后，这些工具绑定到语言模型，从而赋予模型在确定需要外部函数调用以满足用户查询时生成结构化工具使用请求的能力。
 
@@ -94,8 +94,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool as langchain_tool
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 
-# 取消注释
-# 安全地提示用户并将 API 密钥设置为环境变量
+## 取消注释
+## 安全地提示用户并将 API 密钥设置为环境变量
 os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google API key: ")
 os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter your OpenAI API key: ")
 
@@ -107,7 +107,7 @@ except Exception as e:
     print(f"🛑 初始化语言模型时出错：{e}")
     llm = None
 
-# --- 定义工具 ---
+## --- 定义工具 ---
 @langchain_tool
 def search_information(query: str) -> str:
     """
@@ -130,7 +130,7 @@ def search_information(query: str) -> str:
 
 tools = [search_information]
 
-# --- 创建工具调用 Agent ---
+## --- 创建工具调用 Agent ---
 if llm:
     # 此提示词模板需要一个 `agent_scratchpad` 占位符用于 Agent 的内部步骤。
     agent_prompt = ChatPromptTemplate.from_messages([
@@ -171,32 +171,32 @@ asyncio.run(main())
 
 代码使用 LangChain 库和 Google Gemini 模型设置了一个工具调用 Agent。它定义了一个 search_information 工具，模拟为特定查询提供事实答案。该工具对"weather in london"、"capital of france"和"population of earth"有预定义的响应，以及其他查询的默认响应。初始化了一个 ChatGoogleGenerativeAI 模型，确保它具有工具调用能力。创建了一个 ChatPromptTemplate 来指导 Agent 的交互。使用 create_tool_calling_agent 函数将语言模型、工具和提示词组合成一个 Agent。然后设置一个 AgentExecutor 来管理 Agent 的执行和工具调用。定义了 run_agent_with_tool 异步函数以使用给定查询调用 Agent 并打印结果。main 异步函数准备多个要并发运行的查询。这些查询旨在测试 search_information 工具的特定和默认响应。最后，asyncio.run(main()) 调用执行所有 Agent 任务。代码包括在继续 Agent 设置和执行之前成功 LLM 初始化的检查。
 
-# 实操代码示例（CrewAI）
+## 实操代码示例（CrewAI）
 
 此代码提供了如何在 CrewAI 框架中实现函数调用（工具）的实际示例。它设置了一个简单的场景，其中 Agent 配备了查找信息的工具。该示例专门演示了使用此 Agent 和工具获取模拟股票价格。
 
 ```python
-# pip install crewai langchain-openai
+## pip install crewai langchain-openai
 import os
 from crewai import Agent, Task, Crew
 from crewai.tools import tool
 import logging
 
-# --- 最佳实践：配置日志 ---
-# 基本日志设置有助于调试和跟踪团队的执行。
+## --- 最佳实践：配置日志 ---
+## 基本日志设置有助于调试和跟踪团队的执行。
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# --- 设置您的 API 密钥 ---
-# 对于生产环境，建议使用更安全的密钥管理方法
-# 例如在运行时加载的环境变量或秘密管理器。
+## --- 设置您的 API 密钥 ---
+## 对于生产环境，建议使用更安全的密钥管理方法
+## 例如在运行时加载的环境变量或秘密管理器。
 #
-# 为您选择的 LLM 提供商设置环境变量（例如，OPENAI_API_KEY）
-# os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY"
-# os.environ["OPENAI_MODEL_NAME"] = "gpt-4o"
+## 为您选择的 LLM 提供商设置环境变量（例如，OPENAI_API_KEY）
+## os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY"
+## os.environ["OPENAI_MODEL_NAME"] = "gpt-4o"
 
-# --- 1. 重构的工具：返回干净的数据 ---
-# 该工具现在返回原始数据（浮点数）或引发标准 Python 错误。
-# 这使其更可重用，并强制 Agent 正确处理结果。
+## --- 1. 重构的工具：返回干净的数据 ---
+## 该工具现在返回原始数据（浮点数）或引发标准 Python 错误。
+## 这使其更可重用，并强制 Agent 正确处理结果。
 @tool("Stock Price Lookup Tool")
 def get_stock_price(ticker: str) -> float:
     """
@@ -219,8 +219,8 @@ def get_stock_price(ticker: str) -> float:
         # Agent 配备了处理异常的能力，可以决定下一步行动。
         raise ValueError(f"未找到代码 '{ticker.upper()}' 的模拟价格。")
 
-# --- 2. 定义 Agent ---
-# Agent 定义保持不变，但它现在将利用改进的工具。
+## --- 2. 定义 Agent ---
+## Agent 定义保持不变，但它现在将利用改进的工具。
 financial_analyst_agent = Agent(
     role='高级财务分析师',
     goal='使用提供的工具分析股票数据并报告关键价格。',
@@ -231,9 +231,9 @@ financial_analyst_agent = Agent(
     allow_delegation=False,
 )
 
-# --- 3. 精炼任务：更清晰的说明和错误处理 ---
-# 任务描述更具体，并指导 Agent 如何应对
-# 成功的数据检索和潜在错误。
+## --- 3. 精炼任务：更清晰的说明和错误处理 ---
+## 任务描述更具体，并指导 Agent 如何应对
+## 成功的数据检索和潜在错误。
 analyze_aapl_task = Task(
     description=(
         "Apple（代码：AAPL）的当前模拟股票价格是多少？"
@@ -248,16 +248,16 @@ analyze_aapl_task = Task(
     agent=financial_analyst_agent,
 )
 
-# --- 4. 组建团队 ---
-# 团队协调 Agent 和任务如何协同工作。
+## --- 4. 组建团队 ---
+## 团队协调 Agent 和任务如何协同工作。
 financial_crew = Crew(
     agents=[financial_analyst_agent],
     tasks=[analyze_aapl_task],
     verbose=True # 在生产环境中设置为 False 以获得较少的详细日志
 )
 
-# --- 5. 在主执行块中运行团队 ---
-# 使用 __name__ == "__main__": 块是标准 Python 最佳实践。
+## --- 5. 在主执行块中运行团队 ---
+## 使用 __name__ == "__main__": 块是标准 Python 最佳实践。
 def main():
     """运行团队的主函数。"""
     # 在启动前检查 API 密钥以避免运行时错误。
@@ -282,11 +282,11 @@ if __name__ == "__main__":
 
 此代码演示了使用 Crew.ai 库模拟财务分析任务的简单应用程序。它定义了一个自定义工具 get_stock_price，模拟查找预定义代码的股票价格。该工具设计为对有效代码返回浮点数，或对无效代码引发 ValueError。创建了一个名为 financial_analyst_agent 的 Crew.ai Agent，角色为高级财务分析师。该 Agent 被赋予 get_stock_price 工具进行交互。定义了一个任务 analyze_aapl_task，专门指示 Agent 使用工具查找 AAPL 的模拟股票价格。任务描述包括关于使用工具时如何处理成功和失败情况的明确说明。组建了一个团队，包含 financial_analyst_agent 和 analyze_aapl_task。为 Agent 和团队启用了详细设置，以在执行期间提供详细日志。脚本的主要部分在标准 if __name__ == "__main__": 块中使用 kickoff() 方法运行团队的任务。在启动团队之前，它会检查是否设置了 OPENAI_API_KEY 环境变量，这是 Agent 运行所必需的。然后将团队执行的结果（即任务的输出）打印到控制台。代码还包括基本日志配置，以更好地跟踪团队的行动和工具调用。它使用环境变量进行 API 密钥管理，尽管它指出对于生产环境建议使用更安全的方法。简而言之，核心逻辑展示了如何定义工具、Agent 和任务，以在 Crew.ai 中创建协作工作流。
 
-# 实操代码（Google ADK）
+## 实操代码（Google ADK）
 
-# Google Agent Developer Kit (ADK) 包括一个原生集成工具库，可以直接集成到 Agent 的能力中。
+## Google Agent Developer Kit (ADK) 包括一个原生集成工具库，可以直接集成到 Agent 的能力中。
 
-# **Google 搜索：** 此类组件的主要示例是 Google 搜索工具。此工具作为 Google 搜索引擎的直接接口，为 Agent 提供执行网络搜索和检索外部信息的功能。
+## **Google 搜索：** 此类组件的主要示例是 Google 搜索工具。此工具作为 Google 搜索引擎的直接接口，为 Agent 提供执行网络搜索和检索外部信息的功能。
 
 ```python
 from google.adk.agents import Agent
@@ -297,12 +297,12 @@ from google.genai import types
 import nest_asyncio
 import asyncio
 
-# 定义会话设置和 Agent 执行所需的变量
+## 定义会话设置和 Agent 执行所需的变量
 APP_NAME="Google Search_agent"
 USER_ID="user1234"
 SESSION_ID="1234"
 
-# 使用搜索工具定义 Agent
+## 使用搜索工具定义 Agent
 root_agent = ADKAgent(
   name="basic_search_agent",
   model="gemini-2.0-flash-exp",
@@ -311,7 +311,7 @@ root_agent = ADKAgent(
   tools=[google_search] # Google 搜索是执行 Google 搜索的预构建工具。
 )
 
-# Agent 交互
+## Agent 交互
 async def call_agent(query):
   """
   使用查询调用 Agent 的辅助函数。
@@ -352,12 +352,12 @@ from google.adk.tools import google_search
 from google.adk.code_executors import BuiltInCodeExecutor
 from google.genai import types
 
-# 定义会话设置和 Agent 执行所需的变量
+## 定义会话设置和 Agent 执行所需的变量
 APP_NAME = "calculator"
 USER_ID = "user1234"
 SESSION_ID = "session_code_exec_async"
 
-# Agent 定义
+## Agent 定义
 code_agent = LlmAgent(
     name="calculator_agent",
     model="gemini-2.0-flash",
@@ -369,7 +369,7 @@ code_agent = LlmAgent(
     description="执行 Python 代码以进行计算。",
 )
 
-# Agent 交互（异步）
+## Agent 交互（异步）
 async def call_agent_async(query):
     # 会话和运行器
     session_service = InMemorySessionService()
@@ -412,12 +412,12 @@ async def call_agent_async(query):
     
     print("-" * 30)
 
-# 运行示例的主异步函数
+## 运行示例的主异步函数
 async def main():
     await call_agent_async("计算 (5 + 7) * 3 的值")
     await call_agent_async("10 的阶乘是多少？")
 
-# 执行主异步函数
+## 执行主异步函数
 try:
     nest_asyncio.apply()
     asyncio.run(main())
@@ -444,20 +444,20 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 import os
 
-# --- 配置 ---
-# 确保您已设置 GOOGLE_API_KEY 和 DATASTORE_ID 环境变量
-# 例如：
-# os.environ["GOOGLE_API_KEY"] = "YOUR_API_KEY"
-# os.environ["DATASTORE_ID"] = "YOUR_DATASTORE_ID"
+## --- 配置 ---
+## 确保您已设置 GOOGLE_API_KEY 和 DATASTORE_ID 环境变量
+## 例如：
+## os.environ["GOOGLE_API_KEY"] = "YOUR_API_KEY"
+## os.environ["DATASTORE_ID"] = "YOUR_DATASTORE_ID"
 
 DATASTORE_ID = os.environ.get("DATASTORE_ID")
 
-# --- 应用程序常量 ---
+## --- 应用程序常量 ---
 APP_NAME = "vsearch_app"
 USER_ID = "user_123"  # 示例用户 ID
 SESSION_ID = "session_456" # 示例会话 ID
 
-# --- Agent 定义（根据指南的示例更新） ---
+## --- Agent 定义（根据指南的示例更新） ---
 vsearch_agent = agents.VSearchAgent(
     name="q2_strategy_vsearch_agent",
     description="使用 Vertex AI 搜索回答有关 Q2 战略文档的问题。",
@@ -466,14 +466,14 @@ vsearch_agent = agents.VSearchAgent(
     model_parameters={"temperature": 0.0}
 )
 
-# --- 运行器和会话初始化 ---
+## --- 运行器和会话初始化 ---
 runner = Runner(
     agent=vsearch_agent,
     app_name=APP_NAME,
     session_service=InMemorySessionService(),
 )
 
-# --- Agent 调用逻辑 ---
+## --- Agent 调用逻辑 ---
 async def call_vsearch_agent_async(query: str):
     """初始化会话并流式传输 Agent 的响应。"""
     print(f"用户：{query}")
@@ -506,13 +506,13 @@ async def call_vsearch_agent_async(query: str):
         print("请确保您的数据存储 ID 正确，并且服务帐户具有必要的权限。")
         print("-" * 30)
 
-# --- 运行示例 ---
+## --- 运行示例 ---
 async def run_vsearch_example():
     # 替换为与您的数据存储内容相关的问题
     await call_vsearch_agent_async("总结 Q2 战略文档的要点。")
     await call_vsearch_agent_async("实验室 X 提到了哪些安全程序？")
 
-# --- 执行 ---
+## --- 执行 ---
 if __name__ == "__main__":
     if not DATASTORE_ID:
         print("错误：未设置 DATASTORE_ID 环境变量。")
@@ -532,7 +532,7 @@ if __name__ == "__main__":
 
 **Vertex Extensions：** Vertex AI 扩展是一个结构化的 API 包装器，使模型能够连接到外部 API 以进行实时数据处理和操作执行。扩展提供企业级安全性、数据隐私和性能保证。它们可用于生成和运行代码、查询网站以及分析来自私有数据存储的信息等任务。Google 为常见用例提供预构建扩展，如代码解释器和 Vertex AI 搜索，并可选择创建自定义扩展。扩展的主要好处包括强大的企业控制和与其他 Google 产品的无缝集成。扩展和函数调用之间的关键区别在于它们的执行：Vertex AI 自动执行扩展，而函数调用需要用户或客户端手动执行。
 
-# 概览
+## 概览
 
 **什么：** LLM 是强大的文本生成器，但它们基本上与外部世界断开连接。它们的知识是静态的，仅限于它们训练的数据，并且缺乏执行操作或检索实时信息的能力。这种固有的限制阻止它们完成需要与外部 API、数据库或服务交互的任务。没有通往这些外部系统的桥梁，它们解决现实世界问题的效用受到严重限制。
 
@@ -546,7 +546,7 @@ if __name__ == "__main__":
 
 图 2：工具使用设计模式
 
-# 关键要点
+## 关键要点
 
 * 工具使用（函数调用）允许 Agent 与外部系统交互并访问动态信息。
 * 它涉及定义具有 LLM 可以理解的清晰描述和参数的工具。
@@ -556,11 +556,11 @@ if __name__ == "__main__":
 * LangChain 使用 @tool 装饰器简化工具定义，并提供 create_tool_calling_agent 和 AgentExecutor 用于构建工具使用 Agent。
 * Google ADK 有许多非常有用的预构建工具，如 Google 搜索、代码执行和 Vertex AI 搜索工具。
 
-# 结论
+## 结论
 
 工具使用模式是将大型语言模型的功能范围扩展到其固有文本生成能力之外的关键架构原则。通过为模型配备与外部软件和数据源交互的能力，此范式允许 Agent 执行操作、执行计算并从其他系统检索信息。此过程涉及模型在确定这样做是满足用户查询所必需时生成调用外部工具的结构化请求。LangChain、Google ADK 和 Crew AI 等框架提供结构化抽象和组件，促进这些外部工具的集成。这些框架管理向模型公开工具规范并解析其后续工具使用请求的过程。这简化了可以与外部数字环境交互并在其中采取行动的复杂 Agent 系统的开发。
 
-# 参考文献
+## 参考文献
 
 1. LangChain Documentation (Tools): [https://python.langchain.com/docs/integrations/tools/](https://python.langchain.com/docs/integrations/tools/)
 2. Google Agent Developer Kit (ADK) Documentation (Tools): [https://google.github.io/adk-docs/tools/](https://google.github.io/adk-docs/tools/)

@@ -1,6 +1,6 @@
 # Chapter 2: Routing
 
-# Routing Pattern Overview
+## Routing Pattern Overview
 
 While sequential processing via prompt chaining is a foundational technique for executing deterministic, linear workflows with language models, its applicability is limited in scenarios requiring adaptive responses. Real-world agentic systems must often arbitrate between multiple potential actions based on contingent factors, such as the state of the environment, user input, or the outcome of a preceding operation. This capacity for dynamic decision-making, which governs the flow of control to different specialized functions, tools, or sub-processes, is achieved through a mechanism known as routing.
 
@@ -28,7 +28,7 @@ Computational frameworks such as LangChain, LangGraph, and Google's Agent Develo
 
 The implementation of routing enables a system to move beyond deterministic sequential processing. It facilitates the development of more adaptive execution flows that can respond dynamically and appropriately to a wider range of inputs and state changes.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 The routing pattern is a critical control mechanism in the design of adaptive agentic systems, enabling them to dynamically alter their execution path in response to variable inputs and internal states. Its utility spans multiple domains by providing a necessary layer of conditional logic.
 
@@ -40,7 +40,7 @@ In complex systems involving multiple specialized tools or agents, routing acts 
 
 Ultimately, routing provides the capacity for logical arbitration that is essential for creating functionally diverse and context-aware systems. It transforms an agent from a static executor of pre-defined sequences into a dynamic system that can make decisions about the most effective method for accomplishing a task under changing conditions.
 
-# Hands-On Code Example (LangChain)
+## Hands-On Code Example (LangChain)
 
 Implementing routing in code involves defining the possible paths and the logic that decides which path to take. Frameworks like LangChain and LangGraph provide specific components and structures for this. LangGraph's state-based graph structure is particularly intuitive for visualizing and implementing routing logic.
 
@@ -55,19 +55,19 @@ pip install langchain langgraph google-cloud-aiplatform langchain-google-genai g
 You will also need to set up your environment with your API key for the language model you choose (e.g., OpenAI, Google Gemini, Anthropic).
 
 ```python
-# Copyright (c) 2025 Marco Fago
-# https://www.linkedin.com/in/marco-fago/
+## Copyright (c) 2025 Marco Fago
+## https://www.linkedin.com/in/marco-fago/
 #
-# This code is licensed under the MIT License.
-# See the LICENSE file in the repository for the full license text.
+## This code is licensed under the MIT License.
+## See the LICENSE file in the repository for the full license text.
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableBranch
 
-# --- Configuration ---
-# Ensure your API key environment variable is set (e.g., GOOGLE_API_KEY)
+## --- Configuration ---
+## Ensure your API key environment variable is set (e.g., GOOGLE_API_KEY)
 try:
    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
    print(f"Language model initialized: {llm.model}")
@@ -75,7 +75,7 @@ except Exception as e:
    print(f"Error initializing language model: {e}")
    llm = None
 
-# --- Define Simulated Sub-Agent Handlers (equivalent to ADK sub_agents) ---
+## --- Define Simulated Sub-Agent Handlers (equivalent to ADK sub_agents) ---
 def booking_handler(request: str) -> str:
    """Simulates the Booking Agent handling a request."""
    print("\n--- DELEGATING TO BOOKING HANDLER ---")
@@ -91,8 +91,8 @@ def unclear_handler(request: str) -> str:
    print("\n--- HANDLING UNCLEAR REQUEST ---")
    return f"Coordinator could not delegate request: '{request}'. Please clarify."
 
-# --- Define Coordinator Router Chain (equivalent to ADK coordinator's instruction) ---
-# This chain decides which handler to delegate to.
+## --- Define Coordinator Router Chain (equivalent to ADK coordinator's instruction) ---
+## This chain decides which handler to delegate to.
 coordinator_router_prompt = ChatPromptTemplate.from_messages([
    ("system", """Analyze the user's request and determine which specialist handler should process it.
    - If the request is related to booking flights or hotels,
@@ -107,32 +107,32 @@ coordinator_router_prompt = ChatPromptTemplate.from_messages([
 if llm:
    coordinator_router_chain = coordinator_router_prompt | llm | StrOutputParser()
 
-# --- Define the Delegation Logic (equivalent to ADK's Auto-Flow based on sub_agents) ---
-# Use RunnableBranch to route based on the router chain's output.
-# Define the branches for the RunnableBranch
+## --- Define the Delegation Logic (equivalent to ADK's Auto-Flow based on sub_agents) ---
+## Use RunnableBranch to route based on the router chain's output.
+## Define the branches for the RunnableBranch
 branches = {
    "booker": RunnablePassthrough.assign(output=lambda x: booking_handler(x['request']['request'])),
    "info": RunnablePassthrough.assign(output=lambda x: info_handler(x['request']['request'])),
    "unclear": RunnablePassthrough.assign(output=lambda x: unclear_handler(x['request']['request'])),
 }
 
-# Create the RunnableBranch. It takes the output of the router chain
-# and routes the original input ('request') to the corresponding handler.
+## Create the RunnableBranch. It takes the output of the router chain
+## and routes the original input ('request') to the corresponding handler.
 delegation_branch = RunnableBranch(
    (lambda x: x['decision'].strip() == 'booker', branches["booker"]), # Added .strip()
    (lambda x: x['decision'].strip() == 'info', branches["info"]),     # Added .strip()
    branches["unclear"] # Default branch for 'unclear' or any other output
 )
 
-# Combine the router chain and the delegation branch into a single runnable
-# The router chain's output ('decision') is passed along with the original input ('request')
-# to the delegation_branch.
+## Combine the router chain and the delegation branch into a single runnable
+## The router chain's output ('decision') is passed along with the original input ('request')
+## to the delegation_branch.
 coordinator_agent = {
    "decision": coordinator_router_chain,
    "request": RunnablePassthrough()
 } | delegation_branch | (lambda x: x['output']) # Extract the final output
 
-# --- Example Usage ---
+## --- Example Usage ---
 def main():
    if not llm:
        print("\nSkipping execution due to LLM initialization failure.")
@@ -163,17 +163,17 @@ A core component is the coordinator\_router\_chain, which utilizes a ChatPromptT
 
 The main function demonstrates the system's usage with three example requests, showcasing how different inputs are routed and processed by the simulated agents. Error handling for language model initialization is included to ensure robustness. The code structure mimics a basic multi-agent framework where a central coordinator delegates tasks to specialized agents based on intent.
 
-# Hands-On Code Example (Google ADK)
+## Hands-On Code Example (Google ADK)
 
 The Agent Development Kit (ADK) is a framework for engineering agentic systems, providing a structured environment for defining an agent's capabilities and behaviours. In contrast to architectures based on explicit computational graphs, routing within the ADK paradigm is typically implemented by defining a discrete set of "tools" that represent the agent's functions. The selection of the appropriate tool in response to a user query is managed by the framework's internal logic, which leverages an underlying model to match user intent to the correct functional handler.
 
 This Python code demonstrates an example of an Agent Development Kit (ADK) application using Google's ADK library. It sets up a "Coordinator" agent that routes user requests to specialized sub-agents ("Booker" for bookings and "Info" for general information) based on defined instructions. The sub-agents then use specific tools to simulate handling the requests, showcasing a basic delegation pattern within an agent system
 
 ```python
-# Copyright (c) 2025 Marco Fago
+## Copyright (c) 2025 Marco Fago
 #
-# This code is licensed under the MIT License.
-# See the LICENSE file in the repository for the full license text.
+## This code is licensed under the MIT License.
+## See the LICENSE file in the repository for the full license text.
 
 import uuid
 from typing import Dict, Any, Optional
@@ -183,8 +183,8 @@ from google.adk.tools import FunctionTool
 from google.genai import types
 from google.adk.events import Event
 
-# --- Define Tool Functions ---
-# These functions simulate the actions of the specialist agents.
+## --- Define Tool Functions ---
+## These functions simulate the actions of the specialist agents.
 def booking_handler(request: str) -> str:
    """
    Handles booking requests for flights and hotels.
@@ -211,11 +211,11 @@ def unclear_handler(request: str) -> str:
    """Handles requests that couldn't be delegated."""
    return f"Coordinator could not delegate request: '{request}'. Please clarify."
 
-# --- Create Tools from Functions ---
+## --- Create Tools from Functions ---
 booking_tool = FunctionTool(booking_handler)
 info_tool = FunctionTool(info_handler)
 
-# Define specialized sub-agents equipped with their respective tools
+## Define specialized sub-agents equipped with their respective tools
 booking_agent = Agent(
    name="Booker",
    model="gemini-2.0-flash",
@@ -232,7 +232,7 @@ info_agent = Agent(
    tools=[info_tool]
 )
 
-# Define the parent agent with explicit delegation instructions
+## Define the parent agent with explicit delegation instructions
 coordinator = Agent(
    name="Coordinator",
    model="gemini-2.0-flash",
@@ -251,7 +251,7 @@ coordinator = Agent(
    sub_agents=[booking_agent, info_agent]
 )
 
-# --- Execution Logic ---
+## --- Execution Logic ---
 async def run_coordinator(runner: InMemoryRunner, request: str):
    """Runs the coordinator agent with a given request and delegates."""
    print(f"\n--- Running Coordinator with request: '{request}' ---")
@@ -314,7 +314,7 @@ The Coordinator agent's primary role, as defined in its instruction, is to analy
 
 The main function demonstrates the system's usage by running the coordinator with different requests, showcasing how it delegates booking requests to the Booker and information requests to the Info agent.
 
-# At a Glance
+## At a Glance
 
 **What**: Agentic systems must often respond to a wide variety of inputs and situations that cannot be handled by a single, linear process. A simple sequential workflow lacks the ability to make decisions based on context. Without a mechanism to choose the correct tool or sub-process for a specific task, the system remains rigid and non-adaptive. This limitation makes it difficult to build sophisticated applications that can manage the complexity and variability of real-world user requests.
 
@@ -327,14 +327,14 @@ The main function demonstrates the system's usage by running the coordinator wit
 ![][image1]  
 Fig.1: Router pattern, using an LLM as a Router
 
-# Key Takeaways
+## Key Takeaways
 
 * Routing enables agents to make dynamic decisions about the next step in a workflow based on conditions.  
 * It allows agents to handle diverse inputs and adapt their behavior, moving beyond linear execution.  
 * Routing logic can be implemented using LLMs, rule-based systems, or embedding similarity.  
 * Frameworks like LangGraph and Google ADK provide structured ways to define and manage routing within agent workflows, albeit with different architectural approaches.
 
-# Conclusion
+## Conclusion
 
 The Routing pattern is a critical step in building truly dynamic and responsive agentic systems. By implementing routing, we move beyond simple, linear execution flows and empower our agents to make intelligent decisions about how to process information, respond to user input, and utilize available tools or sub-agents.
 
@@ -344,7 +344,7 @@ The code examples using LangChain and Google ADK demonstrate two different, yet 
 
 Mastering the Routing pattern is essential for building agents that can intelligently navigate different scenarios and provide tailored responses or actions based on context. It's a key component in creating versatile and robust agentic applications.
 
-# References
+## References
 
 1. LangGraph Documentation: [https://www.langchain.com/](https://www.langchain.com/)    
 2. Google Agent Developer Kit Documentation: [https://google.github.io/adk-docs/](https://google.github.io/adk-docs/) 

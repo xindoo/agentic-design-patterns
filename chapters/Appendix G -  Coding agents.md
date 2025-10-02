@@ -1,10 +1,10 @@
 # 附录 G \- 编码 Agent
 
-# Vibe 编码：一个起点
+## Vibe 编码：一个起点
 
 "Vibe 编码"已成为快速创新和创意探索的强大技术。这种实践涉及使用 LLM 生成初始草稿、概述复杂逻辑或构建快速原型，显著减少初始摩擦。它对于克服"空白页"问题非常宝贵，使开发者能够快速从模糊的概念过渡到具体的、可运行的代码。Vibe 编码在探索不熟悉的 API 或测试新颖的架构模式时特别有效，因为它绕过了对完美实现的即时需求。生成的代码通常充当创意催化剂，为开发者提供批判、重构和扩展的基础。其主要优势在于能够加速软件生命周期的初始发现和构思阶段。然而，虽然 vibe 编码擅长头脑风暴，但开发稳健、可扩展和可维护的软件需要更结构化的方法，从纯粹的生成转向与专门的编码 Agent 的协作伙伴关系。
 
-# Agent 作为团队成员
+## Agent 作为团队成员
 
 虽然最初的浪潮专注于原始代码生成——完美适合构思的"vibe 代码"——但行业现在正在转向一种更集成和强大的生产工作范式。最有效的开发团队不仅仅是将任务委托给 Agent；他们正在用一套复杂的编码 Agent 来增强自己。这些 Agent 作为不知疲倦的专业团队成员，放大人类创造力并显著提高团队的可扩展性和速度。
 
@@ -71,7 +71,7 @@
 
 最终，这种人类主导的模型在开发者的战略方向和 Agent 的战术执行之间创造了强大的协同作用。因此，开发者可以超越日常任务，将他们的专业知识集中在提供最大价值的创意和架构挑战上。
 
-# 实践实施
+## 实践实施
 
 ## 设置清单
 
@@ -95,13 +95,13 @@
 * **充当最终质量关卡** Agent 的输出始终是一个提案，永远不是命令。将审查者 Agent 的反馈视为强大的信号，但你是最终的质量关卡。应用你的领域专业知识和项目特定知识来验证、挑战和批准所有更改，充当代码库完整性的最终守护者。  
 * **参与迭代对话** 最佳结果来自对话，而不是独白。如果 Agent 的初始输出不完美，不要丢弃它——完善它。提供纠正性反馈，添加澄清上下文，并提示再次尝试。这种迭代对话至关重要，特别是与审查者 Agent，其"反思"输出旨在成为协作讨论的开始，而不仅仅是最终报告。
 
-# 结论
+## 结论
 
 代码开发的未来已经到来，它是增强的。孤独编码者的时代已经让位于一个新范式，开发者领导专业 AI Agent 团队。这个模型不会削弱人类角色；它通过自动化日常任务、扩大个人影响力并实现以前无法想象的开发速度来提升它。
 
 通过将战术执行卸载给 Agent，开发者现在可以将他们的认知能量专注于真正重要的事情：战略创新、弹性架构设计，以及构建令用户满意的产品所需的创造性问题解决。基本关系已经重新定义；这不再是人类与机器的竞赛，而是人类独创性与 AI 之间的伙伴关系，作为一个无缝集成的团队工作。
 
-# 参考文献
+## 参考文献
 
 1. AI is responsible for generating more than 30% of the code at Google [https://www.reddit.com/r/singularity/comments/1k7rxo0/ai\_is\_now\_writing\_well\_over\_30\_of\_the\_code\_at/](https://www.reddit.com/r/singularity/comments/1k7rxo0/ai_is_now_writing_well_over_30_of_the_code_at/)   
 2. AI is responsible for generating more than 30% of the code at Microsoft [https://www.businesstoday.in/tech-today/news/story/30-of-microsofts-code-is-now-ai-generated-says-ceo-satya-nadella-474167-2025-04-30](https://www.businesstoday.in/tech-today/news/story/30-of-microsofts-code-is-now-ai-generated-says-ceo-satya-nadella-474167-2025-04-30) 

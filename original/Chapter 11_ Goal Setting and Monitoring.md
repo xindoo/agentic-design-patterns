@@ -2,7 +2,7 @@
 
 For AI agents to be truly effective and purposeful, they need more than just the ability to process information or use tools; they need a clear sense of direction and a way to know if they're actually succeeding. This is where the Goal Setting and Monitoring pattern comes into play. It's about giving agents specific objectives to work towards and equipping them with the means to track their progress and determine if those objectives have been met.
 
-# Goal Setting and Monitoring Pattern Overview
+## Goal Setting and Monitoring Pattern Overview
 
 Think about planning a trip. You don't just spontaneously appear at your destination. You decide where you want to go (the goal state), figure out where you are starting from (the initial state), consider available options (transportation, routes, budget), and then map out a sequence of steps: book tickets, pack bags, travel to the airport/station, board the transport, arrive, find accommodation, etc. This step-by-step process, often considering dependencies and constraints, is fundamentally what we mean by planning in agentic systems.
 
@@ -10,7 +10,7 @@ In the context of AI agents, planning typically involves an agent taking a high-
 
 A good planning capability allows agents to tackle problems that aren't simple, single-step queries. It enables them to handle multi-faceted requests, adapt to changing circumstances by replanning, and orchestrate complex workflows. It's a foundational pattern that underpins many advanced agentic behaviors, turning a simple reactive system into one that can proactively work towards a defined objective.
 
-# Practical Applications & Use Cases
+## Practical Applications & Use Cases
 
 The Goal Setting and Monitoring pattern is essential for building agents that can operate autonomously and reliably in complex, real-world scenarios. Here are some practical applications:
 
@@ -23,7 +23,7 @@ The Goal Setting and Monitoring pattern is essential for building agents that ca
 
 This pattern is fundamental for agents that need to operate reliably, achieve specific outcomes, and adapt to dynamic conditions, providing the necessary framework for intelligent self-management.
 
-# Hands-On Code Example
+## Hands-On Code Example
 
 To illustrate the Goal Setting and Monitoring pattern, we have an example using LangChain and OpenAI APIs. This Python script outlines an autonomous AI agent engineered to generate and refine Python code. Its core function is to produce solutions for specified problems, ensuring adherence to user-defined quality benchmarks.
 
@@ -38,9 +38,9 @@ pip install langchain_openai openai python-dotenv .env file with key in OPENAI_A
 You can best understand this script by imagining it as an autonomous AI programmer assigned to a project (see Fig. 1). The process begins when you hand the AI a detailed project brief, which is the specific coding problem it needs to solve.
 
 ```python
-# MIT License
-# Copyright (c) 2025 Mahtab Syed
-# https://www.linkedin.com/in/mahtabsyed/
+## MIT License
+## Copyright (c) 2025 Mahtab Syed
+## https://www.linkedin.com/in/mahtabsyed/
 
 """
 Hands-On Code Example - Iteration 2
@@ -61,13 +61,13 @@ from pathlib import Path
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv, find_dotenv
 
-# 🔐 Load environment variables
+## 🔐 Load environment variables
 _ = load_dotenv(find_dotenv())
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise EnvironmentError("❌ Please set the OPENAI_API_KEY environment variable.")
 
-# ✅ Initialize OpenAI model
+## ✅ Initialize OpenAI model
 print("📡 Initializing OpenAI LLM (gpt-4o)...")
 llm = ChatOpenAI(
     model="gpt-4o",  # If you dont have access to gpt-4o use other OpenAI LLMs
@@ -75,7 +75,7 @@ llm = ChatOpenAI(
     openai_api_key=OPENAI_API_KEY,
 )
 
-# --- Utility Functions ---
+## --- Utility Functions ---
 def generate_prompt(
     use_case: str, goals: list[str], previous_code: str = "", feedback: str = ""
 ) -> str:
@@ -162,7 +162,7 @@ def save_code_to_file(code: str, use_case: str) -> str:
     return str(filepath)
 
 
-# --- Main Agent Function ---
+## --- Main Agent Function ---
 def run_code_agent(use_case: str, goals_input: str, max_iterations: int = 5) -> str:
     goals = [g.strip() for g in goals_input.split(",")]
     print(f"\n🎯 Use Case: {use_case}")
@@ -196,7 +196,7 @@ def run_code_agent(use_case: str, goals_input: str, max_iterations: int = 5) -> 
     return save_code_to_file(final_code, use_case)
 
 
-# --- CLI Test Run ---
+## --- CLI Test Run ---
 if __name__ == "__main__":
     print("\n🧠 Welcome to the AI Code Generation Agent")
     # Example 1
@@ -253,7 +253,7 @@ In this multi-agent system, the Code Reviewer, acting as a separate entity from 
 
 I leave to the interested reader the task of adding these more sophisticated controls and making the code closer to production-ready.
 
-# At a Glance
+## At a Glance
 
 **What**: AI agents often lack a clear direction, preventing them from acting with purpose beyond simple, reactive tasks. Without defined objectives, they cannot independently tackle complex, multi-step problems or orchestrate sophisticated workflows. Furthermore, there is no inherent mechanism for them to determine if their actions are leading to a successful outcome. This limits their autonomy and prevents them from being truly effective in dynamic, real-world scenarios where mere task execution is insufficient.
 
@@ -267,7 +267,7 @@ I leave to the interested reader the task of adding these more sophisticated con
 
 Fig.2: Goal design patterns
 
-# Key takeaways
+## Key takeaways
 
 Key takeaways include:
 
@@ -278,11 +278,11 @@ Key takeaways include:
 * Feedback loops from monitoring allow agents to adapt, revise plans, or escalate issues.  
 * In Google's ADK, goals are often conveyed through agent instructions, with monitoring accomplished through state management and tool interactions.
 
-# Conclusion
+## Conclusion
 
 This chapter focused on the crucial paradigm of Goal Setting and Monitoring. I highlighted how this concept transforms AI agents from merely reactive systems into proactive, goal-driven entities. The text emphasized the importance of defining clear, measurable objectives and establishing rigorous monitoring procedures to track progress. Practical applications demonstrated how this paradigm supports reliable autonomous operation across various domains, including customer service and robotics. A conceptual coding example illustrates the implementation of these principles within a structured framework, using agent directives and state management to guide and evaluate an agent's achievement of its specified goals. Ultimately, equipping agents with the ability to formulate and oversee goals is a fundamental step toward building truly intelligent and accountable AI systems.
 
-# References
+## References
 
 1. SMART Goals Framework. [https://en.wikipedia.org/wiki/SMART\_criteria](https://en.wikipedia.org/wiki/SMART_criteria) 
 

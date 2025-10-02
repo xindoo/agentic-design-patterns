@@ -6,7 +6,7 @@
 
 图 1：评估和监控的最佳实践
 
-# 实际应用与用例
+## 实际应用与用例
 
 最常见的应用和用例：
 
@@ -18,7 +18,7 @@
 * **Agent 行为中的异常检测：** 识别 Agent 采取的异常或意外操作，这些操作可能表明错误、恶意攻击或涌现的不良行为。
 * **学习进度评估：** 对于设计为学习的 Agent，跟踪它们的学习曲线、特定技能的改进或在不同任务或数据集上的泛化能力。
 
-# 实践代码示例
+## 实践代码示例
 
 为 AI Agent 开发一个全面的评估框架是一项具有挑战性的工作，其复杂性堪比学术学科或大量出版物。这种困难源于需要考虑的众多因素，如模型性能、用户交互、道德影响和更广泛的社会影响。然而，对于实际实施，可以将重点缩小到对 AI Agent 高效有效运行至关重要的关键用例。
 
@@ -30,7 +30,7 @@ def evaluate_response_accuracy(agent_output: str, expected_output: str) -> float
     # 这是一个非常基本的精确匹配；现实世界会使用更复杂的指标
     return 1.0 if agent_output.strip().lower() == expected_output.strip().lower() else 0.0
 
-# 示例使用
+## 示例使用
 agent_response = "The capital of France is Paris."
 ground_truth = "Paris is the capital of France."
 score = evaluate_response_accuracy(agent_response, ground_truth)
@@ -53,7 +53,7 @@ Python 函数 `evaluate_response_accuracy` 通过对 Agent 输出和期望输出
 **跟踪 LLM 交互的 Token 使用量：** 对于 LLM 驱动的 Agent，跟踪 token 使用量对于管理成本和优化资源分配至关重要。LLM 交互的计费通常取决于处理的 token 数量（输入和输出）。因此，高效的 token 使用直接降低运营费用。此外，监控 token 计数有助于识别提示词工程或响应生成过程中的潜在改进领域。
 
 ```python
-# 这是概念性的，因为实际的 token 计数取决于 LLM API
+## 这是概念性的，因为实际的 token 计数取决于 LLM API
 class LLMInteractionMonitor:
     def __init__(self):
         self.total_input_tokens = 0
@@ -70,7 +70,7 @@ class LLMInteractionMonitor:
     def get_total_tokens(self):
         return self.total_input_tokens, self.total_output_tokens
 
-# 示例使用
+## 示例使用
 monitor = LLMInteractionMonitor()
 monitor.record_interaction("What is the capital of France?", "The capital of France is Paris.")
 monitor.record_interaction("Tell me a joke.", "Why don't scientists trust atoms? Because they make up everything!")
@@ -89,18 +89,18 @@ import json
 import logging
 from typing import Optional
 
-# --- 配置 ---
+## --- 配置 ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# 将您的 API 密钥设置为环境变量以运行此脚本
-# 例如，在您的终端中：export GOOGLE_API_KEY='your_key_here'
+## 将您的 API 密钥设置为环境变量以运行此脚本
+## 例如，在您的终端中：export GOOGLE_API_KEY='your_key_here'
 try:
     genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 except KeyError:
     logging.error("错误：GOOGLE_API_KEY 环境变量未设置。")
     exit(1)
 
-# --- 法律调查质量的 LLM-as-a-Judge 评分标准 ---
+## --- 法律调查质量的 LLM-as-a-Judge 评分标准 ---
 LEGAL_SURVEY_RUBRIC = """
 您是一位专家法律调查方法学家和严格的法律审查员。您的任务是评估给定法律调查问题的质量。为整体质量提供 1 到 5 的分数，以及详细的理由和具体反馈。重点关注以下标准：
 1.  **清晰性和精确性（分数 1-5）：**
@@ -185,7 +185,7 @@ class LLMJudgeForLegalSurvey:
             logging.error(f"LLM 判断期间发生意外错误：{e}")
             return None
 
-# --- 示例使用 ---
+## --- 示例使用 ---
 if __name__ == "__main__":
     judge = LLMJudgeForLegalSurvey()
 
@@ -233,7 +233,7 @@ judge_survey_question 方法将此提示词发送到配置的 Gemini 模型，�
 | LLM-as-a-Judge | 一致、高效且可扩展。 | 可能忽略中间步骤。受 LLM 能力限制。 |
 | 自动化指标 | 可扩展、高效且客观 | 在捕获完整能力方面可能存在限制。 |
 
-# Agent 轨迹
+## Agent 轨迹
 
 评估 Agent 的轨迹至关重要，因为传统的软件测试是不够的。标准代码产生可预测的通过/失败结果，而 Agent 以概率方式运行，需要对最终输出和 Agent 的轨迹——达到解决方案所采取的步骤序列——进行定性评估。评估多 Agent 系统具有挑战性，因为它们不断变化。这需要开发超越个体性能的复杂指标来衡量沟通和团队合作的有效性。此外，环境本身不是静态的，要求评估方法（包括测试用例）随时间适应。
 
@@ -250,7 +250,7 @@ AI Agent 的评估涉及两种主要方法：使用测试文件和使用评估�
 * 是否为正确的任务选择了正确的 Agent？如果用户询问他们旅行的天气，系统应该使用提供实时数据的专门"天气 Agent"。如果它使用提供通用答案（如"夏天通常很温暖"）的"通用知识 Agent"，它为这项工作选择了错误的工具。
 * 最后，添加更多 Agent 是否提高了性能？如果您向团队添加一个新的"餐厅预订 Agent"，它是否使整体旅行规划更好、更高效？还是它会造成冲突并减慢系统速度，表明可扩展性存在问题？
 
-# 从 Agent 到高级承包商
+## 从 Agent 到高级承包商
 
 最近，有人提出（Agent Companion，gulli 等人）从简单的 AI Agent 演变为高级"承包商"，从概率性的、通常不可靠的系统转向为复杂的、高风险环境设计的更确定性和可问责的系统（见图 2）。
 
@@ -270,7 +270,7 @@ AI Agent 的评估涉及两种主要方法：使用测试文件和使用评估�
 
 最终，这个承包商框架通过将正式规范、协商和可验证执行的原则直接嵌入到 Agent 的核心逻辑中，重新构想了 AI 交互。这种方法化的方法将人工智能从一个有前途但经常不可预测的助手提升为能够以可审计的精度自主管理复杂项目的可靠系统。通过解决歧义和可靠性的关键挑战，该模型为在信任和问责至关重要的关键任务领域部署 AI 铺平了道路。
 
-# Google 的 ADK
+## Google 的 ADK
 
 在结束之前，让我们看一个支持评估的框架的具体示例。使用 Google 的 ADK 进行 Agent 评估（见图 3）可以通过三种方法进行：基于 Web 的 UI（adk web）用于交互式评估和数据集生成、使用 pytest 的编程集成用于整合到测试管道中，以及直接命令行界面（adk eval）用于适合定期构建生成和验证过程的自动化评估。
 
@@ -282,7 +282,7 @@ AI Agent 的评估涉及两种主要方法：使用测试文件和使用评估�
 
 命令行界面通过提供 Agent 模块路径和评估集文件来促进自动化评估，并具有指定配置文件或打印详细结果的选项。可以通过在评估集文件名后列出（用逗号分隔）来选择较大评估集中的特定评估以供执行。
 
-# 概览
+## 概览
 
 **内容：** Agentic 系统和 LLM 在复杂的动态环境中运行，它们的性能可能会随时间退化。它们的概率性和非确定性本质意味着传统的软件测试不足以确保可靠性。评估动态多 Agent 系统是一项重大挑战，因为它们不断变化的性质以及其环境的性质要求开发适应性测试方法和能够测量超越个体性能的协作成功的复杂指标。部署后可能出现数据漂移、意外交互、工具调用和偏离预期目标等问题。因此，持续评估对于测量 Agent 的有效性、效率以及对操作和安全要求的遵守是必要的。
 
@@ -295,7 +295,7 @@ AI Agent 的评估涉及两种主要方法：使用测试文件和使用评估�
 ![][image4]
 图 4：评估和监控设计模式
 
-# 关键要点
+## 关键要点
 
 * 评估智能 Agent 超越了传统测试，在真实世界环境中持续测量其有效性、效率以及对要求的遵守。
 * Agent 评估的实际应用包括实时系统中的性能跟踪、改进的 A/B 测试、合规审计以及检测行为中的漂移或异常。
@@ -305,13 +305,13 @@ AI Agent 的评估涉及两种主要方法：使用测试文件和使用评估�
 * Agent 评估可以通过基于 Web 的 UI 进行交互式测试、使用 pytest 进行 CI/CD 集成的编程方式，或通过命令行界面进行自动化工作流执行。
 * 为了使 AI 在复杂的、高风险的任务中可靠，我们必须从简单的提示词转向精确定义可验证可交付成果和范围的正式"合约"。这种结构化协议允许 Agent 协商、澄清歧义并迭代验证其自己的工作，将其从不可预测的工具转变为可问责和值得信赖的系统。
 
-# 结论
+## 结论
 
 总之，有效评估 AI Agent 需要超越简单的准确性检查，对其在动态环境中的性能进行持续的、多方面的评估。这涉及实际监控延迟和资源消耗等指标，以及通过其轨迹对 Agent 决策过程进行复杂分析。对于有用性等细微品质，诸如 LLM-as-a-Judge 之类的创新方法变得必不可少，而像 Google 的 ADK 这样的框架为单元和集成测试提供了结构化的工具。对于多 Agent 系统，挑战加剧，重点转向评估协作成功和有效合作。
 
 为了确保关键应用中的可靠性，范式正在从简单的、提示词驱动的 Agent 转向受正式协议约束的高级"承包商"。这些承包商 Agent 在明确的、可验证的条款上运作，允许它们协商、分解任务并自我验证其工作以满足严格的质量标准。这种结构化方法将 Agent 从不可预测的工具转变为能够处理复杂的、高风险任务的可问责系统。最终，这种演变对于建立在关键任务领域部署复杂的 Agentic AI 所需的信任至关重要。
 
-# 参考文献
+## 参考文献
 
 相关研究包括：
 
