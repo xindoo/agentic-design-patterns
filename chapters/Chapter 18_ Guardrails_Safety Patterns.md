@@ -102,13 +102,13 @@ SAFETY_GUARDRAIL_PROMPT = """
 **输出规范：**
 您**必须**以 JSON 格式提供您的评估，包含三个不同的键：`compliance_status`、`evaluation_summary` 和 `triggered_policies`。`triggered_policies` 字段应该是一个字符串列表，其中每个字符串精确标识一个违反的策略指令（例如"1. 指令颠覆尝试"，"2. 禁止内容：仇恨言论"）。如果输入合规，此列表应为空。
 
-```json
+
 {
   "compliance_status": "compliant" | "non-compliant",
   "evaluation_summary": "合规状态的简要解释（例如'试图绕过策略。'，'指示有害内容。'，'离题政治讨论。'，'讨论竞争对手公司 X。'）。",
   "triggered_policies": ["已触发", "策略", "编号", "或", "类别", "列表"]
 }
-```
+
 """
 
 # --- Guardrail 的结构化输出定义 ---
@@ -178,7 +178,7 @@ policy_enforcer_agent = Agent(
 # 任务：评估用户输入
 evaluate_input_task = Task(
     description=(
-        f"{SAFETY_GUARDRAIL_PROMPT}\n\n"
+        f"{SAFETY_GUARDRAIL_PROMPT}"
         "您的任务是评估以下用户输入并根据提供的安全策略指令确定其合规状态。"
         "用户输入：'{{user_input}}'"
     ),
@@ -383,12 +383,13 @@ LLM（如 Gemini）可以支持强大的、基于提示词的安全措施，如�
 **输出格式：**
 您**必须**以 JSON 格式输出您的决策，包含两个键：`decision` 和 `reasoning`。
 
-```json
+"""
 {
   "decision": "safe" | "unsafe",
   "reasoning": "决策的简要解释（例如'尝试越狱。'，'指示生成仇恨言论。'，'关于政治的离题讨论。'，'提到竞争对手 X。'）。"
 }
-```
+"""
+
 ```
 
 # 构建可靠的 Agent
