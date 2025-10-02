@@ -37,104 +37,58 @@ jobs:
         
         EOF
         
+        # 定义一个函数来处理每个文件：修复图片路径并添加唯一前缀
+        process_and_append() {
+          local file="$1"
+          local prefix="$2"
+          # 将 ../images/ 替换为 images/，并给图片引用标签添加前缀以避免冲突
+          sed -e 's|\.\./images/|images/|g' \
+              -e "s/^\[image\([0-9]*\)\]:/[${prefix}_image\1]:/" "$file" >> ../combined.md
+          echo -e "\n\n" >> ../combined.md
+        }
+        
         # 按照Agentic Design Patterns.md中定义的顺序拼接章节
-        cat "README.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 1_ Prompt Chaining.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 2_ Routing.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 3_ Parallelization.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 4_ Reflection.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 5_ Tool Use.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 6_ Planning.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 7_ Multi-Agent Collaboration.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 8_ Memory Management.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 9_ Learning and Adaptation.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 10_ Model Context Protocol (MCP).md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 11_ Goal Setting and Monitoring.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 12_ Exception Handling and Recovery.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 13_ Human-in-the-Loop.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 14_ Knowledge Retrieval (RAG).md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 15_ Inter-Agent Communication (A2A).md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 16_ Resource-Aware Optimization.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 17_ Reasoning Techniques.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 18_ Guardrails_Safety Patterns.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 19_ Evaluation and Monitoring.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 20_ Prioritization.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Chapter 21_ Exploration and Discovery.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Appendix A_ Advanced Prompting Techniques.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Appendix B - AI Agentic Interactions_ From GUI to Real world environment.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Appendix C - Quick overview of Agentic Frameworks.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Appendix D - Building an Agent with AgentSpace (on-line only).md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Appendix E - AI Agents on the CLI.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Appendix F  - Under the Hood_ An Inside Look at the Agents' Reasoning Engines.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Appendix G -  Coding agents.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Conclusion.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Glossary.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Index of Terms.md" >> ../combined.md
-        echo -e "\n\n" >> ../combined.md
-        
-        cat "Frequently Asked Questions_ Agentic Design Patterns.md" >> ../combined.md
+        process_and_append "README.md" "intro"
+        process_and_append "Chapter 1_ Prompt Chaining.md" "ch1"
+        process_and_append "Chapter 2_ Routing.md" "ch2"
+        process_and_append "Chapter 3_ Parallelization.md" "ch3"
+        process_and_append "Chapter 4_ Reflection.md" "ch4"
+        process_and_append "Chapter 5_ Tool Use.md" "ch5"
+        process_and_append "Chapter 6_ Planning.md" "ch6"
+        process_and_append "Chapter 7_ Multi-Agent Collaboration.md" "ch7"
+        process_and_append "Chapter 8_ Memory Management.md" "ch8"
+        process_and_append "Chapter 9_ Learning and Adaptation.md" "ch9"
+        process_and_append "Chapter 10_ Model Context Protocol (MCP).md" "ch10"
+        process_and_append "Chapter 11_ Goal Setting and Monitoring.md" "ch11"
+        process_and_append "Chapter 12_ Exception Handling and Recovery.md" "ch12"
+        process_and_append "Chapter 13_ Human-in-the-Loop.md" "ch13"
+        process_and_append "Chapter 14_ Knowledge Retrieval (RAG).md" "ch14"
+        process_and_append "Chapter 15_ Inter-Agent Communication (A2A).md" "ch15"
+        process_and_append "Chapter 16_ Resource-Aware Optimization.md" "ch16"
+        process_and_append "Chapter 17_ Reasoning Techniques.md" "ch17"
+        process_and_append "Chapter 18_ Guardrails_Safety Patterns.md" "ch18"
+        process_and_append "Chapter 19_ Evaluation and Monitoring.md" "ch19"
+        process_and_append "Chapter 20_ Prioritization.md" "ch20"
+        process_and_append "Chapter 21_ Exploration and Discovery.md" "ch21"
+        process_and_append "Appendix A_ Advanced Prompting Techniques.md" "appa"
+        process_and_append "Appendix B - AI Agentic Interactions_ From GUI to Real world environment.md" "appb"
+        process_and_append "Appendix C - Quick overview of Agentic Frameworks.md" "appc"
+        process_and_append "Appendix D - Building an Agent with AgentSpace (on-line only).md" "appd"
+        process_and_append "Appendix E - AI Agents on the CLI.md" "appe"
+        process_and_append "Appendix F  - Under the Hood_ An Inside Look at the Agents' Reasoning Engines.md" "appf"
+        process_and_append "Appendix G -  Coding agents.md" "appg"
+        process_and_append "Conclusion.md" "conclusion"
+        process_and_append "Glossary.md" "glossary"
+        process_and_append "Index of Terms.md" "index"
+        process_and_append "Frequently Asked Questions_ Agentic Design Patterns.md" "faq"
+    - name: Process LaTeX special characters
+      run: |
+        # 确保文件存在
+        ls -la combined.md
+        # 执行处理脚本
+        chmod 777 .github/scripts/process_latex_chars.py
+        python3 .github/scripts/process_latex_chars.py combined.md
+
 
     - name: Generate PDF
       run: |
@@ -145,6 +99,7 @@ jobs:
           --toc-depth=2 \
           -V mainfont="Noto Sans CJK SC" \
           -V geometry:margin=1in \
+          --listings \
           --metadata title="智能体设计模式" \
           --metadata author="Antonio Gulli" \
           --metadata lang=zh-CN
