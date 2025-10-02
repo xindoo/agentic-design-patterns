@@ -83,15 +83,6 @@ jobs:
         process_and_append "Glossary.md" "glossary"
         process_and_append "Index of Terms.md" "index"
         process_and_append "Frequently Asked Questions_ Agentic Design Patterns.md" "faq"
-    - name: Process LaTeX special characters
-      run: |
-        # 确保文件存在
-        ls -la combined.md
-        # 执行处理脚本
-        chmod 777 .github/scripts/process_latex_chars.py
-        python3 .github/scripts/process_latex_chars.py combined.md
-
-
     - name: Generate PDF
       run: |
         pandoc combined.md \
