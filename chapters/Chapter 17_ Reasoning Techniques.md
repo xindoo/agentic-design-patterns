@@ -130,7 +130,7 @@ search_agent = Agent(
     model='gemini-2.0-flash',
     name='SearchAgent',
     instruction="""
-    You're a specialist in Google Search
+    你是 Google 搜索专家
     """,
     tools=[google_search],
 )
@@ -139,7 +139,7 @@ coding_agent = Agent(
     model='gemini-2.0-flash',
     name='CodeAgent',
     instruction="""
-    You're a specialist in Code Execution
+    你是代码执行专家
     """,
     code_executor=[BuiltInCodeExecutor],
 )
@@ -147,7 +147,7 @@ coding_agent = Agent(
 root_agent = Agent(
     name="RootAgent",
     model="gemini-2.0-flash",
-    description="Root Agent",
+    description="根 Agent",
     tools=[agent_tool.AgentTool(agent=search_agent), agent_tool.AgentTool(agent=coding_agent)],
 )
 ```
