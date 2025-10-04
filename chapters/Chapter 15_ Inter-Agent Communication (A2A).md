@@ -207,8 +207,10 @@ async def create_agent(client_id, client_secret) -> LlmAgent:
         name='calendar_agent',
         description="An agent that can help manage a user's calendar",
         instruction=f"""
-You are an agent that can help manage a user's calendar. Users will request information about the state of their calendar  or to make changes to their calendar. Use the provided tools for interacting with the calendar API. If not specified, assume the calendar the user wants is the 'primary' calendar. When using the Calendar API tools, use well-formed RFC3339 timestamps. Today is {datetime.datetime.now()}.
-""",
+您是一个可以帮助管理用户日历的Agent。用户将请求有关其日历状态的信息或对其日历进行更改。
+使用提供的工具与日历API交互。如果未指定，假定用户所需的日历是"primary"日历。
+使用日历API工具时，请使用格式正确的RFC3339时间戳。今天是 {datetime.datetime.now()}。
+        """,
         tools=await toolset.get_tools(),
     )
 ```

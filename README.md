@@ -2,6 +2,15 @@
 
 # Agentic Design Patterns（中文翻译项目）
 
+## 👨‍💻 关于xindoo
+
+**xindoo** - 本翻译项目的发起者和主要维护者
+
+- **GitHub**: [xindoo](https://github.com/xindoo)
+- **个人网站**: [zxs.io](https://zxs.io)
+- **博客**：[xindoo](https://blog.csdn.net/xindoo)
+- **个人简介**: 热衷于技术分享和开源贡献的开发者，专注于 AI 技术、系统架构、职业发展。 
+
 ## 📚 项目简介
 
 本项目是《Agentic Design Patterns》一书的中文翻译项目。该书系统介绍了 AI Agent 系统的各种设计模式，涵盖从基础到高级的 21 个核心模式，以及多个附录章节。
@@ -129,6 +138,8 @@ agentic-design-patterns/
 ## 🌟 致谢
 
 感谢所有参与翻译和审校的贡献者！
+
+特别感谢项目创建者 **xindoo** 发起并维护这个重要的中文翻译项目，为中文技术社区带来优质的 AI Agent 设计模式知识。
 
 ---
 

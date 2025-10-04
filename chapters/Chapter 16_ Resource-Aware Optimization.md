@@ -36,16 +36,16 @@ from google.adk.agents import Agent
 gemini_pro_agent = Agent(
     name="GeminiProAgent",
     model="gemini-2.5-pro", # 如果实际模型名称不同，这是占位符
-    description="A highly capable agent for complex queries.",
-    instruction="You are an expert assistant for complex problem-solving."
+    description="一个用于复杂查询的高能力Agent。",
+    instruction="您是一个专门解决复杂问题的专家助手。"
 )
 
 ## 使用更便宜的 Gemini Flash 2.5 的 Agent
 gemini_flash_agent = Agent(
     name="GeminiFlashAgent",
     model="gemini-2.5-flash", # 如果实际模型名称不同，这是占位符
-    description="A fast and efficient agent for simple queries.",
-    instruction="You are a quick assistant for straightforward questions."
+    description="一个用于简单查询的快速高效Agent。",
+    instruction="您是一个处理简单问题的快速助手。"
 )
 ```
 
@@ -62,7 +62,7 @@ import asyncio
 
 class QueryRouterAgent(BaseAgent):
     name: str = "QueryRouter"
-    description: str = "Routes user queries to the appropriate LLM agent based on complexity."
+    description: str = "根据复杂性将用户查询路由到适当的LLM Agent。"
 
     async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:
         user_query = context.current_message.text # 假设文本输入
@@ -205,8 +205,8 @@ def generate_response(prompt: str, classification: str, search_results=None) -> 
                 ]
             )
         else:
-            search_context = "No search results found."
-        full_prompt = f"""Use the following web results to answer the user query: {search_context} Query: {prompt}"""
+            search_context = "未找到搜索结果。"
+            full_prompt = f"""使用以下网络结果回答用户查询：{search_context} 查询：{prompt}"""
     response = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": full_prompt}],
