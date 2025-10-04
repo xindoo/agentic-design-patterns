@@ -211,10 +211,10 @@ generator = LlmAgent(
     output_key="draft_text" # 输出保存到此状态键。
 )
 
-## 第二个 Agent 批评第一个 Agent 的草稿。
+## 第二个 Agent 评审第一个 Agent 的草稿。
 reviewer = LlmAgent(
     name="FactChecker",
-    description="审查给定文本的事实准确性并提供结构化批评。",
+    description="审查给定文本的事实准确性并提供结构化评审。",
     instruction="""
     你是一个细致的事实核查员。
     1. 阅读状态键 'draft_text' 中提供的文本。
@@ -237,7 +237,7 @@ review_pipeline = SequentialAgent(
 ## 2. reviewer 运行 -> 读取 state['draft_text'] 并将其字典输出保存到 state['review_output']。
 ```
 
-此代码演示了在 Google ADK 中使用顺序 Agent 管道生成和审查文本。它定义了两个 LlmAgent 实例：generator 和 reviewer。generator Agent 设计用于创建关于给定主题的初始草稿段落，被指示撰写简短信息丰富的文章，并将其输出保存至状态键 draft_text。reviewer Agent 作为生成器产出文本的事实核查员，被指示从 draft_text 读取文本并验证其事实准确性。审查者的输出是包含两个键的结构化字典：status 和 reasoning。status 指示文本为"ACCURATE"或"INACCURATE"，reasoning 则提供状态解释。此字典保存至状态键 review_output。创建名为 review_pipeline 的 SequentialAgent 来管理两个 Agent 的执行顺序，确保生成器先运行，然后是审查者。整体执行流程为：生成器产出文本并保存至状态，随后审查者从状态读取文本，执行事实核查，并将其发现（状态和推理）保存回状态。此管道允许使用独立 Agent 进行结构化内容创建和审查过程。**注意：** 对于感兴趣者，还提供了利用 ADK 的 LoopAgent 的替代实现。
+此代码演示了在 Google ADK 中使用顺序 Agent 管道生成和审查文本。它定义了两个 LlmAgent 实例：generator 和 reviewer。generator Agent 设计用于创建关于给定主题的初始草稿段落，被指示撰写简短信息丰富的文章，并将其输出保存至状态键 draft_text。reviewer Agent 作为生成器产出文本的事实核查员，被指示从 draft_text 读取文本并验证其事实准确性。评审者的输出是包含两个键的结构化字典：status 和 reasoning。status 指示文本为"ACCURATE"或"INACCURATE"，reasoning 则提供状态解释。此字典保存至状态键 review_output。创建名为 review_pipeline 的 SequentialAgent 来管理两个 Agent 的执行顺序，确保生成器先运行，然后是评审者。整体执行流程为：生成器产出文本并保存至状态，随后评审者从状态读取文本，执行事实核查，并将其发现（状态和推理）保存回状态。此管道允许使用独立 Agent 进行结构化内容创建和审查过程。**注意：** 对于感兴趣者，还提供了利用 ADK 的 LoopAgent 的替代实现。
 
 结束前需考虑，虽然反思模式显著提升输出质量，但也带来重要权衡。迭代过程虽强大，但可能导致更高成本和延迟，因为每个优化循环可能需要新的 LLM 调用，使其对时间敏感应用并非最优选择。此外，该模式内存密集；随着每次迭代，对话历史扩展，包含初始输出、评审和后续优化
 
@@ -257,7 +257,7 @@ review_pipeline = SequentialAgent(
 
 **![][image2]**
 
-图 2：反思设计模式，生产者和批评者 Agent
+图 2：反思设计模式，生产者和评审者 Agent
 
 ## 关键要点
 

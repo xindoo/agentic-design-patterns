@@ -130,7 +130,7 @@ search_agent = Agent(
     model='gemini-2.0-flash',
     name='SearchAgent',
     instruction="""
-    你是 Google 搜索专家
+    您是 Google 搜索专家
     """,
     tools=[google_search],
 )
@@ -139,7 +139,7 @@ coding_agent = Agent(
     model='gemini-2.0-flash',
     name='CodeAgent',
     instruction="""
-    你是代码执行专家
+    您是代码执行专家
     """,
     code_executor=[BuiltInCodeExecutor],
 )

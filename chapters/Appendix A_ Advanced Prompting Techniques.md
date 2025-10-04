@@ -27,7 +27,7 @@ Agentic 模式是构建智能系统的架构蓝图，在主要章节中已有详
 
 **实验和迭代**：提示工程是一个迭代过程。找到最有效的提示需要多次尝试。从初步设计开始，进行测试，分析输出，识别不足，然后优化提示。模型变体、配置参数（如温度或 top-p）以及细微的措辞变化都可能产生不同结果。记录实验过程对于学习和改进至关重要。实验和迭代是实现预期性能的必要手段。
 
-这些原则构成了与语言模型有效沟通的基础。通过优先考虑清晰性、简洁性、动作动词、积极指令和迭代流程，为应用更高级提示技术奠定了坚实基础。
+这些原则构成了与语言模型有效沟通的基础。通过优先考虑清晰性、简洁性、善用动词、积极指令和迭代流程，为应用更高级提示技术奠定了坚实基础。
 
 ## 基础提示技术
 
@@ -505,7 +505,7 @@ Google 的 AI"Gems"（见图 1）代表其大型语言模型架构中的用户�
 
 以下是进一步阅读和深入探索提示工程技术的资源列表：
 
-1. Prompt Engineering, [https://www.kaggle.com/whitepaper-prompt-engineering](https://www://www.kaggle.com/whitepaper-prompt-engineering)   
+1. Prompt Engineering, [https://www.kaggle.com/whitepaper-prompt-engineering](https://www.kaggle.com/whitepaper-prompt-engineering)
 2. Chain-of-Thought Prompting Elicits Reasoning in Large Language Models, [https://arxiv.org/abs/2201.11903](https://arxiv.org/abs/2201.11903)   
 3. Self-Consistency Improves Chain of Thought Reasoning in Language Models,  [https://arxiv.org/pdf/2203.11171](https://arxiv.org/pdf/2203.11171)   
 4. ReAct: Synergizing Reasoning and Acting in Language Models, [https://arxiv.org/abs/2210.03629](https://arxiv.org/abs/2210.03629)  
