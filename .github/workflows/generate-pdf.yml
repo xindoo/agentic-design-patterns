@@ -31,6 +31,8 @@ jobs:
         title: "智能体设计模式"
         subtitle: "构建智能系统实战指南"
         author: "Antonio Gulli"
+        translator: "xindoo"
+        publisher: "GitHub: https://github.com/xindoo/agentic-design-patterns"
         documentclass: book
         lang: zh-CN
         CJKmainfont: "Noto Sans CJK SC"
@@ -96,6 +98,8 @@ jobs:
           --listings \
           --metadata title="智能体设计模式" \
           --metadata author="Antonio Gulli" \
+          --metadata translator="xindoo" \
+          --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
           --metadata lang=zh-CN
 
     - name: Generate EPUB
@@ -106,6 +110,8 @@ jobs:
           --toc-depth=2 \
           --metadata title="智能体设计模式" \
           --metadata author="Antonio Gulli" \
+          --metadata translator="xindoo" \
+          --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
           --metadata lang=zh-CN \
           --epub-cover-image=images/cover.png
 
