@@ -39,7 +39,7 @@
 10. [第10章：模型上下文协议（Model Context Protocol）](chapters/Chapter%2010_%20Model%20Context%20Protocol%20(MCP).md)
 11. [第11章：目标设定与监控（Goal Setting and Monitoring）](chapters/Chapter%2011_%20Goal%20Setting%20and%20Monitoring.md)
 12. [第12章：异常处理与恢复（Exception Handling and Recovery）](chapters/Chapter%2012_%20Exception%20Handling%20and%20Recovery.md)
-13. [第13章：人在回路（Human-in-the-Loop）](chapters/Chapter%2013_%20Human-in-the-Loop.md)
+13. [第13章：人机协同（Human-in-the-Loop）](chapters/Chapter%2013_%20Human-in-the-Loop.md)
 14. [第14章：知识检索（Knowledge Retrieval - RAG）](chapters/Chapter%2014_%20Knowledge%20Retrieval%20(RAG).md)
 15. [第15章：智能体间通信（Inter-Agent Communication - A2A）](chapters/Chapter%2015_%20Inter-Agent%20Communication%20(A2A).md)
 16. [第16章：资源感知优化（Resource-Aware Optimization）](chapters/Chapter%2016_%20Resource-Aware%20Optimization.md)
