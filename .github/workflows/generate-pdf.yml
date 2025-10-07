@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'chapters/**'
+      - 'original/**'
   workflow_dispatch:
 
 jobs:
@@ -23,23 +24,22 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended texlive-lang-chinese fonts-noto-cjk
 
-    - name: Concatenate Markdown files
+    - name: Concatenate Chinese Markdown files
       run: |
         cd chapters
-        cat > ../combined.md << 'EOF'
-        ---
-        title: "智能体设计模式"
-        subtitle: "构建智能系统实战指南"
-        author: "Antonio Gulli"
-        translator: "xindoo"
-        publisher: "GitHub: https://github.com/xindoo/agentic-design-patterns"
-        documentclass: book
-        lang: zh-CN
-        CJKmainfont: "Noto Sans CJK SC"
-        geometry: "margin=1in"
-        ---
-        
-        EOF
+        cat > ../combined-zh.md << 'EOF'
+---
+title: "智能体设计模式"
+subtitle: "构建智能系统实战指南"
+author: "Antonio Gulli"
+translator: "xindoo"
+publisher: "GitHub: https://github.com/xindoo/agentic-design-patterns"
+documentclass: book
+lang: zh-CN
+CJKmainfont: "Noto Sans CJK SC"
+geometry: "margin=1in"
+---
+EOF
         
         # 定义一个函数来处理每个文件：修复图片路径并添加唯一前缀
         process_and_append() {
@@ -49,8 +49,8 @@ jobs:
           # 给图片引用标签添加前缀以避免冲突（包括引用定义和使用）
           sed -e 's|\.\./images/|images/|g' \
               -e "s/^\[image\([0-9]*\)\]:/[${prefix}_image\1]:/" \
-              -e "s/!\[\]\[image\([0-9]*\)\]/![][${prefix}_image\1]/g" "$file" >> ../combined.md
-          echo -e "\n\n" >> ../combined.md
+              -e "s/!\[\]\[image\([0-9]*\)\]/![][${prefix}_image\1]/g" "$file" >> ../combined-zh.md
+          echo -e "\n\n" >> ../combined-zh.md
         }
         
         # 按照Agentic Design Patterns.md中定义的顺序拼接章节
@@ -86,11 +86,73 @@ jobs:
         process_and_append "Glossary.md" "glossary"
         process_and_append "Index of Terms.md" "index"
         process_and_append "Frequently Asked Questions_ Agentic Design Patterns.md" "faq"
-    - name: Generate PDF
+        
+    - name: Concatenate English Markdown files
       run: |
-        pandoc combined.md \
+        cd original
+        cat > ../combined-en.md << 'EOF'
+---
+title: "Agentic Design Patterns"
+subtitle: "A Practical Guide to Building Intelligent Systems"
+author: "Antonio Gulli"
+publisher: "GitHub: https://github.com/xindoo/agentic-design-patterns"
+documentclass: book
+lang: en-US
+geometry: "margin=1in"
+---
+EOF
+        
+        # Define a function to process each file: fix image paths and add unique prefix
+        process_and_append() {
+          local file="$1"
+          local prefix="$2"
+          # Replace ../images/ with images/
+          # Add prefix to image references to avoid conflicts
+          sed -e 's|\.\./images/|images/|g' \
+              -e "s/^\[image\([0-9]*\)\]:/[${prefix}_image\1]:/" \
+              -e "s/!\[\]\[image\([0-9]*\)\]/![][${prefix}_image\1]/g" "$file" >> ../combined-en.md
+          echo -e "\n\n" >> ../combined-en.md
+        }
+        
+        # Concatenate chapters in order
+        process_and_append "Chapter 1_ Prompt Chaining.md" "ch1"
+        process_and_append "Chapter 2_ Routing.md" "ch2"
+        process_and_append "Chapter 3_ Parallelization.md" "ch3"
+        process_and_append "Chapter 4_ Reflection.md" "ch4"
+        process_and_append "Chapter 5_ Tool Use.md" "ch5"
+        process_and_append "Chapter 6_ Planning.md" "ch6"
+        process_and_append "Chapter 7_ Multi-Agent Collaboration.md" "ch7"
+        process_and_append "Chapter 8_ Memory Management.md" "ch8"
+        process_and_append "Chapter 9_ Learning and Adaptation.md" "ch9"
+        process_and_append "Chapter 10_ Model Context Protocol (MCP).md" "ch10"
+        process_and_append "Chapter 11_ Goal Setting and Monitoring.md" "ch11"
+        process_and_append "Chapter 12_ Exception Handling and Recovery.md" "ch12"
+        process_and_append "Chapter 13_ Human-in-the-Loop.md" "ch13"
+        process_and_append "Chapter 14_ Knowledge Retrieval (RAG).md" "ch14"
+        process_and_append "Chapter 15_ Inter-Agent Communication (A2A).md" "ch15"
+        process_and_append "Chapter 16_ Resource-Aware Optimization.md" "ch16"
+        process_and_append "Chapter 17_ Reasoning Techniques.md" "ch17"
+        process_and_append "Chapter 18_ Guardrails_Safety Patterns.md" "ch18"
+        process_and_append "Chapter 19_ Evaluation and Monitoring.md" "ch19"
+        process_and_append "Chapter 20_ Prioritization.md" "ch20"
+        process_and_append "Chapter 21_ Exploration and Discovery.md" "ch21"
+        process_and_append "Appendix A_ Advanced Prompting Techniques.md" "appa"
+        process_and_append "Appendix B - AI Agentic Interactions_ From GUI to Real world environment.md" "appb"
+        process_and_append "Appendix C - Quick overview of Agentic Frameworks.md" "appc"
+        process_and_append "Appendix D - Building an Agent with AgentSpace (on-line only).md" "appd"
+        process_and_append "Appendix E - AI Agents on the CLI.md" "appe"
+        process_and_append "Appendix F  - Under the Hood_ An Inside Look at the Agents' Reasoning Engines.md" "appf"
+        process_and_append "Appendix G -  Coding agents.md" "appg"
+        process_and_append "Conclusion.md" "conclusion"
+        process极速赛车开奖网|极速赛车开奖记录官网|_and_append "Glossary.md" "glossary"
+        process_and_append "Index of Terms.md" "index"
+        process_and_append "Online contribution - Frequently Asked Questions_ Agentic Design Patterns.md" "faq"
+        
+    - name: Generate Chinese PDF
+      run: |
+        pandoc combined-zh.md \
           -o agentic-design-patterns-chinese.pdf \
-          --pdf-engine=xelatex \
+          --pdf-engine=xelate极速赛车开奖网|极速赛车开奖记录官网| \
           --toc \
           --toc-depth=2 \
           -V mainfont="Noto Sans CJK SC" \
@@ -102,9 +164,9 @@ jobs:
           --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
           --metadata lang=zh-CN
 
-    - name: Generate EPUB
+    - name: Generate Chinese EPUB
       run: |
-        pandoc combined.md \
+        pandoc combined-zh.md \
           -o agentic-design-patterns-chinese.epub \
           --toc \
           --toc-depth=2 \
@@ -114,18 +176,57 @@ jobs:
           --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
           --metadata lang=zh-CN \
           --epub-cover-image=images/cover.png
+          
+    - name: Generate English PDF
+      run: |
+        pandoc combined-en.md \
+          -o agentic-design-patterns-english.pdf \
+          --pdf-engine=xelatex \
+          --toc \
+          --toc-depth=2 \
+          -V mainfont="Times New Roman" \
+          -V geometry:margin=1in \
+          --listings \
+          --metadata title="Agentic Design Patterns" \
+          --metadata author="Antonio Gulli" \
+          --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
+          --metadata lang=en-US
 
-    - name: Upload PDF artifact
+    - name: Generate English EPUB
+      run: |
+        pandoc combined-en.md \
+          -o agentic-design-patterns-english.epub \
+          --toc \
+          --toc-depth=2 \
+          --metadata title="Agentic Design Patterns" \
+          --metadata author="Antonio Gulli" \
+          --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
+          --metadata lang=en-US \
+          --epub-cover-image=images/cover.png
+
+    - name: Upload Chinese PDF artifact
       uses: actions/upload-artifact@v4
       with:
         name: agentic-design-patterns-chinese-pdf
         path: agentic-design-patterns-chinese.pdf
 
-    - name: Upload EPUB artifact
+    - name: Upload Chinese EPUB artifact
       uses: actions/upload-artifact@v4
       with:
         name: agentic-design-patterns-chinese-epub
         path: agentic-design-patterns-chinese.epub
+        
+    - name: Upload English PDF artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: agentic-design-patterns-english-pdf
+        path: agentic-design-patterns-english.pdf
+
+    - name: Upload English EPUB artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: agentic-design-patterns-english-epub
+        path: agentic-design-patterns-english.epub
 
     - name: Create Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -136,6 +237,8 @@ jobs:
         files: |
           agentic-design-patterns-chinese.pdf
           agentic-design-patterns-chinese.epub
+          agentic-design-patterns-english.pdf
+          agentic-design-patterns-english.epub
         draft: false
         prerelease: false
       env:
