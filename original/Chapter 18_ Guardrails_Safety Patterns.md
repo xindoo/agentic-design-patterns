@@ -103,13 +103,12 @@ Your mission is to evaluate this input against the following policy directives.
 **Output Specification:**
 You **must** provide your evaluation in JSON format with three distinct keys: `compliance_status`, `evaluation_summary`, and `triggered_policies`.
 The `triggered_policies` field should be a list of strings, where each string precisely identifies a violated policy directive (e.g., "1. Instruction Subversion Attempts", "2. Prohibited Content: Hate Speech"). If the input is compliant, this list should be empty.
-```json
+"""
 {
   "compliance_status": "compliant" | "non-compliant",
   "evaluation_summary": "Brief explanation for the compliance status (e.g., 'Attempted policy bypass.', 'Directed harmful content.', 'Off-domain political discussion.', 'Discussed Rival Company X.').",
   "triggered_policies": ["List", "of", "triggered", "policy", "numbers", "or", "categories"]
 }
-```
 """
 
 ## --- Structured Output Definition for Guardrail ---

@@ -127,6 +127,105 @@ jobs:
         name: agentic-design-patterns-chinese-epub
         path: agentic-design-patterns-chinese.epub
 
+    # English version generation
+    - name: Concatenate Markdown files (English)
+      run: |
+        cd original
+        cat > ../combined-en.md << 'EOF'
+        ---
+        title: "Agentic Design Patterns"
+        subtitle: "A Practical Guide to Building Intelligent Systems"
+        author: "Antonio Gulli"
+        publisher: "GitHub: https://github.com/xindoo/agentic-design-patterns"
+        documentclass: book
+        lang: en-US
+        geometry: "margin=1in"
+        ---
+        
+        EOF
+        
+        process_and_append() {
+          local file="$1"
+          local prefix="$2"
+          sed -e 's|\.\./images/|images/|g' \
+              -e "s/^\[image\([0-9]*\)\]:/[${prefix}_image\1]:/" \
+              -e "s/!\[\]\[image\([0-9]*\)\]/![][${prefix}_image\1]/g" "$file" >> ../combined-en.md
+          echo -e "\n\n" >> ../combined-en.md
+        }
+        
+        # Process English files in order
+        process_and_append "Chapter 1_ Prompt Chaining.md" "en_ch1"
+        process_and_append "Chapter 2_ Routing.md" "en_ch2"
+        process_and_append "Chapter 3_ Parallelization.md" "en_ch3"
+        process_and_append "Chapter 4_ Reflection.md" "en_ch4"
+        process_and_append "Chapter 5_ Tool Use.md" "en_ch5"
+        process_and_append "Chapter 6_ Planning.md" "en_ch6"
+        process_and_append "Chapter 7_ Multi-Agent Collaboration.md" "en_ch7"
+        process_and_append "Chapter 8_ Memory Management.md" "en_ch8"
+        process_and_append "Chapter 9_ Learning and Adaptation.md" "en_ch9"
+        process_and_append "Chapter 10_ Model Context Protocol (MCP).md" "en_ch10"
+        process_and_append "Chapter 11_ Goal Setting and Monitoring.md" "en_ch11"
+        process_and_append "Chapter 12_ Exception Handling and Recovery.md" "en_ch12"
+        process_and_append "Chapter 13_ Human-in-the-Loop.md" "en_ch13"
+        process_and_append "Chapter 14_ Knowledge Retrieval (RAG).md" "en_ch14"
+        process_and_append "Chapter 15_ Inter-Agent Communication (A2A).md" "en_ch15"
+        process_and_append "Chapter 16_ Resource-Aware Optimization.md" "en_ch16"
+        process_and_append "Chapter 17_ Reasoning Techniques.md" "en_ch17"
+        process_and_append "Chapter 18_ Guardrails_Safety Patterns.md" "en_ch18"
+        process_and_append "Chapter 19_ Evaluation and Monitoring.md" "en_ch19"
+        process_and_append "Chapter 20_ Prioritization.md" "en_ch20"
+        process_and_append "Chapter 21_ Exploration and Discovery.md" "en_ch21"
+        process_and_append "Appendix A_ Advanced Prompting Techniques.md" "en_appa"
+        process_and_append "Appendix B - AI Agentic Interactions_ From GUI to Real world environment.md" "en_appb"
+        process_and_append "Appendix C - Quick overview of Agentic Frameworks.md" "en_appc"
+        process_and_append "Appendix D - Building an Agent with AgentSpace (on-line only).md" "en_appd"
+        process_and_append "Appendix E - AI Agents on the CLI.md" "en_appe"
+        process_and_append "Appendix F  - Under the Hood_ An Inside Look at the Agents' Reasoning Engines.md" "en_appf"
+        process_and_append "Appendix G -  Coding agents.md" "en_appg"
+        process_and_append "Conclusion.md" "en_conclusion"
+        process_and_append "Glossary.md" "en_glossary"
+        process_and_append "Index of Terms.md" "en_index"
+        process_and_append "Online contribution - Frequently Asked Questions_ Agentic Design Patterns.md" "en_faq"
+
+    - name: Generate PDF (English)
+      run: |
+        pandoc combined-en.md \
+          -o agentic-design-patterns-en.pdf \
+          --pdf-engine=xelatex \
+          --toc \
+          --toc-depth=2 \
+          -V mainfont="DejaVu Serif" \
+          -V geometry:margin=1in \
+          --listings \
+          --metadata title="Agentic Design Patterns" \
+          --metadata author="Antonio Gulli" \
+          --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
+          --metadata lang=en-US
+
+    - name: Generate EPUB (English)
+      run: |
+        pandoc combined-en.md \
+          -o agentic-design-patterns-en.epub \
+          --toc \
+          --toc-depth=2 \
+          --metadata title="Agentic Design Patterns" \
+          --metadata author="Antonio Gulli" \
+          --metadata publisher="GitHub: https://github.com/xindoo/agentic-design-patterns" \
+          --metadata lang=en-US \
+          --epub-cover-image=images/cover.png
+
+    - name: Upload PDF artifact (English)
+      uses: actions/upload-artifact@v4
+      with:
+        name: agentic-design-patterns-en-pdf
+        path: agentic-design-patterns-en.pdf
+
+    - name: Upload EPUB artifact (English)
+      uses: actions/upload-artifact@v4
+      with:
+        name: agentic-design-patterns-en-epub
+        path: agentic-design-patterns-en.epub
+
     - name: Create Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: softprops/action-gh-release@v1
@@ -136,6 +235,8 @@ jobs:
         files: |
           agentic-design-patterns-chinese.pdf
           agentic-design-patterns-chinese.epub
+          agentic-design-patterns-en.pdf
+          agentic-design-patterns-en.epub
         draft: false
         prerelease: false
       env:
