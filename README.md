@@ -95,7 +95,7 @@ agentic-design-patterns/
 
 本项目已部署到 GitHub Pages，可以在线阅读：
 
-**访问地址：** [https://xindoo.github.io/agentic-design-patterns/](https://xindoo.github.io/agentic-design-patterns/)
+**访问地址：** [https://adp.xindoo.xyz/](https://adp.xindoo.xyz/)
 
 
 ## � 翻译进度
