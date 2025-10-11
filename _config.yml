@@ -9,8 +9,8 @@ author:
 # 网站设置
 lang: zh-CN
 timezone: Asia/Shanghai
-baseurl: "/agentic-design-patterns" # 子目录路径
-url: "https://xindoo.github.io" # 你的域名
+baseurl: "/" # 子目录路径
+url: "https://adp.xindoo.xyz" # 你的域名
 
 # 主题设置
 theme: jekyll-theme-cayman
