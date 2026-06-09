@@ -15,6 +15,15 @@
 
 本项目是《Agentic Design Patterns》一书的中文翻译项目。该书系统介绍了 AI Agent 系统的各种设计模式，涵盖从基础到高级的 21 个核心模式，以及多个附录章节。
 
+<p align="center">
+  <a href="https://www.atlascloud.ai/?utm_source=github&utm_medium=link&utm_campaign=agentic-design-patterns">
+    <img src="./images/atlas-cloud-logo.png" alt="Atlas Cloud logo" width="220">
+  </a>
+</p>
+
+> 🎁 **[Atlas Cloud](https://www.atlascloud.ai/?utm_source=github&utm_medium=link&utm_campaign=agentic-design-patterns)** 为本书讨论的 Agent、RAG、MCP、推理、编程智能体等模式提供了一个统一的 OpenAI-compatible API 落点，便于读者在实验或教学场景里切换 DeepSeek、Qwen、GLM、Kimi、MiniMax 等模型，而不必为每家供应商分别适配。
+> 对编程与 Agent 工作流尤其友好：[coding plan](https://www.atlascloud.ai/console/coding-plan)
+
 ## 🎯 关于本书
 
 《Agentic Design Patterns》探讨了构建智能 AI Agent 系统的核心设计模式，包括：
