@@ -283,9 +283,9 @@ if __name__ == "__main__":
 
 ## 实操代码（Google ADK）
 
-## Google 智能体开发工具包 (ADK) 提供原生集成工具库，可直接扩展智能体的能力
+Google 智能体开发工具包 (ADK) 提供原生集成工具库，可直接扩展智能体的能力。
 
-## **Google 搜索：** 此类组件的主要示例是 Google 搜索工具。此工具作为 Google 搜索引擎的直接接口，为智能体执行网络搜索和检索外部信息的功能。
+**Google 搜索：** 此类组件的主要示例是 Google 搜索工具。此工具作为 Google 搜索引擎的直接接口，为智能体提供执行网络搜索和检索外部信息的功能。
 
 ```python
 from google.adk.agents import Agent

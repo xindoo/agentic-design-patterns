@@ -106,9 +106,9 @@ Fourth, an agent can identify knowledge gaps and use external tools. Suppose a u
 
 **Agentic RAG 的挑战**：虽然功能强大，但智能体层引入了其自身的一系列挑战。主要缺点是复杂性和成本的显著增加。设计、实施和维护智能体的决策逻辑和工具集成需要大量的工程工作，并增加了计算费用。这种复杂性也可能导致延迟增加，因为智能体的反思、工具使用和多步推理循环比标准的直接检索过程需要更多时间。此外，智能体本身可能成为新的错误来源；有缺陷的推理过程可能导致它陷入无用的循环，误解任务，或不当丢弃相关信息，最终降低最终响应的质量。
 
-### **In summary:** Agentic RAG represents a sophisticated evolution of the standard retrieval pattern, transforming it from a passive data pipeline into an active, problem-solving framework. By embedding a reasoning layer that can evaluate sources, reconcile conflicts, decompose complex questions, and use external tools, agents dramatically improve the reliability and depth of the generated answers. This advancement makes the AI more trustworthy and capable, though it comes with important trade-offs in system complexity, latency, and cost that must be carefully managed.
+**In summary:** Agentic RAG represents a sophisticated evolution of the standard retrieval pattern, transforming it from a passive data pipeline into an active, problem-solving framework. By embedding a reasoning layer that can evaluate sources, reconcile conflicts, decompose complex questions, and use external tools, agents dramatically improve the reliability and depth of the generated answers. This advancement makes the AI more trustworthy and capable, though it comes with important trade-offs in system complexity, latency, and cost that must be carefully managed.
 
-### **总结：** Agentic RAG 代表了标准检索模式的复杂演进，将其从被动的数据管道转变为主动的、解决问题的框架。通过嵌入一个可以评估来源、协调冲突、分解复杂问题和使用外部工具的推理层，智能体显著提高了生成答案的可靠性和深度。这一进步使 AI 更加可信和有能力，尽管它带来了必须仔细管理的系统复杂性、延迟和成本方面的重要权衡。
+**总结：** Agentic RAG 代表了标准检索模式的复杂演进，将其从被动的数据管道转变为主动的、解决问题的框架。通过嵌入一个可以评估来源、协调冲突、分解复杂问题和使用外部工具的推理层，智能体显著提高了生成答案的可靠性和深度。这一进步使 AI 更加可信和有能力，尽管它带来了必须仔细管理的系统复杂性、延迟和成本方面的重要权衡。
 
 ## Practical Applications & Use Cases
 

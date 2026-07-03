@@ -276,9 +276,9 @@ This code demonstrates a simple application using the Crew.ai library to simulat
 
 ## Hands-on code (Google ADK)
 
-## The Google Agent Developer Kit (ADK) includes a library of natively integrated tools that can be directly incorporated into an agent's capabilities. 
+The Google Agent Developer Kit (ADK) includes a library of natively integrated tools that can be directly incorporated into an agent's capabilities. 
 
-## **Google search:** A primary example of such a component is the Google Search tool. This tool serves as a direct interface to the Google Search engine, equipping the agent with the functionality to perform web searches and retrieve external information.
+**Google search:** A primary example of such a component is the Google Search tool. This tool serves as a direct interface to the Google Search engine, equipping the agent with the functionality to perform web searches and retrieve external information.
 
 ```python
 from google.adk.agents import Agent
