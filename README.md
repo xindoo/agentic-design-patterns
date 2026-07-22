@@ -10,6 +10,11 @@
 - **个人网站**: [zxs.io](https://zxs.io)
 - **博客**：[xindoo](https://blog.csdn.net/xindoo)
 - **个人简介**: 热衷于技术分享和开源贡献的开发者，专注于 AI 技术、系统架构、职业发展。 
+- **微信公众号（XIN洞察）**: 资深博主，做过运维、写过代码、现任产品经理，从命令行终端敲到产品设计稿，跨视角硬核解码新时代的XIN洞察。欢迎扫码关注。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/xindoo/xindoo/master/img/xindoochat.jpg" width="220" alt="XIN洞察"/>
+</p>
 
 ## 📚 项目简介
 
@@ -117,8 +122,7 @@ agentic-design-patterns/
 
 **当前状态：**
 - ✅ 已完成翻译：32/32
-- 🔄 待审核：32/32
-- 📝 已审核完成：0/32
+- 📝 已审核完成：32/32
 
 查看详细翻译进度请参考 [progress.md](progress.md)
 
