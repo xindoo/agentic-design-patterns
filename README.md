@@ -162,7 +162,7 @@ agentic-design-patterns/
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=xindoo/agentic-design-patterns&type=date&legend=top-left)](https://github.com/xindoo/agentic-design-patterns)
+[![Star History Chart](https://star-history.dera.page/svg?repos=xindoo/agentic-design-patterns&type=date&legend=top-left)](https://github.com/xindoo/agentic-design-patterns)
 
 ## 📄 许可证
 
