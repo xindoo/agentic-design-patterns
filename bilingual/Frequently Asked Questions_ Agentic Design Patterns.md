@@ -27,7 +27,7 @@
 * **反思（Reflection）**：Agent 通过批判自身行为与输出来提升性能的能力。
 * **规划（Planning）**：将复杂目标分解为可管理步骤或任务序列的过程。
 * **工具使用（Tool Use）**：Agent 借助外部工具（如代码解释器、搜索引擎或其他 API）获取信息或执行自身无法完成操作的模式。
-* **多智能体（Multi-Agent Collaboration）**：多个专业化智能体协同解决问题的架构，通常包含"领导者"或"协调者"Agent。
+* **多智能体协作（Multi-Agent Collaboration）**：多个专业化智能体协同解决问题的架构，通常包含"领导者"或"协调者"Agent。
 * **人机协同（Human-in-the-Loop）**：整合人类监督与干预机制，支持对智能体进行反馈、修正与审批。
 
 **Why is "planning" an important pattern?** Planning is crucial because it allows an agent to tackle complex, multi-step tasks that cannot be solved with a single action. By creating a plan, the agent can maintain a coherent strategy, track its progress, and handle errors or unexpected obstacles in a structured manner. This prevents the agent from getting "stuck" or deviating from the user's ultimate goal.
@@ -94,7 +94,7 @@
 
 **How does an agent decide which tool to use?** The agent is typically given a list of available tools along with descriptions of what each tool does and what parameters it requires. When faced with a request it can't handle with its internal knowledge, the agent's reasoning ability allows it to select the most appropriate tool from the list to accomplish the task.
 
-**Agent 如何决策工具选用？** 智能体获授权使用可用工具清单及各工具功能描述与参数要求。当面临内部知识无法处理的请求时，Agent 依托推理能力从清单中筛选最适配任务需求的工具。
+**Agent 如何决策工具选用？** 通常会为智能体提供可用工具清单及各工具的功能描述与参数要求。当面临内部知识无法处理的请求时，Agent 依托推理能力从清单中筛选最适配任务需求的工具。
 
 **What is the "ReAct" (Reason and Act) framework mentioned in this context?** ReAct is a popular framework that integrates reasoning and acting. The agent follows a loop of **Thought** (reasoning about what it needs to do), **Action** (deciding which tool to use and with what inputs), and **Observation** (seeing the result from the tool). This loop continues until it has gathered enough information to fulfill the user's request.
 
@@ -148,7 +148,7 @@
 
 **What is the Multi-Agent Collaboration pattern?** This pattern involves creating a system composed of multiple specialized agents that work together to achieve a common goal. Instead of one "generalist" agent trying to do everything, you create a team of "specialist" agents, each with a specific role or expertise.
 
-**何为多智能体模式？** 该模式指构建由多个专业化智能体协同的系统，通过集体智慧达成共同目标。替代单一"全才"Agent 尝试包揽所有任务的模式，转而组建各具专长的"专家"Agent 团队。
+**何为多智能体协作模式？** 该模式指构建由多个专业化智能体协同的系统，通过集体智慧达成共同目标。替代单一"全才"Agent 尝试包揽所有任务的模式，转而组建各具专长的"专家"Agent 团队。
 
 **What are the benefits of a multi-agent system?**
 
@@ -156,7 +156,7 @@
 * **Reduced Complexity:** Breaking a complex workflow down into specialized roles makes the overall system easier to design, debug, and maintain.  
 * **Simulated Brainstorming:** Different agents can offer different perspectives on a problem, leading to more creative and robust solutions, similar to how a human team works.
 
-**多智能体的优势何在？**
+**多智能体协作的优势何在？**
 
 * **模块化与专业化**：每个智能体针对特定任务进行精细化提示调优（如"研究专员"、"文案专家"、"代码工程师"），产出质量显著提升。
 * **复杂度管控**：将复杂工作流分解为专业角色，大幅降低系统整体设计、调试与维护难度。
@@ -164,7 +164,7 @@
 
 **What is a common architecture for multi-agent systems?** A common architecture involves an **Orchestrator Agent** (sometimes called a "manager" or "conductor"). The orchestrator understands the overall goal, breaks it down, and delegates sub-tasks to the appropriate specialist agents. It then collects the results from the specialists and synthesizes them into a final output.
 
-**多智能体的典型架构如何？** 常见架构核心为**协调者 Agent**（亦称"管理者"或"指挥者"）。协调者把握全局目标，进行任务分解与委派，收集各专家智能体的输出进行最终合成。
+**多智能体协作的典型架构如何？** 常见架构核心为**协调者 Agent**（亦称"管理者"或"指挥者"）。协调者把握全局目标，进行任务分解与委派，收集各专家智能体的输出进行最终合成。
 
 **How do the agents communicate with each other?** Communication is often managed by the orchestrator. For example, the orchestrator might pass the output of the "researcher" agent to the "writer" agent as context. A shared "scratchpad" or message bus where agents can post their findings is another common communication method.
 
@@ -172,7 +172,7 @@
 
 **Why is evaluating an agent more difficult than evaluating a traditional software program?** Traditional software has deterministic outputs (the same input always produces the same output). Agents, especially those using LLMs, are non-deterministic and their performance can be subjective. Evaluating them requires assessing the *quality* and *relevance* of their output, not just whether it's technically "correct."
 
-**为何智能体评估较传统软件更复杂？** 传统软件具备确定性输出（相同输入恒定产生相同输出）。而基于 LLM 的智能体具有不确定性特征，其性能评估常涉主观判断。评估需聚焦输出*质量*与*相关性*，而非单纯技术正确性。
+**为何评估智能体比评估传统软件更困难？** 传统软件具备确定性输出（相同输入恒定产生相同输出）。而基于 LLM 的智能体具有不确定性特征，其性能评估常涉主观判断。评估需聚焦输出*质量*与*相关性*，而非单纯技术正确性。
 
 **What are some common methods for evaluating agent performance?** The guide suggests a few methods:
 

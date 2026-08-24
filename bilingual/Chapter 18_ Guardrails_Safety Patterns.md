@@ -345,7 +345,7 @@ Google Cloud 的 Vertex AI 提供了一种多方面的方法来减轻风险并�
 
 For robust safety, consider these essential practices: use a less computationally intensive model (e.g., Gemini Flash Lite) as an extra safeguard, employ isolated code execution environments, rigorously evaluate and monitor agent actions, and restrict agent activity within secure network boundaries (e.g., VPC Service Controls). Before implementing these, conduct a detailed risk assessment tailored to the agent's functionalities, domain, and deployment environment. Beyond technical safeguards, sanitize all model-generated content before displaying it in user interfaces to prevent malicious code execution in browsers. Let's see an example.
 
-为了实现强大的安全性，请考虑这些基本实践：使用计算密集度较低的模型（例如 Gemini Flash Lite）作为额外保障、采用隔离的代码执行环境、严格评估和监控智能体，以及在安全网络边界内限制智能体（如 VPC Service Controls）。在实施这些之前，请针对智能体的用例和部署环境进行详细的风险评估。除了技术保障措施外，在用户界面中显示所有模型生成的内容之前对其进行清理，以防止浏览器中恶意代码的执行。让我们看一个例子。
+为了实现强大的安全性，请考虑这些基本实践：使用计算密集度较低的模型（例如 Gemini Flash Lite）作为额外保障、采用隔离的代码执行环境、严格评估和监控智能体，以及在安全网络边界内限制智能体（如 VPC Service Controls）。在实施这些之前，请针对智能体的功能、领域和部署环境进行详细的风险评估。除了技术保障措施外，在用户界面中显示所有模型生成的内容之前对其进行清理，以防止浏览器中恶意代码的执行。让我们看一个例子。
 
 ```python
 from google.adk.agents import Agent
@@ -392,7 +392,7 @@ root_agent = Agent(  # Use the documented Agent class
 
 This code defines an agent and a validation callback for tool execution. It imports necessary components like Agent, BaseTool, and ToolContext. The validate\_tool\_params function is a callback designed to be executed before a tool is called by the agent. This function takes the tool, its arguments, and the ToolContext as input. Inside the callback, it accesses the session state from the ToolContext and compares a user\_id\_param from the tool's arguments with a stored session\_user\_id. If these IDs don't match, it indicates a potential security issue and returns an error dictionary, which would block the tool's execution. Otherwise, it returns None, allowing the tool to run. Finally, it instantiates an Agent named root\_agent, specifying a model, instructions, and crucially, assigning the validate\_tool\_params function as the before\_tool\_callback. This setup ensures that the defined validation logic is applied to any tools the root\_agent might attempt to use. 
 
-此代码定义了一个智能体工具执行的验证回调。它导入了必要的组件，如 Agent、BaseTool 和 ToolContext。validate_tool_params 函数是一个回调，设计为在智能体执行工具之前执行。此函数接受工具、其参数和 ToolContext 作为输入。在回调内部，它从 ToolContext 访问会话状态，并将工具参数中的 user_id_param 与存储的 session_user_id 进行比较。如果这些 ID 不匹配，则表示潜在的安全问题并返回错误字典，这将阻止工具的执行。否则，它返回 None，允许工具运行。最后，它实例化了一个名为 root_agent 的 Agent，指定模型、指令，并至关重要地将 validate_tool_params 函数分配为 before_tool_callback。此设置确保将定义的验证逻辑应用于 root_agent 可能尝试使用的任何工具。
+此代码定义了一个智能体以及一个用于验证工具执行的回调。它导入了必要的组件，如 Agent、BaseTool 和 ToolContext。validate_tool_params 函数是一个回调，设计为在智能体执行工具之前执行。此函数接受工具、其参数和 ToolContext 作为输入。在回调内部，它从 ToolContext 访问会话状态，并将工具参数中的 user_id_param 与存储的 session_user_id 进行比较。如果这些 ID 不匹配，则表示潜在的安全问题并返回错误字典，这将阻止工具的执行。否则，它返回 None，允许工具运行。最后，它实例化了一个名为 root_agent 的 Agent，指定模型、指令，并至关重要地将 validate_tool_params 函数分配为 before_tool_callback。此设置确保将定义的验证逻辑应用于 root_agent 可能尝试使用的任何工具。
 
 It's worth emphasizing that guardrails can be implemented in various ways. While some are simple allow/deny lists based on specific patterns, more sophisticated guardrails can be created using prompt-based instructions. 
 
@@ -522,7 +522,7 @@ Fig. 1: Guardrail design pattern
 * 它们可以在各个阶段实施，包括输入验证、输出过滤、行为提示词、工具使用限制和外部审核。
 * 不同防护栏技术的组合提供了最强大的保护。
 * 防护栏需要持续的监控、评估和改进，以适应不断演变的风险和用户交互。
-* 有效的防护栏对于维护用户信任和保护智能体开发者的声誉至关重要。
+* 有效的防护栏对于维护用户信任和保护智能体及其开发者的声誉至关重要。
 * 构建可靠的、生产级智能体的有效方法是将它们视为复杂软件，应用与传统系统几十年来相同的经过验证的工程最佳实践——如容错、状态管理和健壮测试。
 
 ## Conclusion

@@ -184,7 +184,7 @@ Agent 卡片指定智能体是否支持流式传输或推送通知功能。此�
 
 The synchronous request uses the sendTask method, where the client asks for and expects a single, complete answer to its query. In contrast, the streaming request uses the sendTaskSubscribe method to establish a persistent connection, allowing the agent to send back multiple, incremental updates or partial results over time.
 
-同步请求使用 sendTask 方法，其中客户端请求并期望对其查询的单个完整答案。相比之下，流式请求使用 sendTaskSubscribe 方法建立持久连接，允许智能体间发送多个增量更新或部分结果。
+同步请求使用 sendTask 方法，其中客户端请求并期望对其查询的单个完整答案。相比之下，流式请求使用 sendTaskSubscribe 方法建立持久连接，允许智能体发回多个增量更新或部分结果。
 
 ```json
 {
@@ -235,7 +235,7 @@ The synchronous request uses the sendTask method, where the client asks for and 
 
 A2A is a protocol that complements Anthropic's Model Context Protocol (MCP) (see Fig. 1). While MCP focuses on structuring context for agents and their interaction with external data and tools, A2A facilitates coordination and communication among agents, enabling task delegation and collaboration.
 
-A2A 是补充 Anthropic 模型上下文协议（MCP）的协议（见图 1）。MCP 专注于为智能体提供上下文及其与外部数据和工具的交互，而 A2A 则促进智能体间发现和通信，实现任务委派与协作。
+A2A 是补充 Anthropic 模型上下文协议（MCP）的协议（见图 1）。MCP 专注于为智能体构建上下文结构及其与外部数据和工具的交互，而 A2A 则促进智能体间发现和通信，实现任务委派与协作。
 
 ![][image1]
 
@@ -395,7 +395,7 @@ Further exploration of A2A is recommended through the code demonstration at [htt
 
 **What:** Individual AI agents, especially those built on different frameworks, often struggle with complex, multi-faceted problems on their own. The primary challenge is the lack of a common language or protocol that allows them to communicate and collaborate effectively. This isolation prevents the creation of sophisticated systems where multiple specialized agents can combine their unique skills to solve larger tasks. Without a standardized approach, integrating these disparate agents is costly, time-consuming, and hinders the development of more powerful, cohesive AI solutions.
 
-**问题背景：** 单个 AI 智能体（特别是基于不同框架构建的智能体）在处理复杂、多方面问题时通常会遇到困难。主要挑战是缺乏允许它们有效通信协作的通用语言或协议。这种隔离阻止了创建复杂系统，其中多个专门智能体结合独特技能解决更大的任务。如果没有标准化方法，集成这些不同的智能体会非常耗时，并阻碍了更强大、更具凝聚力的 AI 解决方案的开发。
+**问题背景：** 单个 AI 智能体（特别是基于不同框架构建的智能体）在处理复杂、多方面问题时通常会遇到困难。主要挑战是缺乏允许它们有效通信协作的通用语言或协议。这种隔离阻止了创建复杂系统，其中多个专门智能体结合独特技能解决更大的任务。如果没有标准化方法，集成这些不同的智能体成本高昂、非常耗时，并阻碍了更强大、更具凝聚力的 AI 解决方案的开发。
 
 **Why:** The Inter-Agent Communication (A2A) protocol provides an open, standardized solution for this problem. It is an HTTP-based protocol that enables interoperability, allowing distinct AI agents to coordinate, delegate tasks, and share information seamlessly, regardless of their underlying technology. A core component is the Agent Card, a digital identity file that describes an agent's capabilities, skills, and communication endpoints, facilitating discovery and interaction. A2A defines various interaction mechanisms, including synchronous and asynchronous communication, to support diverse use cases. By creating a universal standard for agent collaboration, A2A fosters a modular and scalable ecosystem for building complex, multi-agent Agentic systems.
 

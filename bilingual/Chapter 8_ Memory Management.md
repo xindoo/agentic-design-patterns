@@ -363,7 +363,7 @@ memory_service = InMemoryMemoryService()
 
 Session and State can be conceptualized as short-term memory for a single chat session, whereas the Long-Term Knowledge managed by the MemoryService functions as a persistent and searchable repository. This repository may contain information from multiple past interactions or external sources. The MemoryService, as defined by the BaseMemoryService interface, establishes a standard for managing this searchable, long-term knowledge. Its primary functions include adding information, which involves extracting content from a session and storing it using the add_session_to_memory method, and retrieving information, which allows an agent to query the store and receive relevant data using the search_memory method.
 
-Session 和 State 可概念化为单个聊天会话的短期记忆，而由 MemoryService 管理的长期知识则充当持久且可搜索的存储库。此存储库可能包含来自多个过往交互或外部来源的信息。由 BaseMemoryService 接口定义的 MemoryService 为管理这种可搜索的长期知识建立了标准。其主要功能包括添加信息（涉及从会话中提取内容并使用 add_session_to_memory 方法存储）以及检索信息（允许智能体存储并使用 search_memory 方法接收相关数据）。
+Session 和 State 可概念化为单个聊天会话的短期记忆，而由 MemoryService 管理的长期知识则充当持久且可搜索的存储库。此存储库可能包含来自多个过往交互或外部来源的信息。由 BaseMemoryService 接口定义的 MemoryService 为管理这种可搜索的长期知识建立了标准。其主要功能包括添加信息（涉及从会话中提取内容并使用 add_session_to_memory 方法存储）以及检索信息（允许智能体查询该存储库并使用 search_memory 方法接收相关数据）。
 
 The ADK offers several implementations for creating this long-term knowledge store. The InMemoryMemoryService provides a temporary storage solution suitable for testing purposes, but data is not preserved across application restarts. For production environments, the VertexAiRagMemoryService is typically utilized. This service leverages Google Cloud's Retrieval Augmented Generation (RAG) service, enabling scalable, persistent, and semantic search capabilities (Also, refer to the chapter 14 on RAG).
 
@@ -762,7 +762,7 @@ To quickly recap the main points about memory management:
 
 This chapter dove into the really important job of memory management for agent systems, showing the difference between the short-lived context and the knowledge that sticks around for a long time. We talked about how these types of memory are set up and where you see them used in building smarter agents that can remember things. We took a detailed look at how Google ADK gives you specific pieces like Session, State, and MemoryService to handle this. Now that we've covered how agents can remember things, both short-term and long-term, we can move on to how they can learn and adapt. The next pattern ​​"Learning and Adaptation" is about an agent changing how it thinks, acts, or what it knows, all based on new experiences or data.
 
-本章深入探讨智能体记忆管理，展示了短暂上下文与长期持久知识之间的区别。我们讨论了这些记忆类型的设置方式以及在构建更智能智能体中的应用。详细了解了 Google ADK 如何通过 Session、State 和 MemoryService 等组件处理此过程。既然已介绍智能体如何管理记忆（短期和长期），我们将继续探讨其如何学习和适应。下一模式"学习和适应"关注智能体如何根据智能体数据改变思考、行动或知识。
+本章深入探讨智能体记忆管理，展示了短暂上下文与长期持久知识之间的区别。我们讨论了这些记忆类型的设置方式以及在构建更智能智能体中的应用。详细了解了 Google ADK 如何通过 Session、State 和 MemoryService 等组件处理此过程。既然已介绍智能体如何管理记忆（短期和长期），我们将继续探讨其如何学习和适应。下一模式"学习和适应"关注智能体如何根据新经验或数据改变其思维方式、行动或知识。
 
 ## References
 

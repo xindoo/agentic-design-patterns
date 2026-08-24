@@ -51,7 +51,7 @@ A multi-agent system (see Fig.1) fundamentally comprises the delineation of agen
 ![][image1]
 
 Fig.1: Example of multi-agent system
-图 1：多智能体示例
+图 1：多智能体系统示例
 
 Frameworks such as Crew AI and Google ADK are engineered to facilitate this paradigm by providing structures for the specification of agents, tasks, and their interactive procedures. This approach is particularly effective for challenges necessitating a variety of specialized knowledge, encompassing multiple discrete phases, or leveraging the advantages of concurrent processing and the corroboration of information across agents.
 
@@ -84,7 +84,7 @@ Multi-Agent Collaboration is a powerful pattern applicable across numerous domai
 * **供应链优化：** 多个智能体代表供应链中的不同节点（供应商、制造商、分销商）并协作优化库存水平、物流和调度以响应需求变化或中断。
 
 * **Network Analysis & Remediation:** Autonomous operations benefit greatly from an agentic architecture, particularly in failure pinpointing. Multiple agents can collaborate to triage and remediate issues, suggesting optimal actions. These agents can also integrate with traditional machine learning models and tooling, leveraging existing systems while simultaneously offering the advantages of Generative AI.
-* **网络分析与修复：** 自主操作从多智能体协作中受益匪浅，特别是在故障定位方面。多个智能体协作分类和修复问题，建议最佳行动。这些智能体还支持机器学习模型和工具集成，利用现有系统，同时提供生成式 AI 的优势。
+* **网络分析与修复：** 自主操作从多智能体协作中受益匪浅，特别是在故障定位方面。多个智能体协作分类和修复问题，建议最佳行动。这些智能体还可以与传统机器学习模型和工具集成，充分利用现有系统，同时提供生成式 AI 的优势。
 
 The capacity to delineate specialized agents and meticulously orchestrate their interrelationships empowers developers to construct systems exhibiting enhanced modularity, scalability, and the ability to address complexities that would prove insurmountable for a singular, integrated agent.
 
@@ -461,7 +461,7 @@ artist_agent = LlmAgent(
 **问题背景：** 复杂问题通常超出单个单体基于 LLM 的智能体的能力范围。单个智能体往往缺乏解决多方面任务所有部分所需的多样化专业技能或对特定工具的访问。此限制造成瓶颈，降低系统的整体效率和可扩展性。因此，处理复杂的多领域目标变得低效，并可能导致不完整或次优的结果。
 
 **Why:** The Multi-Agent Collaboration pattern offers a standardized solution by creating a system of multiple, cooperating agents. A complex problem is broken down into smaller, more manageable sub-problems. Each sub-problem is then assigned to a specialized agent with the precise tools and capabilities required to solve it. These agents work together through defined communication protocols and interaction models like sequential handoffs, parallel workstreams, or hierarchical delegation. This agentic, distributed approach creates a synergistic effect, allowing the group to achieve outcomes that would be impossible for any single agent.
-**解决方案：** 多智能体协作模式通过创建多个协作智能体的系统提供了标准化解决方案。复杂问题被分解为更小、更易于管理的子问题。然后将每个子问题分配给具有解决它所需的精确工具和能力的专门智能体。这些智能体通过精心设计的通信协议和交互模型（如顺序交接、并行工作流或层次化委托）协同工作。这种模块化的智能体方法创造了协同效应，使团队能够实现任何单个智能体都无法单独实现的成果。
+**解决方案：** 多智能体协作模式通过创建多个协作智能体的系统提供了标准化解决方案。复杂问题被分解为更小、更易于管理的子问题。然后将每个子问题分配给具有解决它所需的精确工具和能力的专门智能体。这些智能体通过精心设计的通信协议和交互模型（如顺序交接、并行工作流或层次化委托）协同工作。这种分布式智能体方法创造了协同效应，使整个系统能够实现任何单个智能体都无法单独实现的成果。
 
 **Rule of thumb:** Use this pattern when a task is too complex for a single agent and can be decomposed into distinct sub-tasks requiring specialized skills or tools. It is ideal for problems that benefit from diverse expertise, parallel processing, or a structured workflow with multiple stages, such as complex research and analysis, software development, or creative content generation.
 **实践建议：** 当任务对于单个智能体太复杂并且可以分解为需要专业技能或工具的不同子任务时，使用此模式。它非常适合受益于多样化专业知识、并行处理或具有多个阶段的结构化工作流的问题，例如复杂的研究和分析、软件开发或创意内容生成。

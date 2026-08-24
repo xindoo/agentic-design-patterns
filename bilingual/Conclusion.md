@@ -57,9 +57,9 @@ Consider the development of an autonomous AI research assistant, a task that req
 
 * **初始规划：** 用户查询，例如"分析量子计算对网络安全格局的影响"，首先会被规划器智能体接收。该智能体利用规划模式将高层次请求分解为结构化的多步骤研究计划。该计划可能包括诸如"识别量子计算的基础概念"、"研究常见的加密算法"、"查找有关量子威胁对加密的专家分析"和"将发现综合成结构化报告"等步骤。
 * **使用工具使用进行信息收集：** 为了执行该计划，智能体将严重依赖工具使用模式。计划的每一步都将触发对 Google 搜索或 vertex_ai_search 工具的调用。对于更结构化的数据，它可能使用工具查询学术数据库（如 ArXiv）或金融数据 API。
-* **协作分析和写作：** 单个智能体可以处理这个问题，但更稳健的架构将采用多智能体协作。"研究员"智能体可负责执行搜索计划和收集原始信息。它的输出——摘要和来源链接的集合——然后将传递给"作家"智能体。这个专家智能体使用初始计划作为其大纲，将收集的信息综合成连贯的草稿。
-* **迭代反思和改进：** 初稿很少是完美的。反思模式可以通过引入第三个"批评家"智能体来实现。该智能体的唯一目的是审查作家的草稿，检查逻辑不一致、事实不准确或缺乏清晰度的领域。其批评将反馈给作家智能体，然后作家智能体将利用自我纠正模式来改进其输出，纳入反馈以产生更高质量的最终报告。
-* **状态管理：** 在整个过程中，内存管理系统将是必不可少的。它将维护研究计划的状态，存储研究员收集的信息，保存作家创建的草稿，并跟踪批评家的反馈，确保在整个多步骤、多智能体工作流中保持上下文。
+* **协作分析和写作：** 单个智能体可以处理这个问题，但更稳健的架构将采用多智能体协作。"研究员"智能体可负责执行搜索计划和收集原始信息。它的输出——摘要和来源链接的集合——然后将传递给"撰写者"智能体。这个专家智能体使用初始计划作为其大纲，将收集的信息综合成连贯的草稿。
+* **迭代反思和改进：** 初稿很少是完美的。反思模式可以通过引入第三个"批评者"智能体来实现。该智能体的唯一目的是审查撰写者的草稿，检查逻辑不一致、事实不准确或缺乏清晰度的领域。其批评将反馈给撰写者智能体，然后撰写者智能体将利用自我纠正模式来改进其输出，纳入反馈以产生更高质量的最终报告。
+* **状态管理：** 在整个过程中，内存管理系统将是必不可少的。它将维护研究计划的状态，存储研究员收集的信息，保存撰写者创建的草稿，并跟踪批评者的反馈，确保在整个多步骤、多智能体工作流中保持上下文。
 
 In this example, at least five distinct agentic patterns are woven together. The Planning pattern provides the high-level structure, Tool Use grounds the operation in real-world data, Multi-Agent Collaboration enables specialization and division of labor, Reflection ensures quality, and Memory Management maintains coherence. This composition transforms a set of individual capabilities into a powerful, autonomous system capable of tackling a task that would be far too complex for a single prompt or a simple chain.
 
@@ -71,11 +71,11 @@ In this example, at least five distinct agentic patterns are woven together. The
 
 The composition of agentic patterns into complex systems, as illustrated by our AI research assistant, is not the end of the story but rather the beginning of a new chapter in software development. As we look ahead, several emerging trends and challenges will define the next generation of intelligent systems, pushing the boundaries of what is possible and demanding even greater sophistication from their creators.
 
-将 Agentic 模式组合成复杂系统（如我们的 AI 研究助手所示）不是故事的结束，而是软件开发新篇章的开始。展望未来，几个新兴趋势和挑战将定义下一代智能系统，推动可能性的边界，并要求其创建者具有更高的复杂性。
+将 Agentic 模式组合成复杂系统（如我们的 AI 研究助手所示）不是故事的结束，而是软件开发新篇章的开始。展望未来，几个新兴趋势和挑战将定义下一代智能系统，拓展可能性的边界，并要求其创造者具备更高水平的成熟技艺。
 
 The journey toward more advanced agentic AI will be marked by a drive for greater **autonomy and reasoning**. The patterns we have discussed provide the scaffolding for goal-oriented behavior, but the future will require agents that can navigate ambiguity, perform abstract and causal reasoning, and even exhibit a degree of common sense. This will likely involve tighter integration with novel model architectures and neuro-symbolic approaches that blend the pattern-matching strengths of LLMs with the logical rigor of classical AI. We will see a shift from human-in-the-loop systems, where the agent is a co-pilot, to human-on-the-loop systems, where agents are trusted to execute complex, long-running tasks with minimal oversight, reporting back only when the objective is complete or a critical exception occurs.
 
-迈向更先进的 Agentic AI 的旅程将以追求更大的**自主性和推理能力**为标志。我们讨论的模式为目标导向的行为提供了脚手架，但未来将需要能够应对模糊性、执行抽象和因果推理，甚至表现出一定程度常识的智能体。这可能涉及与新颖模型架构和神经符号方法的更紧密集成，这些方法将 LLM 的模式匹配优势与经典 AI 的逻辑严谨性相结合。我们将看到从人机协同系统（其中智能体是副驾驶）向人机在环系统的转变，其中智能体被信任在最少的监督下执行复杂的、长时间运行的任务，仅在目标完成或发生关键异常时报告。
+迈向更先进的 Agentic AI 的旅程将以追求更大的**自主性和推理能力**为标志。我们讨论的模式为目标导向的行为提供了脚手架，但未来将需要能够应对模糊性、执行抽象和因果推理，甚至表现出一定程度常识的智能体。这可能涉及与新颖模型架构和神经符号方法的更紧密集成，这些方法将 LLM 的模式匹配优势与经典 AI 的逻辑严谨性相结合。我们将看到从"人在环中（human-in-the-loop）"系统（其中智能体是副驾驶）向"人在环上（human-on-the-loop）"系统的转变，在后一种系统中，智能体被信任在最少的监督下执行复杂的、长时间运行的任务，仅在目标完成或发生关键异常时报告。
 
 This evolution will be accompanied by the rise of **agentic ecosystems and standardization**. The Multi-Agent Collaboration pattern highlights the power of specialized agents, and the future will see the emergence of open marketplaces and platforms where developers can deploy, discover, and orchestrate fleets of agents-as-a-service. For this to succeed, the principles behind the Model Context Protocol (MCP) and Inter-Agent Communication (A2A) will become paramount, leading to industry-wide standards for how agents, tools, and models exchange not just data, but also context, goals, and capabilities.
 

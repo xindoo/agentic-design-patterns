@@ -95,7 +95,6 @@ from langchain_core.tools import tool as langchain_tool
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 
 ## 安全地提示用户并将 API 密钥设置为环境变量
-## 安全地提示用户并将 API 密钥设置为环境变量
 os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google API key: ")
 os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter your OpenAI API key: ")
 
@@ -332,7 +331,7 @@ nest_asyncio.apply()
 asyncio.run(call_agent("最新的 AI 新闻是什么？"))
 ```
 
-此代码演示了如何使用 Python 的 Google ADK 创建和使用由 Google ADK 驱动的基本智能体。该智能体为通过利用 Google 搜索作为工具来回答问题。首先，从 IPython、google.adk 和 google.genai 导入必要的库。定义了应用程序名称、用户 ID 和会话 ID 的常量。创建了一个名为"basic_search_agent"的智能体，具有描述和说明指示其目的。它被配置为使用 Google 搜索工具，这是 ADK 提供的预构建工具。初始化 InMemorySessionService（见第 8 章）以管理智能体的会话。为指定的应用程序、用户和会话 ID 创建新会话。实例化 Runner，将创建的智能体与会话服务链接此运行器负责在会话中执行智能体的交互。定义了一个名为 call_agent 的函数 以简化向智能体发送查询和处理响应。在 call_agent 内部，用户的查询被格式化为具有角色"user"的 types.Content 对象。使用用户 ID、会话 ID 和新消息内容调用 runner.run 方法。runner.run 方法返回表示智能体操作和响应的事件列表。遍历这些事件以查找最终响应。如果事件被识别为最终响应，则提取该响应的文本内容。提取的智能体响应然后打印到控制台。最后，使用查询"最新的 AI 新闻是什么？"调用 call_agent 函数以演示智能体的运行情况。
+此代码演示了如何使用 Python 的 Google ADK 创建和使用由其驱动的基本智能体。该智能体旨在通过利用 Google 搜索作为工具来回答问题。首先，从 IPython、google.adk 和 google.genai 导入必要的库。定义了应用程序名称、用户 ID 和会话 ID 的常量。创建了一个名为"basic_search_agent"的智能体，具有描述和说明指示其目的。它被配置为使用 Google 搜索工具，这是 ADK 提供的预构建工具。初始化 InMemorySessionService（见第 8 章）以管理智能体的会话。为指定的应用程序、用户和会话 ID 创建新会话。实例化 Runner，将创建的智能体与会话服务链接。此运行器负责在会话中执行智能体的交互。定义了一个名为 call_agent 的函数，以简化向智能体发送查询和处理响应的过程。在 call_agent 内部，用户的查询被格式化为具有角色"user"的 types.Content 对象。使用用户 ID、会话 ID 和新消息内容调用 runner.run 方法。runner.run 方法返回表示智能体操作和响应的事件列表。遍历这些事件以查找最终响应。如果事件被识别为最终响应，则提取该响应的文本内容。提取的智能体响应然后打印到控制台。最后，使用查询"最新的 AI 新闻是什么？"调用 call_agent 函数以演示智能体的运行情况。
 
 **代码执行：** Google ADK 包含专为动态代码执行设计的组件。built_in_code_execution 工具提供沙盒化 Python 解释器，让模型能编写运行代码执行计算、操作数据结构及运行脚本。此功能对需要确定性逻辑和精确计算的任务至关重要，弥补了概率性语言生成的不足。
 
@@ -529,7 +528,7 @@ if __name__ == "__main__":
 
 总的来说，此代码为构建利用 Vertex AI Search 根据存储在数据存储中的信息回答问题的对话式 AI 应用程序提供了基本框架。它演示了如何定义智能体、设置运行器以及在流式传输响应的同时异步与智能体交互。重点是从特定数据存储检索和综合信息以回答用户查询。
 
-**Vertex Extensions：** Vertex AI 扩展是一个结构化的 API 包装器，使模型能够连接到外部 API 以进行实时数据处理和操作执行。扩展提供企业级安全性、数据隐私和性能保证。它们可用于生成和运行代码、查询网站以及分析来自私有数据存储的信息等任务。Google 为常见用例提供预构建扩展，如代码解释器和 Vertex AI Search，并可选择创建自定义扩展。扩展的主要好处包括强大的企业控制和与其他 Google 产品的无缝集成。扩展和工具调用之间的关键区别在于它们的执行：Vertex AI 自动执行扩展，而工具调用需要用户或客户端手动执行。
+**Vertex Extensions：** Vertex AI 扩展是一个结构化的 API 包装器，使模型能够连接到外部 API 以进行实时数据处理和操作执行。扩展提供企业级安全性、数据隐私和性能保证。它们可用于生成和运行代码、查询网站以及分析来自私有数据存储的信息等任务。Google 为常见用例提供预构建扩展，如代码解释器和 Vertex AI Search，并可选择创建自定义扩展。扩展的主要好处包括强大的企业控制和与其他 Google 产品的无缝集成。扩展和函数调用之间的关键区别在于它们的执行：Vertex AI 自动执行扩展，而工具调用需要用户或客户端手动执行。
 
 ## 速览
 

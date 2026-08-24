@@ -217,11 +217,11 @@ This code sets up a sequential workflow for a team of AI agents, where they tack
 
 **MetaGPT**: MetaGPT implements a multi-agent system by assigning roles and tasks based on a predefined set of Standard Operating Procedures (SOPs). This framework structures agent collaboration to mimic a software development company, with agents taking on roles like product managers or engineers to complete complex tasks. This SOP-driven approach results in highly structured and coherent outputs, which is a significant advantage for specialized domains like code generation. The framework's primary limitation is its high degree of specialization, making it less adaptable for general-purpose agentic tasks outside of its core design.
 
-**MetaGPT**：MetaGPT 通过基于预定义标准操作程序（SOP）分配角色和任务来实现多智能体协作。该框架将智能体组织化以模拟软件开发公司，智能体承担产品经理或工程师等角色完成复杂任务。这种 SOP 驱动方法产生高度结构化且连贯的输出，对代码生成等专业领域是显著优势。该框架主要局限在于其高度专业化，使其在核心设计范畴外的通用智能体任务适应性较弱。
+**MetaGPT**：MetaGPT 通过基于预定义标准操作程序（SOP）分配角色和任务来实现多智能体协作。该框架将智能体协作结构化为模拟一家软件开发公司，智能体承担产品经理或工程师等角色完成复杂任务。这种 SOP 驱动方法产生高度结构化且连贯的输出，对代码生成等专业领域是显著优势。该框架主要局限在于其高度专业化，使其在核心设计范畴外的通用智能体任务适应性较弱。
 
 **SuperAGI**: SuperAGI is an open-source framework designed to provide a complete lifecycle management system for autonomous agents. It includes features for agent provisioning, monitoring, and a graphical interface, aiming to enhance the reliability of agent execution. The key benefit is its focus on production-readiness, with built-in mechanisms to handle common failure modes like looping and to provide observability into agent performance. A potential drawback is that its comprehensive platform approach can introduce more complexity and overhead than a more lightweight, library-based framework.
 
-**SuperAGI**：SuperAGI 是旨在为自主智能体提供完整生命周期管理系统的开源框架。它包括智能体监控和图形界面等功能，旨在提升智能体执行体验。其关键优势在于其对生产就绪性的关注，具备处理循环等常见故障模式的内置机制，并提供智能体性能可视化。其潜在缺点在于，与更轻量级库框架相比，其全面平台方法可能引入更多复杂性与开销。
+**SuperAGI**：SuperAGI 是旨在为自主智能体提供完整生命周期管理系统的开源框架。它包括智能体配置、监控和图形界面等功能，旨在提升智能体执行的可靠性。其关键优势在于对生产就绪性的关注，具备处理循环等常见故障模式的内置机制，并提供智能体性能可视化。其潜在缺点在于，与更轻量级库框架相比，其全面平台方法可能引入更多复杂性与开销。
 
 **Semantic Kernel**: Developed by Microsoft, Semantic Kernel is an SDK that integrates large language models with conventional programming code through a system of "plugins" and "planners." It allows an LLM to invoke native functions and orchestrate workflows, effectively treating the model as a reasoning engine within a larger software application. Its primary strength is its seamless integration with existing enterprise codebases, particularly in .NET and Python environments. The conceptual overhead of its plugin and planner architecture can present a steeper learning curve compared to more straightforward agent frameworks.
 

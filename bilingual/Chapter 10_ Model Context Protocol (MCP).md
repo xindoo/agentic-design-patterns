@@ -324,7 +324,7 @@ adk web
 
 Once the ADK Web UI has loaded in your browser, select the `filesystem_assistant_agent` from the agent menu. Next, experiment with prompts such as:
 
-ADK Web UI 在浏览器中加载后，从智能体中选择 `filesystem_assistant_agent`。接下来，尝试以下提示：
+ADK Web UI 在浏览器中加载后，从智能体菜单中选择 `filesystem_assistant_agent`。接下来，尝试以下提示：
 
 * "Show me the contents of this folder."  
 * "Read the `sample.txt` file." (This assumes `sample.txt` is located at `TARGET_FOLDER_PATH`.)  
@@ -454,7 +454,7 @@ Creating an `__init__.py` file within the fastmcp\_client\_agent directory is ne
 
 To begin, open a new terminal and run `python fastmcp_server.py` to start the FastMCP server. Next, go to the parent directory of `fastmcp_client_agent` (for example, `adk_agent_samples`) in your terminal and execute `adk web`. Once the ADK Web UI loads in your browser, select the `fastmcp_greeter_agent` from the agent menu. You can then test it by entering a prompt like "Greet John Doe." The agent will use the `greet` tool on your FastMCP server to create a response.
 
-首先，打开一个新终端并运行 `python fastmcp_server.py` 来启动 FastMCP 服务器。接下来，在终端中转到 `fastmcp_client_agent` 的父目录（例如，`adk_agent_samples`）并执行 `adk web`。一旦 ADK Web UI 在浏览器中加载，从智能体中选择 `fastmcp_greeter_agent`。然后可以通过输入"Greet John Doe"等提示来测试它。智能体将使用 FastMCP 服务器上的 `greet` 工具创建响应。
+首先，打开一个新终端并运行 `python fastmcp_server.py` 来启动 FastMCP 服务器。接下来，在终端中转到 `fastmcp_client_agent` 的父目录（例如，`adk_agent_samples`）并执行 `adk web`。一旦 ADK Web UI 在浏览器中加载，从智能体菜单中选择 `fastmcp_greeter_agent`。然后可以通过输入"Greet John Doe"等提示来测试它。智能体将使用 FastMCP 服务器上的 `greet` 工具创建响应。
 
 ## At a Glance
 
