@@ -236,7 +236,7 @@ In applications such as AI-assisted software development, the utility of prompt 
 
 Implementing prompt chaining ranges from direct, sequential function calls within a script to the utilization of specialized frameworks designed to manage control flow, state, and component integration. Frameworks such as LangChain, LangGraph, Crew AI, and the Google Agent Development Kit (ADK) offer structured environments for constructing and executing these multi-step processes, which is particularly advantageous for complex architectures.
 
-实现提示词链的范围从脚本中的直接顺序工具调用，到利用专门设计用于管理控制流、状态和组件集成的框架。诸如 LangChain、LangGraph、Crew AI 和 Google 智能体开发工具包（ADK）等框架，提供了用于构建和执行这些多步过程的结构化环境，这对于复杂架构特别有利。
+实现提示词链的范围从脚本中的直接顺序函数调用，到利用专门设计用于管理控制流、状态和组件集成的框架。诸如 LangChain、LangGraph、Crew AI 和 Google 智能体开发工具包（ADK）等框架，提供了用于构建和执行这些多步过程的结构化环境，这对于复杂架构特别有利。
 
 For the purpose of demonstration, LangChain and LangGraph are suitable choices as their core APIs are explicitly designed for composing chains and graphs of operations. LangChain provides foundational abstractions for linear sequences, while LangGraph extends these capabilities to support stateful and cyclical computations, which are necessary for implementing more sophisticated agentic behaviors. This example will focus on a fundamental linear sequence.
 
@@ -253,6 +253,8 @@ pip install langchain langchain-community langchain-openai langgraph
 ```
 
 Note that langchain-openai can be substituted with the appropriate package for a different model provider. Subsequently, the execution environment must be configured with the necessary API credentials for the selected language model provider, such as OpenAI, Google Gemini, or Anthropic.
+
+请注意，langchain-openai 可以替换为不同模型提供商的适当包。随后，必须为选定的语言模型提供商（如 OpenAI、Google Gemini 或 Anthropic）配置执行环境所需的 API 凭据。
 
 This Python code demonstrates how to use the LangChain library to process text. It utilizes two separate prompts: one to extract technical specifications from an input string and another to format these specifications into a JSON object. The ChatOpenAI model is employed for language model interactions, and the StrOutputParser ensures the output is in a usable string format. The LangChain Expression Language (LCEL) is used to elegantly chain these prompts and the language model together. The first chain, extraction\_chain, extracts the specifications. The full\_chain then takes the output of the extraction and uses it as input for the transformation prompt. A sample input text describing a laptop is provided. The full\_chain is invoked with this text, processing it through both steps. The final result, a JSON string containing the extracted and formatted specifications, is then printed.
 
@@ -302,8 +304,6 @@ final_result = full_chain.invoke({"text_input": input_text})
 print("\n--- Final JSON Output ---")
 print(final_result)
 ```
-
-请注意，langchain-openai 可以替换为不同模型提供商的适当包。随后，必须为选定的语言模型提供商（如 OpenAI、Google Gemini 或 Anthropic）配置执行环境所需的 API 凭据。
 
 这段 Python 代码演示了如何使用 LangChain 库处理文本。它利用两个独立的提示词：一个从输入字符串中提取技术规格，另一个将这些规格格式化为 JSON 对象。ChatOpenAI 模型用于语言模型交互，StrOutputParser 确保输出为可用的字符串格式。LangChain 表达式语言（LCEL）用于优雅地将这些提示词和语言模型链接在一起。第一个链 extraction_chain 提取规格。然后 full_chain 获取提取的输出，并将其用作转换提示词的输入。提供了描述笔记本电脑的示例输入文本。使用此文本调用 full_chain，通过两个步骤处理它。最后打印最终结果，即包含提取和格式化规格的 JSON 字符串。
 

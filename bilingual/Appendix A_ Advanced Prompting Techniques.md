@@ -468,7 +468,7 @@ These reasoning and thought process techniques are crucial for building agents c
 
 Intelligent agents possess the capability to actively engage with their environment, beyond generating text. This includes utilizing tools, executing external functions, and participating in iterative cycles of observation, reasoning, and action. This section examines prompting techniques designed to enable these active behaviors.
 
-智能智能体主动与环境交互的能力，超越单纯的文本生成。这包括利用工具、执行外部函数以及参与观察、推理和行动的迭代循环。本节探讨旨在实现这些主动行为的提示技术。
+智能体具备主动与环境交互的能力，这超越了单纯的文本生成。这包括利用工具、执行外部函数以及参与观察、推理和行动的迭代循环。本节探讨旨在实现这些主动行为的提示技术。
 
 ## Tool Use / Function Calling
 
@@ -554,11 +554,11 @@ This interleaved process of thinking and acting allows the agent to dynamically 
   用户：法国的首都是什么？当前人口是多少？
 
   思考：用户询问两个信息：法国首都及其人口。我可以使用搜索工具查找这些信息。我将从确认首都开始，尽管我可能已经知道。
-  行动：搜索({"query": "法国首都"})
+  行动：Search({"query": "capital of France"})
   观察：巴黎
 
   思考：好的，首都是巴黎。现在我需要查找巴黎的人口。
-  行动：搜索({"query": "巴黎当前人口"})
+  行动：Search({"query": "current population of Paris"})
   观察：巴黎人口在 2023 年估计约为 210 万人。
 
   思考：我已找到两条信息。现在可以向用户提供最终答案。
@@ -682,7 +682,7 @@ Framing a task using an analogy can sometimes help the model understand the desi
 
 ## Factored Cognition / Decomposition
 
-## 因式认知/分解
+## 分解式认知/任务分解（Factored Cognition / Decomposition）
 
 For very complex tasks, it can be effective to break down the overall goal into smaller, more manageable sub-tasks and prompt the model separately on each sub-task. The results from the sub-tasks are then combined to achieve the final outcome. This is related to prompt chaining and planning but emphasizes the deliberate decomposition of the problem.
 

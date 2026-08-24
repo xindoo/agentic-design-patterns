@@ -34,7 +34,7 @@ Agents adapt by changing strategy, understanding, or goals based on learning. Th
 
 **Proximal Policy Optimization (PPO)** is a reinforcement learning algorithm used to train agents in environments with a continuous range of actions, like controlling a robot's joints or a character in a game. Its main goal is to reliably and stably improve an agent's decision-making strategy, known as its policy.
 
-**近端策略优化（PPO）** 是一种强化学习算法，用于在动作范围连续的环境中训练智能体，例如控制机器人关节或游戏角色。其主要目标是可靠且稳定地改进智能体的决策策略（即策略）。
+**近端策略优化（PPO）** 是一种强化学习算法，用于在动作范围连续的环境中训练智能体，例如控制机器人关节或游戏角色。其主要目标是可靠且稳定地改进智能体的决策策略（policy）。
 
 The core idea behind PPO is to make small, careful updates to the agent's policy. It avoids drastic changes that could cause performance to collapse. Here's how it works:
 
@@ -54,7 +54,7 @@ In short, PPO balances improving performance with staying close to a known, work
 
 **Direct Preference Optimization (DPO)** is a more recent method designed specifically for aligning Large Language Models (LLMs) with human preferences. It offers a simpler, more direct alternative to using PPO for this task.
 
-**直接偏好优化（DPO）** 是一种专门为使大语言模型与人类偏好保持一致而设计的更新方法。它为这项任务提供了比使用 PPO 更简单、更直接的替代方案。
+**直接偏好优化（DPO）** 是一种专门为使大语言模型与人类偏好保持一致而设计的较新方法。它为这项任务提供了比使用 PPO 更简单、更直接的替代方案。
 
 To understand DPO, it helps to first understand the traditional PPO-based alignment method:
 

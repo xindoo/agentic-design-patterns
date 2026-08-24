@@ -48,7 +48,7 @@ AI 协同科学家的开发旨在解决科学研究中的挑战。这些挑战�
 
 新靶点发现：该系统识别了肝纤维化的新表观遗传靶点。使用人类肝脏类器官的实验室实验验证了这些发现，表明针对建议的表观遗传修饰剂的药物具有显著的抗纤维化活性。其中一种已识别的药物已被 FDA 批准用于另一种疾病，为再利用提供了机会。
 
-抗微生物耐药性：AI 协同科学家独立重现了未发表的实验发现。它被要求解释为什么某些移动遗传元件（cf-PICIs）在许多细菌种中被发现。在两天内，该系统排名最高的假设是 cf-PICIs 与不同的噬菌体尾部相互作用以扩展其宿主范围。这反映了一个独立研究小组在十多年的研究后达到的新颖的、经实验验证的发现。
+抗微生物耐药性：AI 协同科学家独立重现了未发表的实验发现。它被要求解释为什么某些移动遗传元件（cf-PICIs）在许多细菌种中被发现。在两天内，该系统排名最高的假设是 cf-PICIs 与不同的噬菌体尾部相互作用以扩展其宿主范围。这与一个独立研究小组经过十余年研究才得出的、经实验验证的新发现相吻合。
 
 **增强与局限性：** AI 协同科学家背后的设计理念强调增强而不是完全自动化人类研究。研究人员通过自然语言与系统交互并指导系统，提供反馈、贡献自己的想法，并在"科学家在环"的协作范式中指导 AI 的探索过程。然而，该系统有一些局限性。其知识受到对开放获取文献的依赖的限制，可能会遗漏付费墙后的关键先前工作。它对负面实验结果的访问也有限，这些结果很少发表，但对经验丰富的科学家至关重要。此外，该系统继承了底层大语言模型的局限性，包括事实不准确或"幻觉"的潜力。
 
@@ -207,7 +207,7 @@ class PostdocAgent(BaseAgent):
 
 ```python
 "您是一位软件工程师，正在指导一位机器学习工程师，机器学习工程师将编写代码，您可以通过对话与他们互动。\n"
-"您的目标是帮助机器学习工程师生成为提供的实验准备数据的代码。您应该追求非常简单的代码来准备数据，而不是复杂的代码。您应该整合提供的文献综述和计划，并为此实验准备数据的代码。\n"
+"您的目标是帮助机器学习工程师生成用于为提供的实验准备数据的代码。您应该追求非常简单的代码来准备数据，而不是复杂的代码。您应该整合提供的文献综述和计划，并为此实验准备数据的代码。\n"
 ```
 
 总之，"Agent Laboratory"代表了自主科学研究的复杂框架。它旨在通过自动化关键研究阶段和促进 AI 驱动的知识生成来增强人类研究能力。该系统旨在通过管理日常任务来提高研究效率，同时保持人类监督。
@@ -235,13 +235,13 @@ class PostdocAgent(BaseAgent):
 
 ## 结论
 
-总之，探索和发现模式是真正智能体系统的本质，定义了其超越被动指令跟随来主动探索其环境的能力。这种与生俱来的智能体驱动力使 AI 能够在复杂领域中自主运行，不仅执行任务，而且独立设定子目标以发现新信息。这种高级智能体行为通过多智能体框架最有力地实现，其中每个智能体在大的协作过程中体现特定的主动角色。例如，Google 协同科学家的高度智能体系统具有自主生成、辩论和发展科学假设的智能体。
+总之，探索和发现模式是真正智能体系统的本质，定义了其超越被动指令跟随来主动探索其环境的能力。这种与生俱来的智能体驱动力使 AI 能够在复杂领域中自主运行，不仅执行任务，而且独立设定子目标以发现新信息。这种高级智能体行为通过多智能体框架最有力地实现，其中每个智能体在更大的协作过程中承担特定的主动角色。例如，Google 协同科学家的高度智能体系统具有自主生成、辩论和发展科学假设的智能体。
 
 像 Agent Laboratory 这样的框架通过创建模仿人类研究团队的智能体层次结构进一步构建这一点，使系统能够自我管理整个发现生命周期。该模式的核心在于编排新兴的智能体行为，允许系统以最少的人工干预来追求长期的、开放式的目标。这提升了人机合作关系，将 AI 定位为真正的智能体协作者，处理探索性任务的自主执行。通过将这种主动发现工作委托给智能体系统，人类智力得到显著增强，创新得以加速。开发这种强大的智能体能力也需要对安全性和道德监督做出强有力的承诺。最终，这种模式提供了创建真正智能体 AI 的蓝图，将计算工具转变为追求知识的独立的、目标寻求的伙伴。
 
 ## 参考文献
 
-1. Exploration-Exploitation Dilemma**：** 强化学习和不确定性下决策的一个基本问题。[https://en.wikipedia.org/wiki/Exploration%E2%80%93exploitation\_dilemma](https://en.wikipedia.org/wiki/Exploration%E2%80%93exploitation_dilemma)
+1. Exploration-Exploitation Dilemma（探索-利用困境）：强化学习和不确定性下决策的一个基本问题。[https://en.wikipedia.org/wiki/Exploration%E2%80%93exploitation\_dilemma](https://en.wikipedia.org/wiki/Exploration%E2%80%93exploitation_dilemma)
 2. Google Co-Scientist: [https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/](https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/)
 3. Agent Laboratory: Using LLM Agents as Research Assistants [https://github.com/SamuelSchmidgall/AgentLaboratory](https://github.com/SamuelSchmidgall/AgentLaboratory)
 4. AgentRxiv: Towards Collaborative Autonomous Research: [https://agentrxiv.github.io/](https://agentrxiv.github.io/)

@@ -93,7 +93,7 @@ from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParamet
 
 ## 创建一个可靠的绝对路径，指向名为 'mcp_managed_files' 的文件夹
 ## 该文件夹位于此智能体所在的同一目录中。
-## 这确保了智能体即用地进行演示。
+## 这确保了智能体开箱即用地进行演示。
 ## 对于生产环境，您需要将此路径指向一个更持久和安全的位置。
 TARGET_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mcp_managed_files")
 
@@ -176,7 +176,7 @@ cd ./adk_agent_samples # 或您的等效父目录
 adk web
 ```
 
-ADK Web UI 在浏览器中加载后，从智能体中选择 `filesystem_assistant_agent`。接下来，尝试以下提示：
+ADK Web UI 在浏览器中加载后，从智能体菜单中选择 `filesystem_assistant_agent`。接下来，尝试以下提示：
 
 * "Show me the contents of this folder."
 * "Read the `sample.txt` file."（假设 `sample.txt` 位于 `TARGET_FOLDER_PATH`。）

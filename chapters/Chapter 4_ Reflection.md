@@ -158,7 +158,7 @@ def run_reflection_loop():
         
         # --- 2. 反思阶段 ---
         print("\n>>> 阶段 2：对生成的代码进行反思...")
-        # 为反思智能体特定提示词。
+        # 为反思智能体创建特定提示词。
         # 这要求模型充当高级代码审查员。
         reflector_prompt = [
             SystemMessage(content="""

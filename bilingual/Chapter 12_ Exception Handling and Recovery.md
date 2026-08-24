@@ -58,7 +58,7 @@ Exception Handling and Recovery is critical for any agent deployed in a real-wor
 
 * **Customer Service Chatbots:** If a chatbot tries to access a customer database and the database is temporarily down, it shouldn't crash. Instead, it should detect the API error, inform the user about the temporary issue, perhaps suggest trying again later, or escalate the query to a human agent.  
 
-* **客户服务聊天机器人**：如果聊天机器人尝试访问客户数据库而数据库暂时停机，它不应该崩溃。相反，它应该检测 API 错误，通知用户临时问题，可能建议稍后再试，或将查询升级给人类智能体。
+* **客户服务聊天机器人**：如果聊天机器人尝试访问客户数据库而数据库暂时停机，它不应该崩溃。相反，它应该检测 API 错误，通知用户临时问题，可能建议稍后再试，或将查询升级给人工客服。
 
 * **Automated Financial Trading:** A trading bot attempting to execute a trade might encounter an "insufficient funds" error or a "market closed" error. It needs to handle these exceptions by logging the error, not repeatedly trying the same invalid trade, and potentially notifying the user or adjusting its strategy.  
 
@@ -74,7 +74,7 @@ Exception Handling and Recovery is critical for any agent deployed in a real-wor
 
 * **Web Scraping Agents:** When a web scraping agent encounters a CAPTCHA, a changed website structure, or a server error (e.g., 404 Not Found, 503 Service Unavailable), it needs to handle these gracefully. This could involve pausing, using a proxy, or reporting the specific URL that failed.  
 
-* **网络爬虫智能体**：当网络爬虫智能体验证码、网站结构更改或服务器错误（例如，404 未找到、503 服务不可用）时，它需要优雅地处理这些问题。这可能涉及暂停、使用代理或报告失败的特定 URL。
+* **网络爬虫智能体**：当网络爬虫智能体遇到验证码、网站结构更改或服务器错误（例如，404 未找到、503 服务不可用）时，它需要优雅地处理这些问题。这可能涉及暂停、使用代理或报告失败的特定 URL。
 
 * **Robotics and Manufacturing:** A robotic arm performing an assembly task might fail to pick up a component due to misalignment. It needs to detect this failure (e.g., via sensor feedback), attempt to readjust, retry the pickup, and if persistent, alert a human operator or switch to a different component.
 

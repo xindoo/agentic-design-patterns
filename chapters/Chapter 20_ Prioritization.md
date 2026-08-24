@@ -205,13 +205,13 @@ if __name__ == "__main__":
 
 此代码使用 Python 和 LangChain 实现了一个简单的任务管理系统，旨在模拟由大语言模型驱动的项目管理智能体。
 
-该系统采用 [`SuperSimpleTaskManager`](chapters/Chapter 20_ Prioritization.md:58) 类在内存中高效管理任务，利用字典结构实现快速数据检索。每个任务由 [`Task`](chapters/Chapter 20_ Prioritization.md:51) Pydantic 模型表示，包含唯一标识符、描述文本、可选优先级级别（P0、P1、P2）和可选的受让人指定等属性。内存使用量会根据任务类型、工作人员数量等因素而变化。任务管理器提供任务创建、任务修改和检索所有任务的方法。
+该系统采用 `SuperSimpleTaskManager` 类在内存中高效管理任务，利用字典结构实现快速数据检索。每个任务由 `Task` Pydantic 模型表示，包含唯一标识符、描述文本、可选优先级级别（P0、P1、P2）和可选的受让人指定等属性。内存使用量会根据任务类型、工作人员数量等因素而变化。任务管理器提供任务创建、任务修改和检索所有任务的方法。
 
-智能体通过一组定义好的工具与任务管理器交互。这些工具支持创建新任务、为任务分配优先级、将任务分配给人员以及列出所有任务。每个工具都被封装为与 [`SuperSimpleTaskManager`](chapters/Chapter 20_ Prioritization.md:58) 的实例交互。Pydantic 模型用于描述工具所需的参数，从而确保数据验证。
+智能体通过一组定义好的工具与任务管理器交互。这些工具支持创建新任务、为任务分配优先级、将任务分配给人员以及列出所有任务。每个工具都被封装为与 `SuperSimpleTaskManager` 的实例交互。Pydantic 模型用于描述工具所需的参数，从而确保数据验证。
 
-[`AgentExecutor`](chapters/Chapter 20_ Prioritization.md:179) 配置了语言模型、工具集和对话内存组件以保持上下文连续性。定义了特定的 [`ChatPromptTemplate`](chapters/Chapter 20_ Prioritization.md:161) 来指导智能体在项目管理角色中的行为。提示词指示智能体先创建任务，然后根据指定分配优先级和人员，最后以完整的任务列表结束。当信息缺失时，提示词中规定了默认分配，例如 P1 优先级和 'Worker A'。
+`AgentExecutor` 配置了语言模型、工具集和对话内存组件以保持上下文连续性。定义了特定的 `ChatPromptTemplate` 来指导智能体在项目管理角色中的行为。提示词指示智能体先创建任务，然后根据指定分配优先级和人员，最后以完整的任务列表结束。当信息缺失时，提示词中规定了默认分配，例如 P1 优先级和 'Worker A'。
 
-代码包含一个异步模拟函数（[`run_simulation`](chapters/Chapter 20_ Prioritization.md:189)）来演示智能体的协作能力。模拟执行两个不同的场景：管理带有指定人员的紧急任务，以及管理输入信息较少的非紧急任务。由于在 [`AgentExecutor`](chapters/Chapter 20_ Prioritization.md:179) 中启用了 `verbose=True`，智能体的行动和逻辑过程会输出到控制台。
+代码包含一个异步模拟函数（`run_simulation`）来演示智能体的运行能力。模拟执行两个不同的场景：管理带有指定人员的紧急任务，以及管理输入信息较少的非紧急任务。由于在 `AgentExecutor` 中启用了 `verbose=True`，智能体的行动和逻辑过程会输出到控制台。
 
 ## 速览
 

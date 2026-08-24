@@ -54,7 +54,7 @@ Most Common Applications and Use Cases:
 
 Developing a comprehensive evaluation framework for AI agents is a challenging endeavor, comparable to an academic discipline or a substantial publication in its complexity. This difficulty stems from the multitude of factors to consider, such as model performance, user interaction, ethical implications, and broader societal impact. Nevertheless, for practical implementation, the focus can be narrowed to critical use cases essential for the efficient and effective functioning of AI agents.
 
-为 AI 智能体开发一个全面的评估框架是一项具有挑战性的工作，其复杂性堪比一门学术学科或大量研究成果。这种困难源于需要考虑的众多因素，如模型性能、用户交互、道德影响和更广泛的社会影响。然而，对于实际实施，可以将重点缩小到对 AI 智能体高效运行至关重要的关键用例。
+为 AI 智能体开发一个全面的评估框架是一项具有挑战性的工作，其复杂性堪比一门学术学科或一部重要著作。这种困难源于需要考虑的众多因素，如模型性能、用户交互、道德影响和更广泛的社会影响。然而，对于实际实施，可以将重点缩小到对 AI 智能体高效运行至关重要的关键用例。
 
 **Agent Response Assessment:** This core process is essential for evaluating the quality and accuracy of an agent's outputs. It involves determining if the agent delivers pertinent, correct,  logical, unbiased, and accurate information in response to given inputs. Assessment metrics may include factual correctness, fluency, grammatical precision, and adherence to the user's intended purpose.
 
@@ -288,7 +288,7 @@ The core functionality involves sending a survey question to the model along wit
 
 The judge_survey_question method sends this prompt to the configured Gemini model, requesting a JSON response formatted according to the defined structure. The expected output JSON includes an overall score, a summary rationale, detailed feedback for each criterion, a list of concerns, and a recommended action. The class handles potential errors during the AI model interaction, such as JSON decoding issues or empty responses. The script demonstrates its operation by evaluating examples of legal survey questions, illustrating how the AI assesses quality based on the predefined criteria.
 
-judge_survey_question 方法将此提示词发送到配置的 Gemini 模型，请求根据定义的结构格式化的 JSON 响应。期望的输出 JSON 包括整体分数、摘要理由、每个标准的详细反馈、问题列表和推荐的操作。该类处理 AI 模型交互期间的潜在错误，例如 JSON 解码问题或空响应。脚本通过评估法律调查问题的示例来演示其操作，说明 AI 如何根据预定义的标准评估质量。
+judge_survey_question 方法将此提示词发送到配置的 Gemini 模型，请求根据定义的结构格式化的 JSON 响应。期望的输出 JSON 包括整体分数、摘要理由、每个标准的详细反馈、关注点列表和推荐的操作。该类处理 AI 模型交互期间的潜在错误，例如 JSON 解码问题或空响应。脚本通过评估法律调查问题的示例来演示其操作，说明 AI 如何根据预定义的标准评估质量。
 
 Before we conclude, let's examine various evaluation methods, considering their strengths and weaknesses.
 
@@ -332,7 +332,7 @@ To do this, you ask key questions about the team's dynamics, supported by concre
 
 * Are the agents cooperating effectively? For instance, after a 'Flight-Booking Agent' secures a flight, does it successfully pass the correct dates and destination to the 'Hotel-Booking Agent'? A failure in cooperation could lead to a hotel being booked for the wrong week.  
 
-* 智能体是否有效合作？例如，在"航班预订智能体"确保航班后，它是否成功地将正确的日期和目的地传递给"酒店预订智能体"？合作失败可能导致酒店预订在错误的周。
+* 智能体是否有效合作？例如，在"航班预订智能体"成功预订航班后，它是否成功地将正确的日期和目的地传递给"酒店预订智能体"？合作失败可能导致酒店预订在错误的周。
 
 * Did they create a good plan and stick to it? Imagine the plan is to first book a flight, then a hotel. If the 'Hotel Agent' tries to book a room before the flight is confirmed, it has deviated from the plan. You also check if an agent gets stuck, for example, endlessly searching for a "perfect" rental car and never moving on to the next step.  
 

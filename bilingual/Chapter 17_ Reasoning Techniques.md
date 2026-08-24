@@ -58,7 +58,7 @@ Let's see an example.  It begins with a set of instructions that tell the AI how
 
 Following that, the example shows the CoT process in action. The section labeled "Agent's Thought Process" is the internal monologue where the model executes the instructed steps. This is the literal "chain of thought." Finally, the "Agent's Final Answer" is the polished, comprehensive output generated as a result of that careful, step-by-step reasoning process
 
-接下来，示例展示了 CoT 过程的实际应用。标记为"Agent 的思考过程"的部分是模型执行指示步骤的内部独白。这是字面上的"思维链"。最后，"Agent 的最终答案"是由于仔细的、逐步推理过程而生成的精炼的、全面的输出。
+接下来，示例展示了 CoT 过程的实际应用。标记为"智能体的思考过程"的部分是模型执行指示步骤的内部独白。这是字面上的"思维链"。最后，"智能体的最终答案"是由于仔细的、逐步推理过程而生成的精炼的、全面的输出。
 
 ```markdown
 You are an Information Retrieval Agent. Your goal is to answer the user's question comprehensively and accurately by thinking step-by-step. Here's the process you must follow:
@@ -104,11 +104,11 @@ Fig.2: Example of Tree of Thoughts
 
 **Self-correction**, also known as self-refinement, is a crucial aspect of an agent's reasoning process, particularly within Chain-of-Thought prompting. It involves the agent's internal evaluation of its generated content and intermediate thought processes. This critical review enables the agent to identify ambiguities, information gaps, or inaccuracies in its understanding or solutions. This iterative cycle of reviewing and refining allows the agent to adjust its approach, improve response quality, and ensure accuracy and thoroughness before delivering a final output. This internal critique enhances the agent's capacity to produce reliable and high-quality results, as demonstrated in examples within the dedicated Chapter 4. 
 
-**自我纠正**，也称为自我改进，是智能体推理过程的一个关键方面，特别是在思维链提示词中。它涉及智能体对生成内容和中间思考过程的内部评估。这种批判性审查使智能体能够识别其理解或解决方案中的模糊性、信息缺口或不准确性。通过审查和改进的迭代循环，Agent 可以调整方法、提升响应质量，并在提供最终输出前确保准确性和完整性。这种内部批评机制增强了智能体产生可靠和高质量结果的能力，如第 4 章的专门示例所示。
+**自我纠正**，也称为自我精炼，是智能体推理过程的一个关键方面，特别是在思维链提示词中。它涉及智能体对生成内容和中间思考过程的内部评估。这种批判性审查使智能体能够识别其理解或解决方案中的模糊性、信息缺口或不准确性。通过审查和改进的迭代循环，Agent 可以调整方法、提升响应质量，并在提供最终输出前确保准确性和完整性。这种内部批评机制增强了智能体产生可靠和高质量结果的能力，如第 4 章的专门示例所示。
 
 This example demonstrates a systematic process of self-correction, crucial for refining AI-generated content. It involves an iterative loop of drafting, reviewing against original requirements, and implementing specific improvements. The illustration begins by outlining the AI's function as a "Self-Correction Agent" with a defined five-step analytical and revision workflow. Following this, a subpar "Initial Draft" of a social media post is presented. The "Self-Correction Agent's Thought Process" forms the core of the demonstration. Here, the Agent critically evaluates the draft according to its instructions, pinpointing weaknesses such as low engagement and a vague call to action. It then suggests concrete enhancements, including the use of more impactful verbs and emojis. The process concludes with the "Final Revised Content," a polished and notably improved version that integrates the self-identified adjustments.
 
-这个示例展示了自我纠正的系统过程，这对于改进 AI 生成内容至关重要。它涉及起草、根据原始要求进行审查以及实施具体改进的迭代循环。示例首先概述了 AI 作为"自我纠正 Agent"的功能，并定义了五步分析和修订工作流程。然后，展示了社交媒体帖子的"初稿"。"自我纠正智能体的思考过程"构成了演示的核心部分。在这里，Agent 根据其指令批判性地评估草稿，指出诸如低参与度和模糊的号召性用语等弱点。随后提出具体的改进建议，包括使用更有影响力的动词和表情符号。整个过程以"最终修订内容"结束，这是一个整合了自我识别调整的精炼和显著改进的版本。
+这个示例展示了自我纠正的系统过程，这对于改进 AI 生成内容至关重要。它涉及起草、根据原始要求进行审查以及实施具体改进的迭代循环。示例首先概述了 AI 作为"自我纠正智能体"的功能，并定义了五步分析和修订工作流程。然后，展示了社交媒体帖子的"初稿"。"自我纠正智能体的思考过程"构成了演示的核心部分。在这里，Agent 根据其指令批判性地评估草稿，指出诸如低参与度和模糊的号召性用语等弱点。随后提出具体的改进建议，包括使用更有影响力的动词和表情符号。整个过程以"最终修订内容"结束，这是一个整合了自我识别调整的精炼和显著改进的版本。
 
 ```markdown
 You are a highly critical and detail-oriented Self-Correction Agent. Your task is to review a previously generated piece of content against its original requirements and identify areas for improvement. Your goal is to refine the content to be more accurate, comprehensive, engaging, and aligned with the prompt.

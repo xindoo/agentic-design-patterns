@@ -236,19 +236,19 @@ This code implements a simple task management system using Python and LangChain,
 
 The system employs a SuperSimpleTaskManager class to efficiently manage tasks within memory, utilizing a dictionary structure for rapid data retrieval. Each task is represented by a Task Pydantic model, which encompasses attributes such as a unique identifier, a descriptive text, an optional priority level (P0, P1, P2), and an optional assignee designation. Memory usage varies based on task type, the number of workers, and other contributing factors. The task manager provides methods for task creation, task modification, and retrieval of all tasks.
 
-该系统采用 [`SuperSimpleTaskManager`](chapters/Chapter 20_ Prioritization.md:58) 类在内存中高效管理任务，利用字典结构实现快速数据检索。每个任务由 [`Task`](chapters/Chapter 20_ Prioritization.md:51) Pydantic 模型表示，包含唯一标识符、描述文本、可选优先级级别（P0、P1、P2）和可选的受让人指定等属性。内存使用量会根据任务类型、工作人员数量等因素而变化。任务管理器提供任务创建、任务修改和检索所有任务的方法。
+该系统采用 `SuperSimpleTaskManager` 类在内存中高效管理任务，利用字典结构实现快速数据检索。每个任务由 `Task` Pydantic 模型表示，包含唯一标识符、描述文本、可选优先级级别（P0、P1、P2）和可选的受让人指定等属性。内存使用量会根据任务类型、工作人员数量等因素而变化。任务管理器提供任务创建、任务修改和检索所有任务的方法。
 
 The agent interacts with the task manager via a defined set of Tools. These tools facilitate the creation of new tasks, the assignment of priorities to tasks, the allocation of tasks to personnel, and the listing of all tasks. Each tool is encapsulated to enable interaction with an instance of the SuperSimpleTaskManager. Pydantic models are utilized to delineate the requisite arguments for the tools, thereby ensuring data validation.
 
-智能体通过一组定义好的工具与任务管理器交互。这些工具支持创建新任务、为任务分配优先级、将任务分配给人员以及列出所有任务。每个工具都被封装为与 [`SuperSimpleTaskManager`](chapters/Chapter 20_ Prioritization.md:58) 的实例交互。Pydantic 模型用于描述工具所需的参数，从而确保数据验证。
+智能体通过一组定义好的工具与任务管理器交互。这些工具支持创建新任务、为任务分配优先级、将任务分配给人员以及列出所有任务。每个工具都被封装为与 `SuperSimpleTaskManager` 的实例交互。Pydantic 模型用于描述工具所需的参数，从而确保数据验证。
 
 An AgentExecutor is configured with the language model, the toolset, and a conversation memory component to maintain contextual continuity. A specific ChatPromptTemplate is defined to direct the agent's behavior in its project management role. The prompt instructs the agent to initiate by creating a task, subsequently assigning priority and personnel as specified, and concluding with a comprehensive task list. Default assignments, such as P1 priority and 'Worker A', are stipulated within the prompt for instances where information is absent.
 
-[`AgentExecutor`](chapters/Chapter 20_ Prioritization.md:179) 配置了语言模型、工具集和对话内存组件以保持上下文连续性。定义了特定的 [`ChatPromptTemplate`](chapters/Chapter 20_ Prioritization.md:161) 来指导智能体在项目管理角色中的行为。提示词指示智能体先创建任务，然后根据指定分配优先级和人员，最后以完整的任务列表结束。当信息缺失时，提示词中规定了默认分配，例如 P1 优先级和 'Worker A'。
+`AgentExecutor` 配置了语言模型、工具集和对话内存组件以保持上下文连续性。定义了特定的 `ChatPromptTemplate` 来指导智能体在项目管理角色中的行为。提示词指示智能体先创建任务，然后根据指定分配优先级和人员，最后以完整的任务列表结束。当信息缺失时，提示词中规定了默认分配，例如 P1 优先级和 'Worker A'。
 
 The code incorporates a simulation function (run\_simulation) of asynchronous nature to demonstrate the agent's operational capacity. The simulation executes two distinct scenarios: the management of an urgent task with designated personnel, and the management of a less urgent task with minimal input. The agent's actions and logical processes are outputted to the console due to the activation of verbose=True within the AgentExecutor.
 
-代码包含一个异步模拟函数（[`run_simulation`](chapters/Chapter 20_ Prioritization.md:189)）来演示智能体的协作能力。模拟执行两个不同的场景：管理带有指定人员的紧急任务，以及管理输入信息较少的非紧急任务。由于在 [`AgentExecutor`](chapters/Chapter 20_ Prioritization.md:179) 中启用了 `verbose=True`，智能体的行动和逻辑过程会输出到控制台。
+代码包含一个异步模拟函数（`run_simulation`）来演示智能体的运行能力。模拟执行两个不同的场景：管理带有指定人员的紧急任务，以及管理输入信息较少的非紧急任务。由于在 `AgentExecutor` 中启用了 `verbose=True`，智能体的行动和逻辑过程会输出到控制台。
 
 ## At a Glance
 
