@@ -341,7 +341,7 @@ from langchain.memory import ConversationBufferMemory
 
 ## 1. 定义 LLM 和提示词
 llm = OpenAI(temperature=0)
-template = """你是一个有帮助的旅行代理。
+template = """你是一个有帮助的旅行智能体。
 之前的对话：
 {history}
 新问题：{question}

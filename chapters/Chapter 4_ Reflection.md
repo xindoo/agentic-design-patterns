@@ -282,7 +282,7 @@ review_pipeline = SequentialAgent(
 1. Training Language Models to Self-Correct via Reinforcement Learning, [https://arxiv.org/abs/2409.12917](https://arxiv.org/abs/2409.12917)
 2. LangChain Expression Language (LCEL) Documentation: [https://python.langchain.com/docs/introduction/](https://python.langchain.com/docs/introduction/)
 3. LangGraph Documentation: [https://www.langchain.com/langgraph](https://www.langchain.com/langgraph)
-4. Google 智能体开发工具包 (ADK) 文档 (多智能体系统): [https://google.github.io/adk-docs/agents/multi-agents/](https://google.github.io/adk-docs/agents/multi-agents/)
+4. Google 智能体开发工具包 (ADK) 文档（多智能体系统）: [https://google.github.io/adk-docs/agents/multi-agents/](https://google.github.io/adk-docs/agents/multi-agents/)
 
 [image1]: ../images/chapter-4/image1.png
 

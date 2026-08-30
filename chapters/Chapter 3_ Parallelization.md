@@ -359,7 +359,7 @@ root_agent = sequential_pipeline_agent
 以下是有关并行化模式和相关概念的一些进一步阅读资源：
 
 1. LangChain Expression Language (LCEL) Documentation (Parallelism): [https://python.langchain.com/docs/concepts/lcel/](https://python.langchain.com/docs/concepts/lcel/)
-2. Google 智能体开发工具包 (ADK) 文档 (多智能体系统): [https://google.github.io/adk-docs/agents/multi-agents/](https://google.github.io/adk-docs/agents/multi-agents/)
+2. Google 智能体开发工具包 (ADK) 文档（多智能体系统）: [https://google.github.io/adk-docs/agents/multi-agents/](https://google.github.io/adk-docs/agents/multi-agents/)
 3. Python asyncio Documentation: [https://docs.python.org/3/library/asyncio.html](https://docs.python.org/3/library/asyncio.html)
 
 [image1]: ../images/chapter-3/image1.png

@@ -168,7 +168,15 @@ def crew(self) -> Crew:
 
 ## 参考文献
 
-1. LangChain, [https://www.langchain.com/](https://www.langchain.com/)   
-2. LangGraph, [https://www.langchain.com/langgraph](https://www.langchain.com/langgraph)   
-3. Google's ADK, [https://google.github.io/adk-docs/](https://google.github.io/adk-docs/)   
-4. Crew.AI, [https://docs.crewai.com/en/introduction](https://docs.crewai.com/en/introduction) 
+1. LangChain, [https://www.langchain.com/](https://www.langchain.com/)
+
+
+
+2. LangGraph, [https://www.langchain.com/langgraph](https://www.langchain.com/langgraph)
+
+
+
+3. Google's ADK, [https://google.github.io/adk-docs/](https://google.github.io/adk-docs/)
+
+4. Crew.AI, [https://docs.crewai.com/en/introduction](https://docs.crewai.com/en/introduction)
+

@@ -104,7 +104,7 @@ AI 智能体是能够感知其环境并采取自主行动以实现目标的系�
 
 **Critique Model:** A critique model is a specialized AI model trained to review, evaluate, and provide feedback on the output of another AI model. It acts as an automated critic, helping to identify errors, improve reasoning, and ensure the final output meets a desired quality standard.
 
-**批评模型（Critique Model）：** 批评模型是一种专门的 AI 模型，经过训练可以审查、评估和提供关于另一个 AI 模型输出的反馈。它充当自动批评者，有助于识别错误、改进推理并确保最终输出符合期望的质量标准。
+**评判模型（Critique Model）：** 评判模型是一种专门的 AI 模型，经过训练可以审查、评估和提供关于另一个 AI 模型输出的反馈。它充当自动批评者，有助于识别错误、改进推理并确保最终输出符合期望的质量标准。
 
 ## Index of Terms
 
@@ -248,8 +248,8 @@ This index of terms was generated using Gemini Pro 2.5. The prompt and reasoning
 * 对话式 Agent(Conversational Agents) - 第 1 章：提示词链，第 4 章：反思
 * 成本敏感探索(Cost-Sensitive Exploration) - 第 16 章：资源感知优化
 * CrewAI(CrewAI) - 第 3 章：并行化，第 5 章：工具使用，第 6 章：规划，第 7 章：多智能体协作，第 18 章：护栏/安全模式，附录 C
-* 批评 Agent(Critique Agent) - 第 16 章：资源感知优化
-* 批评模型(Critique Model) - 术语表
+* 批评智能体(Critique Agent) - 第 16 章：资源感知优化
+* 评判模型(Critique Model) - 术语表
 * 客户支持(Customer Support) - 第 13 章：人机协同
 
 **D**
@@ -329,7 +329,7 @@ This index of terms was generated using Gemini Pro 2.5. The prompt and reasoning
 * Formalized Contract \- Chapter 19: Evaluation and Monitoring  
 * Function Calling \- Chapter 5: Tool Use, Appendix A
 
-* 因子化认知(Factored Cognition) - 附录 A
+* 分解式认知/任务分解(Factored Cognition) - 附录 A
 * FastMCP(FastMCP) - 第 10 章：模型上下文协议（MCP）
 * 容错(Fault Tolerance) - 第 18 章：护栏/安全模式
 * 少样本学习(Few-Shot Learning) - 第 9 章：学习与适应
@@ -597,7 +597,7 @@ This index of terms was generated using Gemini Pro 2.5. The prompt and reasoning
 * RLVR（可验证奖励的强化学习）(RLVR, Reinforcement Learning with Verifiable Rewards) - 第 17 章：推理技术
 * RNN（循环神经网络）(RNN, Recurrent Neural Network) - 术语表
 * 角色提示(Role Prompting) - 附录 A
-* 路由器 Agent(Router Agent) - 第 16 章：资源感知优化
+* 路由器智能体(Router Agent) - 第 16 章：资源感知优化
 * 路由(Routing) - 第 2 章：路由
 
 **S**

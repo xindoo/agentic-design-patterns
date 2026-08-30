@@ -104,11 +104,11 @@ Fig.2: Example of Tree of Thoughts
 
 **Self-correction**, also known as self-refinement, is a crucial aspect of an agent's reasoning process, particularly within Chain-of-Thought prompting. It involves the agent's internal evaluation of its generated content and intermediate thought processes. This critical review enables the agent to identify ambiguities, information gaps, or inaccuracies in its understanding or solutions. This iterative cycle of reviewing and refining allows the agent to adjust its approach, improve response quality, and ensure accuracy and thoroughness before delivering a final output. This internal critique enhances the agent's capacity to produce reliable and high-quality results, as demonstrated in examples within the dedicated Chapter 4. 
 
-**自我纠正**，也称为自我精炼，是智能体推理过程的一个关键方面，特别是在思维链提示词中。它涉及智能体对生成内容和中间思考过程的内部评估。这种批判性审查使智能体能够识别其理解或解决方案中的模糊性、信息缺口或不准确性。通过审查和改进的迭代循环，Agent 可以调整方法、提升响应质量，并在提供最终输出前确保准确性和完整性。这种内部批评机制增强了智能体产生可靠和高质量结果的能力，如第 4 章的专门示例所示。
+**自我纠正**，也称为自我精炼，是智能体推理过程的一个关键方面，特别是在思维链提示词中。它涉及智能体对生成内容和中间思考过程的内部评估。这种批判性审查使智能体能够识别其理解或解决方案中的模糊性、信息缺口或不准确性。通过审查和改进的迭代循环，智能体可以调整方法、提升响应质量，并在提供最终输出前确保准确性和完整性。这种内部批评机制增强了智能体产生可靠和高质量结果的能力，如第 4 章的专门示例所示。
 
 This example demonstrates a systematic process of self-correction, crucial for refining AI-generated content. It involves an iterative loop of drafting, reviewing against original requirements, and implementing specific improvements. The illustration begins by outlining the AI's function as a "Self-Correction Agent" with a defined five-step analytical and revision workflow. Following this, a subpar "Initial Draft" of a social media post is presented. The "Self-Correction Agent's Thought Process" forms the core of the demonstration. Here, the Agent critically evaluates the draft according to its instructions, pinpointing weaknesses such as low engagement and a vague call to action. It then suggests concrete enhancements, including the use of more impactful verbs and emojis. The process concludes with the "Final Revised Content," a polished and notably improved version that integrates the self-identified adjustments.
 
-这个示例展示了自我纠正的系统过程，这对于改进 AI 生成内容至关重要。它涉及起草、根据原始要求进行审查以及实施具体改进的迭代循环。示例首先概述了 AI 作为"自我纠正智能体"的功能，并定义了五步分析和修订工作流程。然后，展示了社交媒体帖子的"初稿"。"自我纠正智能体的思考过程"构成了演示的核心部分。在这里，Agent 根据其指令批判性地评估草稿，指出诸如低参与度和模糊的号召性用语等弱点。随后提出具体的改进建议，包括使用更有影响力的动词和表情符号。整个过程以"最终修订内容"结束，这是一个整合了自我识别调整的精炼和显著改进的版本。
+这个示例展示了自我纠正的系统过程，这对于改进 AI 生成内容至关重要。它涉及起草、根据原始要求进行审查以及实施具体改进的迭代循环。示例首先概述了 AI 作为"自我纠正智能体"的功能，并定义了五步分析和修订工作流程。然后，展示了社交媒体帖子的"初稿"。"自我纠正智能体的思考过程"构成了演示的核心部分。在这里，智能体根据其指令批判性地评估草稿，指出诸如低参与度和模糊的号召性用语等弱点。随后提出具体的改进建议，包括使用更有影响力的动词和表情符号。整个过程以"最终修订内容"结束，这是一个整合了自我识别调整的精炼和显著改进的版本。
 
 ```markdown
 You are a highly critical and detail-oriented Self-Correction Agent. Your task is to review a previously generated piece of content against its original requirements and identify areas for improvement. Your goal is to refine the content to be more accurate, comprehensive, engaging, and aligned with the prompt.
@@ -213,7 +213,7 @@ root_agent = Agent(
 
 **ReAct** (Reasoning and Acting, see Fig. 3, where KB stands for Knowledge Base) is a paradigm that integrates Chain-of-Thought (CoT) prompting with an agent's ability to interact with external environments through tools. Unlike generative models that produce a final answer, a ReAct agent reasons about which actions to take. This reasoning phase involves an internal planning process, similar to CoT, where the agent determines its next steps, considers available tools, and anticipates outcomes. Following this, the agent acts by executing a tool or function call, such as querying a database, performing a calculation, or interacting with an API. 
 
-**ReAct**（推理与行动，见图 3，其中 KB 代表知识库）是一种将思维链（CoT）提示词与智能体通过工具与外部环境交互的能力相结合的范式。与直接生成最终答案的生成模型不同，ReAct 智能体对采取哪些行动进行推理。这个推理阶段涉及内部规划过程，类似于 CoT，Agent 确定下一步行动，考虑可用工具并预测可能的结果。然后，Agent 通过执行工具或工具调用来行动，例如查询数据库、执行计算或与 API 交互。
+**ReAct**（推理与行动，见图 3，其中 KB 代表知识库）是一种将思维链（CoT）提示词与智能体通过工具与外部环境交互的能力相结合的范式。与直接生成最终答案的生成模型不同，ReAct 智能体对采取哪些行动进行推理。这个推理阶段涉及内部规划过程，类似于 CoT，智能体确定下一步行动，考虑可用工具并预测可能的结果。然后，智能体通过执行工具或工具调用来行动，例如查询数据库、执行计算或与 API 交互。
 
 ![][image3]
 
@@ -223,7 +223,7 @@ Fig.3: Reasoning and Act
 
 ReAct operates in an interleaved manner: the agent executes an action, observes the outcome, and incorporates this observation into subsequent reasoning. This iterative loop of "Thought, Action, Observation, Thought..." allows the agent to dynamically adapt its plan, correct errors, and achieve goals requiring multiple interactions with the environment. This provides a more robust and flexible problem-solving approach compared to linear CoT, as the agent responds to real-time feedback. By combining language model understanding and generation with the capability to use tools, ReAct enables agents to perform complex tasks requiring both reasoning and practical execution. This approach is crucial for agents as it allows them to not only reason but also to practically execute steps and interact with dynamic environments.
 
-ReAct 以交错的方式运行：Agent 执行一个动作，观察结果，并将此观察纳入后续推理。这种"思考、行动、观察、思考..."的迭代循环允许智能体调整计划、纠正错误并实现需要与环境进行多次交互的目标。与线性 CoT 相比，这提供了更强大和灵活的问题解决方法，因为智能体能够响应实时反馈。通过结合语言模型的理解和生成能力与使用工具的能力，ReAct 使智能体能够执行需要推理和实际执行的复杂任务。这种方法对智能体至关重要，因为它允许它们不仅进行推理，还可以实际执行步骤并与动态环境交互。
+ReAct 以交错的方式运行：智能体执行一个动作，观察结果，并将此观察纳入后续推理。这种"思考、行动、观察、思考..."的迭代循环允许智能体调整计划、纠正错误并实现需要与环境进行多次交互的目标。与线性 CoT 相比，这提供了更强大和灵活的问题解决方法，因为智能体能够响应实时反馈。通过结合语言模型的理解和生成能力与使用工具的能力，ReAct 使智能体能够执行需要推理和实际执行的复杂任务。这种方法对智能体至关重要，因为它允许它们不仅进行推理，还可以实际执行步骤并与动态环境交互。
 
 **CoD** (Chain of Debates) is a formal AI framework proposed by Microsoft where multiple, diverse models collaborate and argue to solve a problem, moving beyond a single AI's "chain of thought." This system operates like an AI council meeting, where different models present initial ideas, critique each other's reasoning, and exchange counterarguments. The primary goal is to enhance accuracy, reduce bias, and improve the overall quality of the final answer by leveraging collective intelligence. Functioning as an AI version of peer review, this method creates a transparent and trustworthy record of the reasoning process. Ultimately, it represents a shift from a solitary Agent providing an answer to a collaborative team of Agents working together to find a more robust and validated solution.
 
@@ -243,7 +243,7 @@ MASS 采用多阶段优化策略，通过交错进行提示词和拓扑优化来
 
 **1\. Block-Level Prompt Optimization:** The process begins with a local optimization of prompts for individual agent types, or "blocks," to ensure each component performs its role effectively before being integrated into a larger system. This initial step is crucial as it ensures that the subsequent topology optimization builds upon well-performing agents, rather than suffering from the compounding impact of poorly configured ones. For example, when optimizing for the HotpotQA dataset, the prompt for a "Debator" agent is creatively framed to instruct it to act as an "expert fact-checker for a major publication". Its optimized task is to meticulously review proposed answers from other agents, cross-reference them with provided context passages, and identify any inconsistencies or unsupported claims. This specialized role-playing prompt, discovered during block-level optimization, aims to make the debator agent highly effective at synthesizing information before it's even placed into a larger workflow.
 
-**1. 块级提示词优化**：该过程从对各个智能体类型或"块"的提示词进行局部优化开始，以确保每个组件在集成到更大系统之前能够有效执行其角色。这个初始步骤至关重要，因为它确保后续的拓扑优化建立在性能良好的智能体基础上，而不是受到配置不当的智能体的复合影响。例如，在针对 HotpotQA 数据集进行优化时，"Debator"Agent 的提示词被创造性地构建为指示它充当"主要出版物的专家事实核查员"。其优化的任务是仔细审查来自其他智能体的建议答案，与提供的上下文段落交叉引用，并识别任何不一致或不受支持的声明。这种在块级优化期间发现的专门角色扮演提示词旨在使辩论者智能体在被放入更大工作流之前在综合信息方面非常有效。
+**1. 块级提示词优化**：该过程从对各个智能体类型或"块"的提示词进行局部优化开始，以确保每个组件在集成到更大系统之前能够有效执行其角色。这个初始步骤至关重要，因为它确保后续的拓扑优化建立在性能良好的智能体基础上，而不是受到配置不当的智能体的复合影响。例如，在针对 HotpotQA 数据集进行优化时，"Debator"智能体的提示词被创造性地构建为指示它充当"主要出版物的专家事实核查员"。其优化的任务是仔细审查来自其他智能体的建议答案，与提供的上下文段落交叉引用，并识别任何不一致或不受支持的声明。这种在块级优化期间发现的专门角色扮演提示词旨在使辩论者智能体在被放入更大工作流之前在综合信息方面非常有效。
 
 **2\. Workflow Topology Optimization:** Following local optimization, MASS optimizes the workflow topology by selecting and arranging different agent interactions from a customizable design space. To make this search efficient, MASS employs an influence-weighted method. This method calculates the "incremental influence" of each topology by measuring its performance gain relative to a baseline agent and uses these scores to guide the search toward more promising combinations. For instance, when optimizing for the MBPP coding task, the topology search discovers that a specific hybrid workflow is most effective. The best-found topology is not a simple structure but a combination of an iterative refinement process with external tool use. Specifically, it consists of one predictor agent that engages in several rounds of reflection, with its code being verified by one executor agent that runs the code against test cases. This discovered workflow shows that for coding, a structure that combines iterative self-correction with external verification is superior to simpler MAS designs.
 
@@ -257,7 +257,7 @@ Fig. 4: (Courtesy of the Authors): The Multi-Agent System Search (MASS) Framewor
 
 **3\. Workflow-Level Prompt Optimization:** The final stage involves a global optimization of the entire system's prompts. After identifying the best-performing topology, the prompts are fine-tuned as a single, integrated entity to ensure they are tailored for orchestration and that agent interdependencies are optimized. As an example, after finding the best topology for the DROP dataset, the final optimization stage refines the "Predictor" agent's prompt. The final, optimized prompt is highly detailed, beginning by providing the agent with a summary of the dataset itself, noting its focus on "extractive question answering" and "numerical information". It then includes few-shot examples of correct question-answering behavior and frames the core instruction as a high-stakes scenario: "You are a highly specialized AI tasked with extracting critical numerical information for an urgent news report. A live broadcast is relying on your accuracy and speed". This multi-faceted prompt, combining meta-knowledge, examples, and role-playing, is tuned specifically for the final workflow to maximize accuracy.
 
-**3. 工作流级提示词优化**：最后阶段涉及对整个系统提示词的全局优化。在识别出性能最佳的拓扑之后，提示词作为单一的集成实体进行微调，以确保它们针对编排进行定制，并优化智能体的相互依赖性。例如，在找到 DROP 数据集的最佳拓扑后，最终优化阶段改进"Predictor"Agent 的提示词。最终优化的提示词非常详细，首先向智能体提供数据集本身的摘要，指出其重点是"抽取式问答"和"数字信息"。然后包括正确问答行为的少样本示例，并将核心指令框架为高风险场景："您是一个高度专业的 AI，负责为紧急新闻报道提取关键数字信息。现场直播依赖于您的准确性和速度"。这个多方面的提示词，结合元知识、示例和角色扮演，专门针对最终工作流进行调优以最大化准确性。
+**3. 工作流级提示词优化**：最后阶段涉及对整个系统提示词的全局优化。在识别出性能最佳的拓扑之后，提示词作为单一的集成实体进行微调，以确保它们针对编排进行定制，并优化智能体的相互依赖性。例如，在找到 DROP 数据集的最佳拓扑后，最终优化阶段改进"Predictor"智能体的提示词。最终优化的提示词非常详细，首先向智能体提供数据集本身的摘要，指出其重点是"抽取式问答"和"数字信息"。然后包括正确问答行为的少样本示例，并将核心指令框架为高风险场景："您是一个高度专业的 AI，负责为紧急新闻报道提取关键数字信息。现场直播依赖于您的准确性和速度"。这个多方面的提示词，结合元知识、示例和角色扮演，专门针对最终工作流进行调优以最大化准确性。
 
 Key Findings and Principles: Experiments demonstrate that MAS optimized by MASS significantly outperform existing manually designed systems and other automated design methods across a range of tasks. The key design principles for effective MAS, as derived from this research, are threefold:
 
@@ -265,7 +265,7 @@ Key Findings and Principles: Experiments demonstrate that MAS optimized by MASS 
 
 * Optimize individual agents with high-quality prompts before composing them.  
 
-* 在组合智能体之前，使用高质量提示词优化各个 Agent。
+* 在组合智能体之前，使用高质量提示词优化各个智能体。
 
 * Construct MAS by composing influential topologies rather than exploring an unconstrained search space.  
 
@@ -319,7 +319,7 @@ This systematic approach ensures a comprehensive and well-reasoned response, sig
 
 ## Scaling Inference Law
 
-## 推理扩展定律
+**推理扩展定律**
 
 This critical principle dictates the relationship between an LLM's performance and the computational resources allocated during its operational phase, known as inference. The Inference Scaling Law differs from the more familiar scaling laws for training, which focus on how model quality improves with increased data volume and computational power during a model's creation. Instead, this law specifically examines the dynamic trade-offs that occur when an LLM is actively generating an output or answer.
 
@@ -416,23 +416,23 @@ Fig. 6: Example of DeepSearch with LangGraph (code from backend/src/agent/graph.
 
 In summary, an agent's thinking process is a structured approach that combines reasoning and acting to solve problems. This method allows an agent to explicitly plan its steps, monitor its progress, and interact with external tools to gather information.
 
-总之，Agent 的思考过程是一种结合推理和行动来解决问题的结构化方法。这种方法允许智能体规划其步骤、监控其进展并与外部工具交互以收集信息。
+总之，智能体的思考过程是一种结合推理和行动来解决问题的结构化方法。这种方法允许智能体规划其步骤、监控其进展并与外部工具交互以收集信息。
 
 At its core, the agent's "thinking" is facilitated by a powerful LLM. This LLM generates a series of thoughts that guide the agent's subsequent actions. The process typically follows a thought-action-observation loop:
 
-其核心是，Agent 的"思考"由强大的 LLM 驱动。这个 LLM 生成一系列指导智能体行动的思考。该过程通常遵循思考-行动-观察循环：
+其核心是，智能体的"思考"由强大的 LLM 驱动。这个 LLM 生成一系列指导智能体行动的思考。该过程通常遵循思考-行动-观察循环：
 
 1. **Thought:** The agent first generates a textual thought that breaks down the problem, formulates a plan, or analyzes the current situation. This internal monologue makes the agent's reasoning process transparent and steerable.  
 
-1. **思考**：Agent 首先生成分解问题、制定计划或分析当前情况的文本思考。这种内部独白使智能体的推理过程透明且可引导。
+1. **思考**：智能体首先生成分解问题、制定计划或分析当前情况的文本思考。这种内部独白使智能体的推理过程透明且可引导。
 
 2. **Action:** Based on the thought, the agent selects an action from a predefined, discrete set of options. For example, in a question-answering scenario, the action space might include searching online, retrieving information from a specific webpage, or providing a final answer.  
 
-2. **行动**：基于思考，Agent 从预定义的离散选项集中选择一个行动。例如，在问答场景中，行动空间可能包括在线搜索、从特定网页检索信息或提供最终答案。
+2. **行动**：基于思考，智能体从预定义的离散选项集中选择一个行动。例如，在问答场景中，行动空间可能包括在线搜索、从特定网页检索信息或提供最终答案。
 
 3. **Observation:** The agent then receives feedback from its environment based on the action taken. This could be the results of a web search or the content of a webpage.
 
-3. **观察**：Agent 然后根据所采取的行动从其环境接收反馈。这可能是网络搜索的结果或网页的内容。
+3. **观察**：智能体然后根据所采取的行动从其环境接收反馈。这可能是网络搜索的结果或网页的内容。
 
 This cycle repeats, with each observation informing the next thought, until the agent determines that it has reached a final solution and performs a "finish" action.
 
@@ -440,18 +440,18 @@ This cycle repeats, with each observation informing the next thought, until the 
 
 The effectiveness of this approach relies on the advanced reasoning and planning capabilities of the underlying LLM. To guide the agent, the ReAct framework often employs few-shot learning, where the LLM is provided with examples of human-like problem-solving trajectories. These examples demonstrate how to effectively combine thoughts and actions to solve similar tasks.
 
-这种方法的有效性依赖于底层 LLM 的高级推理和规划能力。为了指导 Agent，ReAct 框架通常采用少样本学习，其中向 LLM 提供类似人类问题解决轨迹的示例。这些示例演示了如何有效地结合思考和行动来解决类似任务。
+这种方法的有效性依赖于底层 LLM 的高级推理和规划能力。为了指导智能体，ReAct 框架通常采用少样本学习，其中向 LLM 提供类似人类问题解决轨迹的示例。这些示例演示了如何有效地结合思考和行动来解决类似任务。
 
 The frequency of an agent's thoughts can be adjusted depending on the task. For knowledge-intensive reasoning tasks like fact-checking, thoughts are typically interleaved with every action to ensure a logical flow of information gathering and reasoning. In contrast, for decision-making tasks that require many actions, such as navigating a simulated environment, thoughts may be used more sparingly, allowing the agent to decide when thinking is necessary
 
-Agent 思考的频率可以根据任务进行调整。对于知识密集型推理任务（如事实核查），思考通常与每个行动交错，以确保信息收集和推理的逻辑流动。相比之下，对于需要许多行动的决策任务（例如在模拟环境中导航），思考可能更谨慎地使用，允许智能体决定何时需要思考。
+智能体思考的频率可以根据任务进行调整。对于知识密集型推理任务（如事实核查），思考通常与每个行动交错，以确保信息收集和推理的逻辑流动。相比之下，对于需要许多行动的决策任务（例如在模拟环境中导航），思考可能更谨慎地使用，允许智能体决定何时需要思考。
 
 ## At a Glance
 ## 速览
 
 **What**: Complex problem-solving often requires more than a single, direct answer, posing a significant challenge for AI. The core problem is enabling AI agents to tackle multi-step tasks that demand logical inference, decomposition, and strategic planning. Without a structured approach, agents may fail to handle intricacies, leading to inaccurate or incomplete conclusions. These advanced reasoning methodologies aim to make an agent's internal "thought" process explicit, allowing it to systematically work through challenges.
 
-**问题背景**：复杂的问题解决通常需要的不仅仅是单一的、直接的答案，这对 AI 构成了重大挑战。核心问题是使 AI 智能体能够处理需要逻辑推理、分解和战略规划的多步骤任务。如果没有结构化的方法，Agent 可能无法处理复杂性，导致不准确或不完整的结论。这些高级推理方法旨在使智能体的内部"思考"过程明确，使其能够系统地处理挑战。
+**问题背景**：复杂的问题解决通常需要的不仅仅是单一的、直接的答案，这对 AI 构成了重大挑战。核心问题是使 AI 智能体能够处理需要逻辑推理、分解和战略规划的多步骤任务。如果没有结构化的方法，智能体可能无法处理复杂性，导致不准确或不完整的结论。这些高级推理方法旨在使智能体的内部"思考"过程明确，使其能够系统地处理挑战。
 
 **Why:** The standardized solution is a suite of reasoning techniques that provide a structured framework for an agent's problem-solving process. Methodologies like Chain-of-Thought (CoT) and Tree-of-Thought (ToT) guide LLMs to break down problems and explore multiple solution paths. Self-Correction allows for the iterative refinement of answers, ensuring higher accuracy. Agentic frameworks like ReAct integrate reasoning with action, enabling agents to interact with external tools and environments to gather information and adapt their plans. This combination of explicit reasoning, exploration, refinement, and tool use creates more robust, transparent, and capable AI systems.
 
@@ -476,7 +476,7 @@ Fig. 7: Reasoning design pattern
 
 * By making their reasoning explicit, agents can formulate transparent, multi-step plans, which is the foundational capability for autonomous action and user trust.  
 
-* 通过使推理明确，Agent 可以制定透明的、多步骤的计划，这是自主行动和用户信任的基础能力。
+* 通过使推理明确，智能体可以制定透明的、多步骤的计划，这是自主行动和用户信任的基础能力。
 
 * The ReAct framework provides agents with their core operational loop, empowering them to move beyond mere reasoning and interact with external tools to dynamically act and adapt within an environment.  
 
@@ -515,11 +515,11 @@ Fig. 7: Reasoning design pattern
 
 Modern AI is evolving from passive tools into autonomous agents, capable of tackling complex goals through structured reasoning. This agentic behavior begins with an internal monologue, powered by techniques like Chain-of-Thought (CoT), which allows an agent to formulate a coherent plan before acting. True autonomy requires deliberation, which agents achieve through Self-Correction and Tree-of-Thought (ToT), enabling them to evaluate multiple strategies and independently improve their own work. The pivotal leap to fully agentic systems comes from the ReAct framework, which empowers an agent to move beyond thinking and start acting by using external tools. This establishes the core agentic loop of thought, action, and observation, allowing the agent to dynamically adapt its strategy based on environmental feedback.
 
-现代 AI 正在从被动工具演变为自主 Agent，能够通过结构化推理解决复杂目标。这种 agentic 行为始于由思维链（CoT）等技术驱动的内部独白，允许智能体在行动前制定连贯的计划。真正的自主需要审议，Agent 通过自我纠正和思维树（ToT）实现这一点，使它们能够评估多个策略并独立改进自己的工作。向完全 agentic 系统的关键飞跃来自 ReAct 框架，它使智能体能够超越思考并开始通过使用外部工具来行动。这建立了思考、行动和观察的核心 agentic 循环，允许智能体根据环境反馈动态调整其策略。
+现代 AI 正在从被动工具演变为自主智能体，能够通过结构化推理解决复杂目标。这种 agentic 行为始于由思维链（CoT）等技术驱动的内部独白，允许智能体在行动前制定连贯的计划。真正的自主需要审议，智能体通过自我纠正和思维树（ToT）实现这一点，使它们能够评估多个策略并独立改进自己的工作。向完全 agentic 系统的关键飞跃来自 ReAct 框架，它使智能体能够超越思考并开始通过使用外部工具来行动。这建立了思考、行动和观察的核心 agentic 循环，允许智能体根据环境反馈动态调整其策略。
 
 An agent's capacity for deep deliberation is fueled by the Scaling Inference Law, where more computational "thinking time" directly translates into more robust autonomous actions. The next frontier is the multi-agent system, where frameworks like Chain of Debates (CoD) create collaborative agent societies that reason together to achieve a common goal. This is not theoretical; agentic applications like Deep Research already demonstrate how autonomous agents can execute complex, multi-step investigations on a user's behalf. The overarching goal is to engineer reliable and transparent autonomous agents that can be trusted to independently manage and solve intricate problems. Ultimately, by combining explicit reasoning with the power to act, these methodologies are completing the transformation of AI into truly agentic problem-solvers.
 
-Agent 的深度审议能力由推理扩展定律推动，其中更多的计算"思考时间"直接转化为更稳健的自主行动。下一个前沿是多智能体系统，其中像辩论链（CoD）这样的框架创建协作智能体群体，它们一起推理以实现共同目标。这不是理论性的；像 Deep Research 这样的 agentic 应用程序已经展示了自主智能体如何能够代表用户执行复杂的、多步骤的调查。总体目标是设计可靠和透明的自主 Agent，可以被信任独立管理和解决复杂问题。最终，通过将明确推理与行动能力相结合，这些方法正在完成 AI 向真正 agentic 问题解决者的转变。
+智能体的深度审议能力由推理扩展定律推动，其中更多的计算"思考时间"直接转化为更稳健的自主行动。下一个前沿是多智能体系统，其中像辩论链（CoD）这样的框架创建协作智能体群体，它们一起推理以实现共同目标。这不是理论性的；像 Deep Research 这样的 agentic 应用程序已经展示了自主智能体如何能够代表用户执行复杂的、多步骤的调查。总体目标是设计可靠和透明的自主智能体，可以被信任独立管理和解决复杂问题。最终，通过将明确推理与行动能力相结合，这些方法正在完成 AI 向真正 agentic 问题解决者的转变。
 
 ## References
 ## 参考文献

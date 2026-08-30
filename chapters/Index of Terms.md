@@ -142,8 +142,8 @@ AI 智能体是能够感知其环境并采取自主行动以实现目标的系�
 * 对话式 Agent(Conversational Agents) - 第 1 章：提示词链，第 4 章：反思
 * 成本敏感探索(Cost-Sensitive Exploration) - 第 16 章：资源感知优化
 * CrewAI(CrewAI) - 第 3 章：并行化，第 5 章：工具使用，第 6 章：规划，第 7 章：多智能体协作，第 18 章：护栏/安全模式，附录 C
-* 批评 Agent(Critique Agent) - 第 16 章：资源感知优化
-* 批评模型(Critique Model) - 术语表
+* 批评智能体(Critique Agent) - 第 16 章：资源感知优化
+* 评判模型(Critique Model) - 术语表
 * 客户支持(Customer Support) - 第 13 章：人机协同
 
 **D**
@@ -183,7 +183,7 @@ AI 智能体是能够感知其环境并采取自主行动以实现目标的系�
 
 **F**
 
-* 因子化认知(Factored Cognition) - 附录 A
+* 分解式认知/任务分解(Factored Cognition) - 附录 A
 * FastMCP(FastMCP) - 第 10 章：模型上下文协议（MCP）
 * 容错(Fault Tolerance) - 第 18 章：护栏/安全模式
 * 少样本学习(Few-Shot Learning) - 第 9 章：学习与适应
@@ -333,7 +333,7 @@ AI 智能体是能够感知其环境并采取自主行动以实现目标的系�
 * RLVR（可验证奖励的强化学习）(RLVR, Reinforcement Learning with Verifiable Rewards) - 第 17 章：推理技术
 * RNN（循环神经网络）(RNN, Recurrent Neural Network) - 术语表
 * 角色提示(Role Prompting) - 附录 A
-* 路由器 Agent(Router Agent) - 第 16 章：资源感知优化
+* 路由器智能体(Router Agent) - 第 16 章：资源感知优化
 * 路由(Routing) - 第 2 章：路由
 
 **S**
