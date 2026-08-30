@@ -47,7 +47,7 @@ GitHub Copilot CLI 将广受欢迎的 AI 结对编程体验延伸至终端环境
 
 **示例用例：**
 
-1. **自动化 Issue 解决：** 管理者将 bug 工单（如"Issue \#123：修复分页差一错误"）分配给 Copilot Agent。随后智能体创建新分支、编写代码并提交关联该 issue 的拉取请求，全程无需开发者手动介入。
+1. **自动化 Issue 解决：** 管理者将 bug 工单（如"Issue \#123：修复分页差一错误"）分配给 Copilot 智能体。随后智能体创建新分支、编写代码并提交关联该 issue 的拉取请求，全程无需开发者手动介入。
 2. **仓库感知问答：** 团队新成员可询问："本仓库中数据库连接逻辑定义于何处？需要哪些环境变量？"Copilot CLI 利用其对整个仓库的认知提供包含文件路径的精确答案。
 3. **Shell 命令助手：** 当面对复杂 shell 命令不确定时，用户可输入：gh? find all files larger than 50MB, compress them, and place them in an archive folder. Copilot 将生成执行该任务所需的确切 shell 命令。
 

@@ -561,7 +561,7 @@ if __name__ == "__main__":
 ## 参考文献
 
 1. LangChain Documentation (Tools): [https://python.langchain.com/docs/integrations/tools/](https://python.langchain.com/docs/integrations/tools/)
-2. Google 智能体开发工具包 (ADK) 文档 (工具): [https://google.github.io/adk-docs/tools/](https://google.github.io/adk-docs/tools/)
+2. Google 智能体开发工具包 (ADK) 文档（工具）: [https://google.github.io/adk-docs/tools/](https://google.github.io/adk-docs/tools/)
 3. OpenAI Function Calling Documentation: [https://platform.openai.com/docs/guides/function-calling](https://platform.openai.com/docs/guides/function-calling)
 4. CrewAI Documentation (Tools): [https://docs.crewai.com/concepts/tools](https://docs.crewai.com/concepts/tools)
 

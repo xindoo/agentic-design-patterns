@@ -16,7 +16,7 @@ For example, consider an agent tasked with analyzing a large dataset for a finan
 
 Practical use cases include: 
 
-实际应用场景包括:
+实际应用场景包括：
 
 * **Cost-Optimized LLM Usage:** An agent deciding whether to use a large, expensive LLM for complex tasks or a smaller, more affordable one for simpler queries, based on a budget constraint.  
 
@@ -56,11 +56,11 @@ For example, consider a travel planner built with a hierarchical agent. The high
 
 However, once the plan is established, the individual tasks within that plan, such as looking up flight prices, checking hotel availability, or finding restaurant reviews, are essentially simple, repetitive web queries. These "tool function calls" can be executed by a faster and more affordable model like Gemini Flash. It is easier to visualize why the affordable model can be used for these straightforward web searches, while the intricate planning phase requires the greater intelligence of the more advanced model to ensure a coherent and logical travel plan.
 
-然而，一旦计划制定完成，其中的各个任务（如查询航班价格、检查酒店可用性或查找餐厅评论）本质上是简单的、重复的网络查询。这些"工具函数调用"可以由更快、更经济的模型（如 Gemini Flash）执行。这样就很容易理解为什么经济模型可用于这些直接的网络搜索，而复杂的规划阶段需要更高级模型的更强智能来确保连贯且逻辑合理的旅行计划。
+然而，一旦计划制定完成，其中的各个任务（如查询航班价格、检查酒店可用性或查找餐厅评论）本质上是简单的、重复的网络查询。这些"工具调用"可以由更快、更经济的模型（如 Gemini Flash）执行。这样就很容易理解为什么更经济的模型可用于这些直接的网络搜索，而复杂的规划阶段需要更高级模型的更强智能来确保连贯且逻辑合理的旅行计划。
 
 Google's ADK supports this approach through its multi-agent architecture, which allows for modular and scalable applications. Different agents can handle specialized tasks. Model flexibility enables the direct use of various Gemini models, including both Gemini Pro and Gemini Flash, or integration of other models through LiteLLM. The ADK's orchestration capabilities support dynamic, LLM-driven routing for adaptive behavior. Built-in evaluation features allow systematic assessment of agent performance, which can be used for system refinement (see the Chapter on Evaluation and Monitoring).
 
-Google 的 ADK 通过其多智能体架构支持这种方法，允许构建模块化和可扩展的应用程序。不同的智能体可以处理专门的任务。模型灵活性使得可以直接使用各种 Gemini 模型，包括 Gemini Pro 和 Gemini Flash，或通过 LiteLLM 集成其他模型。ADK 的编排能力支持动态、LLM 驱动的路由以实现自适应行为。内置的评估功能允许系统评估智能体性能，用于智能体系统改进（参见评估和监控章节）。
+Google 的 ADK 通过其多智能体架构支持这种方法，允许构建模块化和可扩展的应用程序。不同的智能体可以处理专门的任务。模型灵活性使得可以直接使用各种 Gemini 模型，包括 Gemini Pro 和 Gemini Flash，或通过 LiteLLM 集成其他模型。ADK 的编排能力支持动态、LLM 驱动的路由以实现自适应行为。内置的评估功能允许系统评估智能体性能，可用于系统改进（参见评估和监控章节）。
 
 Next, two agents with identical setup but utilizing different models and costs will be defined.
 
@@ -129,7 +129,7 @@ The Critique Agent evaluates responses from language models, providing feedback 
 
 Additionally, its feedback can signal reinforcement learning or fine-tuning; consistent identification of inadequate Flash model responses, for instance, can refine the router agent's logic. While not directly managing the budget, the Critique Agent contributes to indirect budget management by identifying suboptimal routing choices, such as directing simple queries to a Pro model or complex queries to a Flash model, which leads to poor results. This informs adjustments that improve resource allocation and cost savings. 
 
-此外，其反馈可以为强化学习或微调提供信号；例如，持续识别 Flash 模型响应不足可以改进路由器智能体的逻辑。虽然不直接管理预算，批评智能体通过识别次优路由选择（例如将简单查询定向到 Pro 模型或将复杂查询定向到 Flash 模型，导致结果不佳）来间接管理预算。这为改进资源分配和节约成本的调整提供了依据。
+此外，其反馈可以为强化学习或微调提供信号；例如，持续识别 Flash 模型响应不足可以改进路由器智能体的逻辑。虽然不直接管理预算，批评智能体通过识别次优路由选择（例如将简单查询定向到 Pro 模型或将复杂查询定向到 Flash 模型，导致结果不佳）间接参与预算管理。这为改进资源分配和节约成本的调整提供了依据。
 
 The Critique Agent can be configured to review either only the generated text from the answering agent or both the original query and the generated text, enabling a comprehensive evaluation of the response's alignment with the initial question.
 
@@ -378,7 +378,7 @@ OpenRouter 提供两种不同的方法来路由和确定用于处理给定请求
 
 OpenRouter offers a detailed leaderboard ( [https://openrouter.ai/rankings](https://openrouter.ai/rankings)) which ranks available AI models based on their cumulative token production. It also offers latest models from different providers (ChatGPT, Gemini, Claude) (see Fig. 1\)
 
-OpenRouter 提供详细的排行榜（[https://openrouter.ai/rankings](https://openrouter.ai/rankings)），根据可用 AI 模型的累积 token 生成对其进行排名。它还提供来自不同提供商（ChatGPT、Gemini、Claude）的最新模型（见图 1）
+OpenRouter 提供详细的排行榜（[https://openrouter.ai/rankings](https://openrouter.ai/rankings)），根据各 AI 模型的累计 token 产出量对其进行排名。它还提供来自不同提供商（ChatGPT、Gemini、Claude）的最新模型（见图 1）。
 
 ![][image1]  
 
