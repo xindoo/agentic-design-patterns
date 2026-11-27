@@ -1,6 +1,5 @@
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage{calc}
 
 \definecolor{codebg}{RGB}{248,248,248}
 \definecolor{framecolor}{RGB}{221,221,221}
@@ -19,8 +18,10 @@
   breakatwhitespace=false,
   breakindent=0pt,
   breakautoindent=true,
-  % Set safe linewidth using calc package
-  linewidth=\linewidth-20pt,
+  % Do NOT set linewidth to an expression like \linewidth-20pt: listings assigns it
+  % as a bare dimen (\linewidth\lst@linewidth\relax), so the trailing "-20pt" leaks
+  % into the PDF as literal text. The width is already narrowed by xleftmargin and
+  % xrightmargin below, which listings subtracts from \linewidth itself.
   columns=fullflexible,
   keepspaces=true,
   showstringspaces=false,

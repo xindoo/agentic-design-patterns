@@ -94,11 +94,11 @@ def generate_prompt(
    if previous_code:
        print("🔄 将之前的代码添加到提示词中以进行完善。")
        base_prompt += f"\n之前生成的代码：\n{previous_code}"
-   
+
    if feedback:
        print("📋 包含反馈以进行修订。")
        base_prompt += f"\n对之前版本的反馈：\n{feedback}\n"
-   
+
    base_prompt += "\n请仅返回修订后的 Python 代码。不要在代码之外包含注释或解释。"
    return base_prompt
 
